@@ -1,0 +1,286 @@
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import {
+  AlertTriangle,
+  ArrowRight,
+  BarChart3,
+  ChevronRight,
+  PackageOpen,
+  Search,
+  Settings,
+  ShoppingCart,
+  Store,
+  TrendingUp,
+  X,
+} from "lucide-react";
+import { navForRole } from "@/components/nav-items";
+import { cn, formatRupiah, formatNumber } from "@/lib/utils";
+
+// Palet tile lembut Material (tanpa gradient) — satu warna per menu,
+// dipakai berurutan agar grid terlihat hidup seperti super-app.
+const tilePalette = [
+  { bg: "bg-[#E8F0FF]", text: "text-[#0085FF]" },
+  { bg: "bg-[#E6FFFA]", text: "text-[#00C292]" },
+  { bg: "bg-[#E5E7FF]", text: "text-[#6B46C1]" },
+  { bg: "bg-[#FFF4E5]", text: "text-[#FF9800]" },
+  { bg: "bg-[#FFE5E5]", text: "text-[#FF4D4D]" },
+  { bg: "bg-[#F3E5F5]", text: "text-[#8E24AA]" },
+  { bg: "bg-[#E0F2F1]", text: "text-[#00897B]" },
+];
+
+// Warna solid untuk kartu "Produk Terlaris" (gaya promo native).
+const topColors = [
+  "bg-[#00C292]",
+  "bg-[#0085FF]",
+  "bg-[#6B46C1]",
+  "bg-[#FF9800]",
+  "bg-[#FF4D4D]",
+  "bg-[#00897B]",
+];
+
+const noScrollbar = "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
+
+// Warna tile stabil per menu (hash href) — tidak bergeser saat grid difilter.
+function tileColor(href: string) {
+  let h = 0;
+  for (const c of href) h += c.charCodeAt(0);
+  return tilePalette[h % tilePalette.length];
+}
+
+export type HomeData = {
+  todayTotal: number;
+  todayCount: number;
+  storeName: string;
+  topProducts: { id: number; name: string; qty: number; revenue: number }[];
+  lowStock: { id: number; name: string; stock: number; unit: string }[];
+  lowStockCount: number;
+};
+
+// Beranda mobile bergaya aplikasi native (super-app): search + hero
+// ringkasan + grid menu 4 kolom + banner stok + carousel data asli.
+// Tujuan yang sudah punya tombol di kartu hero biru — jangan diduplikasi di grid.
+const heroHrefs = new Set(["/pos", "/reports", "/stock"]);
+
+export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
+  const nav = navForRole(role).filter((item) => !heroHrefs.has(item.href));
+  const cards = [...nav, { href: "/settings", label: "Pengaturan", icon: Settings }];
+  const [q, setQ] = React.useState("");
+  const query = q.trim().toLowerCase();
+  const filtered = query ? cards.filter((c) => c.label.toLowerCase().includes(query)) : cards;
+
+  return (
+    <div className="flex flex-col gap-5">
+      {/* Search — memfilter menu grid secara real-time */}
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-outline" />
+        <input
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Cari menu..."
+          aria-label="Cari menu"
+          className="h-11 w-full rounded-full border border-outline-variant/40 bg-surface-container-lowest pl-12 pr-10 text-sm text-on-surface shadow-sm outline-none transition-all placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary-fixed-dim"
+        />
+        {q && (
+          <button
+            onClick={() => setQ("")}
+            aria-label="Bersihkan pencarian"
+            className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
+      {/* Hero: ringkasan hari ini (ala kartu saldo super-app) */}
+      <section className="relative overflow-hidden rounded-3xl bg-primary-container p-5 text-on-primary-container shadow-md">
+        <div className="pointer-events-none absolute -right-6 -top-10 h-28 w-28 rounded-full bg-white/10" />
+        <div className="pointer-events-none absolute -bottom-12 right-20 h-24 w-24 rounded-full bg-white/10" />
+        <div className="relative z-10">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-xs font-semibold">
+              <Store className="h-4 w-4" />
+              {data.storeName}
+            </span>
+            <span className="rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
+              Hari Ini
+            </span>
+          </div>
+          <div className="mt-3 font-display text-3xl font-bold leading-none tracking-tight">
+            {formatRupiah(data.todayTotal)}
+          </div>
+          <p className="mt-1.5 text-xs text-on-primary-container/80">
+            {formatNumber(data.todayCount)} transaksi selesai
+          </p>
+          <div className="mt-5 flex gap-3">
+            <Link
+              href="/pos"
+              className="flex flex-1 flex-col items-center gap-1.5 rounded-xl bg-white/15 py-2.5 transition-colors hover:bg-white/25 active:scale-95"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              <span className="text-[10px] font-semibold">Kasir Baru</span>
+            </Link>
+            <Link
+              href="/reports"
+              className="flex flex-1 flex-col items-center gap-1.5 rounded-xl bg-white/15 py-2.5 transition-colors hover:bg-white/25 active:scale-95"
+            >
+              <BarChart3 className="h-5 w-5" />
+              <span className="text-[10px] font-semibold">Laporan</span>
+            </Link>
+            <Link
+              href="/stock"
+              className="flex flex-1 flex-col items-center gap-1.5 rounded-xl bg-white/15 py-2.5 transition-colors hover:bg-white/25 active:scale-95"
+            >
+              <PackageOpen className="h-5 w-5" />
+              <span className="text-[10px] font-semibold">Stok</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Grid menu 4 kolom — tile ikon berwarna ala super-app */}
+      <section>
+        <div className="grid grid-cols-4 justify-items-center gap-y-6 gap-x-1">
+          {filtered.map((item) => {
+            const Icon = item.icon;
+            const tile = tileColor(item.href);
+            return (
+              <Link key={item.href} href={item.href} className="flex w-full flex-col items-center gap-2">
+                <span
+                  className={cn(
+                    "flex h-[60px] w-[60px] items-center justify-center rounded-[18px] transition-transform active:scale-90",
+                    tile.bg
+                  )}
+                >
+                  <Icon className={cn("h-8 w-8", tile.text)} strokeWidth={2} />
+                </span>
+                <span className="max-w-full truncate px-0.5 text-center text-[12px] font-medium leading-tight text-on-surface">
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+          {filtered.length === 0 && (
+            <div className="col-span-4 flex flex-col items-center gap-2 py-8 text-center">
+              <Search className="h-8 w-8 text-outline" />
+              <p className="text-sm text-on-surface-variant">Tidak ada menu &quot;{q}&quot;</p>
+              <p className="max-w-[240px] text-xs text-on-surface-variant/80">
+                Kasir, Laporan &amp; Stok ada di tab bawah atau tombol kartu biru
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Banner stok menipis */}
+      {data.lowStockCount > 0 && (
+        <Link
+          href="/stock"
+          className="group flex items-center gap-3 rounded-2xl border border-[#FFE0B2] bg-[#FFF4E5] p-4 text-[#B45309] transition-colors hover:bg-[#FFEDD0]"
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FF9800]/15">
+            <AlertTriangle className="h-6 w-6" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-bold">Stok menipis</span>
+            <span className="block truncate text-xs text-[#B45309]/80">
+              {formatNumber(data.lowStockCount)} produk butuh restock
+            </span>
+          </span>
+          <ChevronRight className="h-5 w-5 shrink-0 opacity-60 transition-transform group-hover:translate-x-0.5" />
+        </Link>
+      )}
+
+      {/* Carousel: produk terlaris bulan ini */}
+      <section>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-display text-base font-bold">Produk Terlaris</h2>
+          <Link href="/reports" className="flex items-center gap-0.5 text-xs font-semibold text-primary">
+            Lihat semua <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+        {data.topProducts.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-6 text-center text-sm text-on-surface-variant">
+            Belum ada penjualan bulan ini — mulai transaksi pertama di Kasir.
+          </div>
+        ) : (
+          <div className={cn("-mx-4 flex gap-3 overflow-x-auto px-4 pb-1", noScrollbar)}>
+            {data.topProducts.map((p, i) => (
+              <Link
+                key={p.id}
+                href="/reports"
+                className={cn(
+                  "relative w-[190px] shrink-0 overflow-hidden rounded-2xl p-4 text-white shadow-sm transition-transform hover:-translate-y-0.5 active:scale-[0.98]",
+                  topColors[i % topColors.length]
+                )}
+              >
+                <span className="absolute right-2.5 top-2.5 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold">
+                  #{i + 1}
+                </span>
+                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/85">
+                  <TrendingUp className="h-3.5 w-3.5" /> Terlaris
+                </span>
+                <h3 className="mt-2 line-clamp-2 font-bold leading-snug">{p.name}</h3>
+                <div className="mt-4 flex items-end justify-between gap-2">
+                  <span>
+                    <span className="block font-display text-lg font-bold leading-none">{formatNumber(p.qty)}</span>
+                    <span className="text-[10px] text-white/80">terjual</span>
+                  </span>
+                  <span className="shrink-0 rounded-lg bg-white/20 px-2 py-1 text-[10px] font-bold">
+                    {formatRupiah(p.revenue)}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Carousel: perlu restock */}
+      <section>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-display text-base font-bold">Perlu Restock</h2>
+          <Link href="/stock" className="flex items-center gap-0.5 text-xs font-semibold text-primary">
+            Kelola stok <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+        {data.lowStock.length === 0 ? (
+          <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 text-center text-sm text-on-surface-variant">
+            Semua stok aman 🎉
+          </div>
+        ) : (
+          <div className={cn("-mx-4 flex gap-3 overflow-x-auto px-4 pb-1", noScrollbar)}>
+            {data.lowStock.map((p) => (
+              <Link
+                key={p.id}
+                href="/stock"
+                className="w-[160px] shrink-0 rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
+              >
+                <span
+                  className={cn(
+                    "flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
+                    p.stock === 0 ? "bg-[#FFE5E5] text-[#FF4D4D]" : "bg-[#FFF4E5] text-[#B45309]"
+                  )}
+                >
+                  <AlertTriangle className="h-3 w-3" />
+                  {p.stock === 0 ? "Habis" : "Menipis"}
+                </span>
+                <h3 className="mt-2 line-clamp-2 text-sm font-bold leading-snug">{p.name}</h3>
+                <div className="mt-2 flex items-baseline gap-1">
+                  <span
+                    className={cn("font-display text-lg font-bold leading-none", p.stock === 0 ? "text-[#FF4D4D]" : "text-[#B45309]")}
+                  >
+                    {formatNumber(p.stock)}
+                  </span>
+                  <span className="text-[11px] text-on-surface-variant">{p.unit || "pcs"} tersisa</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}

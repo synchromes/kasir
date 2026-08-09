@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `sale` ADD COLUMN `pointsUsed` INTEGER NOT NULL DEFAULT 0;

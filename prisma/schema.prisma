@@ -1,0 +1,265 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  ADMIN
+  KASIR
+}
+
+enum MovementType {
+  IN
+  OUT
+  ADJUST
+}
+
+enum PaymentMethod {
+  CASH
+  QRIS
+  TRANSFER
+}
+
+enum NotificationType {
+  STOCK
+  SALE
+  PURCHASE
+  SYSTEM
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  password     String
+  role         Role     @default(KASIR)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  // Kepemilikan data (1 toko = 1 akun). Menghapus akun = menghapus tokonya.
+  ownedCategories Category[]
+  ownedUnits      Unit[]
+  ownedSuppliers  Supplier[]
+  ownedProducts   Product[]
+  ownedCustomers  Customer[]
+  ownedSales      Sale[]     @relation("SaleOwner")
+  ownedPurchases  Purchase[] @relation("PurchaseOwner")
+  ownedExpenses   Expense[]  @relation("ExpenseOwner")
+  settings        Setting[]
+  notifications   Notification[]
+
+  // Aktivitas (siapa yang melakukan transaksi)
+  sales     Sale[]           @relation("SaleCashier")
+  movements StockMovement[]
+  purchases Purchase[]       @relation("PurchaseUser")
+  expenses  Expense[]        @relation("ExpenseUser")
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  ownerId  Int
+  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  products Product[]
+
+  @@unique([ownerId, name])
+}
+
+model Unit {
+  id       Int      @id @default(autoincrement())
+  name     String
+  short    String
+  ownerId  Int
+  owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  products Product[]
+
+  @@unique([ownerId, name])
+}
+
+model Supplier {
+  id        Int       @id @default(autoincrement())
+  name      String
+  phone     String?
+  address   String?
+  ownerId   Int
+  owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  purchases Purchase[]
+}
+
+model Product {
+  id         Int      @id @default(autoincrement())
+  sku        String
+  barcode    String?
+  name       String
+  image      String?  @db.LongText // data URL base64 foto produk (di-resize di client)
+  ownerId    Int
+  owner      User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  unitId     Int?
+  unit       Unit?     @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  costPrice  Float    @default(0)
+  sellPrice  Float
+  stock      Int      @default(0)
+  minStock   Int      @default(0)
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  saleItems  SaleItem[]
+  movements  StockMovement[]
+  purchaseItems PurchaseItem[]
+
+  @@unique([ownerId, sku])
+}
+
+model StockMovement {
+  id        Int          @id @default(autoincrement())
+  productId Int
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  type      MovementType
+  qty       Int
+  note      String       @default("")
+  userId    Int?
+  user      User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  saleId    Int?
+  sale      Sale?        @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  purchaseId Int?
+  purchase  Purchase?    @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+}
+
+model Customer {
+  id        Int     @id @default(autoincrement())
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  isMember  Boolean @default(false)
+  points    Int     @default(0)
+  ownerId   Int
+  owner     User    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  sales     Sale[]
+}
+
+model Sale {
+  id            Int            @id @default(autoincrement())
+  invoiceNo     String
+  ownerId       Int
+  owner         User           @relation("SaleOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  cashier       User?          @relation("SaleCashier", fields: [cashierId], references: [id], onDelete: SetNull)
+  cashierId     Int?
+  customer      Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerId    Int?
+  subtotal      Float
+  discount      Float          @default(0)
+  tax           Float          @default(0)
+  total         Float
+  paid          Float
+  change        Float          @default(0)
+  paymentMethod PaymentMethod  @default(CASH)
+  // QRIS/Transfer: foto bukti pembayaran (data URL base64, di-resize client)
+  paymentProof  String?  @db.LongText
+  // QRIS dinamis: payload QR yang digenerate server untuk transaksi ini
+  qrisPayload   String?  @db.LongText
+  pointsUsed    Int            @default(0)
+  pointsEarned  Int            @default(0)
+  createdAt     DateTime       @default(now())
+  items         SaleItem[]
+  movements     StockMovement[]
+
+  @@unique([ownerId, invoiceNo])
+}
+
+model SaleItem {
+  id        Int    @id @default(autoincrement())
+  saleId    Int
+  sale      Sale   @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  qty       Int
+  price     Float
+  cost      Float
+}
+
+model Purchase {
+  id         Int      @id @default(autoincrement())
+  supplierId Int?
+  supplier   Supplier? @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  ownerId    Int
+  owner      User      @relation("PurchaseOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  userId     Int?
+  user       User?     @relation("PurchaseUser", fields: [userId], references: [id], onDelete: SetNull)
+  note       String    @default("")
+  total      Float     @default(0)
+  createdAt  DateTime  @default(now())
+  items      PurchaseItem[]
+  movements  StockMovement[]
+}
+
+model PurchaseItem {
+  id         Int    @id @default(autoincrement())
+  purchaseId Int
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  qty        Int
+  cost       Float
+}
+
+model Expense {
+  id        Int      @id @default(autoincrement())
+  ownerId   Int
+  owner     User     @relation("ExpenseOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  userId    Int?
+  user      User?    @relation("ExpenseUser", fields: [userId], references: [id], onDelete: SetNull)
+  amount    Float
+  note      String
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id          Int  @id @default(autoincrement())
+  ownerId     Int  @unique
+  owner       User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  storeName   String @default("Kasir Saya")
+  address     String @default("")
+  phone       String @default("")
+  taxRate     Float  @default(0)
+  receiptTitle String @default("STRUK PENJUALAN")
+  receiptFooter String @default("Terima kasih atas kunjungan Anda")
+  pointsPer10k Int   @default(1)
+  receiptWidth Int   @default(70)
+  // Preferensi notifikasi in-app per akun (semua default aktif)
+  notifyStock     Boolean @default(true)
+  notifySale      Boolean @default(true)
+  notifyPurchase  Boolean @default(true)
+  // QRIS statis milik toko — dikonversi menjadi QRIS dinamis per transaksi
+  qrisStatic   String? @db.LongText
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  ownerId   Int
+  owner     User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  type      NotificationType @default(SYSTEM)
+  title     String
+  message   String
+  link      String?
+  // refId = id objek terkait (mis. productId untuk alert stok) agar dedupe
+  // alert stok yang sama tidak berulang saat stok masih di bawah minimum.
+  refId     Int?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([ownerId, read])
+  @@index([ownerId, createdAt])
+  // Maksimal 1 notifikasi per objek (mis. 1 alert stok per produk) — tidak
+  // peduli status read. Alerta lama TIDAK pernah dibuat ulang; episode baru
+  // hanya terjadi setelah alert lama dihapus saat stok direstok di atas
+  // minimum. (refId NULL untuk tipe lain — MySQL mengizinkan banyak NULL.)
+  @@unique([ownerId, type, refId])
+}

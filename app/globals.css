@@ -1,0 +1,222 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Jangan pindai .freebuff (folder workspace Freebuff): berisi database SQLite
+   yang dikunci proses lain — membaca file-nya membuat Turbopack panic
+   (os error 33) saat glob-tracking CSS, sehingga dev server error 500. */
+@source not "../.freebuff";
+
+/* Tema gelap dihapus total (keputusan desain). @custom-variant DIPERTAHANKAN
+   dengan basis kelas .dark: jika dihapus, Tailwind v4 mengembalikan varian
+   `dark:` ke media query prefers-color-scheme — pengguna OS gelap justru
+   mendapat campuran gaya dark. Selama class .dark tidak pernah dipasang,
+   semua util dark: tidak pernah aktif. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Material 3 light (seed: blue) */
+  --background: #faf8ff;
+  --foreground: #131b2e;
+  --card: #ffffff;
+  --card-foreground: #131b2e;
+  --popover: #ffffff;
+  --popover-foreground: #131b2e;
+  --primary: #004ac6;
+  --primary-foreground: #ffffff;
+  --primary-container: #2563eb;
+  --on-primary-container: #eeefff;
+  --secondary: #006c49;
+  --secondary-foreground: #ffffff;
+  --secondary-container: #6cf8bb;
+  --on-secondary-container: #00714d;
+  --muted: #eaedff;
+  --muted-foreground: #434655;
+  --accent: #059669;
+  --accent-foreground: #ffffff;
+  --destructive: #ba1a1a;
+  --destructive-foreground: #ffffff;
+  --destructive-container: #ffdad6;
+  --on-destructive-container: #93000a;
+  --border: #c3c6d7;
+  --input: #c3c6d7;
+  --ring: #004ac6;
+
+  /* Material 3 surface / extras */
+  --surface: #faf8ff;
+  --on-surface: #131b2e;
+  --on-surface-variant: #434655;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f2f3ff;
+  --surface-container: #eaedff;
+  --surface-container-high: #e2e7ff;
+  --surface-container-highest: #dae2fd;
+  --outline: #737686;
+  --outline-variant: #c3c6d7;
+  --inverse-surface: #283044;
+  --inverse-on-surface: #eef0ff;
+  --tertiary: #784b00;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #996100;
+  --on-tertiary-container: #ffeedd;
+  --tertiary-fixed: #ffddb8;
+  --on-tertiary-fixed: #2a1700;
+  --tertiary-fixed-dim: #ffb95f;
+  --surface-tint: #0053db;
+  --primary-fixed-dim: #b4c5ff;
+
+  /* Constant hero/brand colors */
+  --brand: #2563eb;
+  --on-brand: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-container: var(--destructive-container);
+  --color-on-destructive-container: var(--on-destructive-container);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --color-surface-tint: var(--surface-tint);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-brand: var(--brand);
+  --color-on-brand: var(--on-brand);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-inter);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color: var(--accent);
+  }
+  ::selection {
+    background-color: color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+}
+
+/* Hide scrollbars for horizontal chip rows */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Thermal receipt print — kertas 80mm (area cetak efektif ±74mm).
+   @page harus VALID per spec: `size: 80mm auto` TIDAK valid (grammar
+   hanya <length>{1,2} | auto | portrait | landscape) — parser Chrome
+   menolaknya sehingga struk malah dicetak sebagai halaman A4/Letter
+   (driver thermal 80mm lalu menskalakan/memotong). Pakai 80mm x 297mm:
+   lebar pas kertas thermal, tinggi cukup untuk struk panjang apa pun.
+   Tinggi ekstra setelah isi struk adalah normal untuk driver thermal. */
+@page {
+  size: 80mm 297mm;
+  margin: 0;
+}
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm;
+    box-sizing: border-box;
+    padding: 2mm 3mm;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #fff;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  /* Kompresi tipografi (rule tanpa @layer mengalahkan util Tailwind) */
+  .print-area .text-sm {
+    font-size: 11px;
+  }
+  .print-area .text-xs {
+    font-size: 10px;
+  }
+  .print-area .text-lg {
+    font-size: 12px;
+  }
+  .print-area .font-display {
+    font-size: 13px;
+  }
+  /* Kolom angka memakai % (bukan px layar) supaya pasti muat di 80mm:
+     Item 34% · Qty 10% · Harga 26% · Subtotal 30% */
+  .print-area table {
+    table-layout: fixed;
+  }
+  .print-area table th:nth-child(2),
+  .print-area table td:nth-child(2) {
+    width: 10%;
+  }
+  .print-area table th:nth-child(3),
+  .print-area table td:nth-child(3) {
+    width: 26%;
+  }
+  .print-area table th:nth-child(4),
+  .print-area table td:nth-child(4) {
+    width: 30%;
+  }
+  /* Blok total sales-detail memakai max-w-xs (320px > lebar 80mm) */
+  .print-area .max-w-xs {
+    max-width: 100%;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
