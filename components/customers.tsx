@@ -24,6 +24,7 @@ import {
 import { TablePagination } from "@/components/table-pagination";
 import { useConfirm } from "@/components/confirm-dialog";
 import { ConsequenceChip } from "@/components/consequence-chip";
+import { GuideDialog } from "@/components/guide-dialog";
 import { Pencil, Trash2, Coins } from "lucide-react";
 import { formatNumber } from "@/lib/utils";
 
@@ -93,7 +94,10 @@ export default function CustomersPage({ customers, saleCounts }: { customers: Cu
           <h1 className="font-display text-2xl font-bold">Pelanggan</h1>
           <p className="text-sm text-muted-foreground">Kelola pelanggan & member</p>
         </div>
-        <Button variant="accent" onClick={openNew}>+ Tambah</Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <GuideDialog variant="chip" initialCategory="customers" />
+          <Button variant="accent" onClick={openNew}>+ Tambah</Button>
+        </div>
       </div>
 
       <Card className="overflow-hidden">

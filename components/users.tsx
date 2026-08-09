@@ -29,6 +29,7 @@ import {
 import { TablePagination } from "@/components/table-pagination";
 import { useConfirm } from "@/components/confirm-dialog";
 import { ConsequenceChip } from "@/components/consequence-chip";
+import { GuideDialog } from "@/components/guide-dialog";
 import { Pencil, Trash2 } from "lucide-react";
 
 type User = { id: number; name: string; email: string; role: string; active: boolean };
@@ -116,7 +117,10 @@ export default function UsersPage({
           <h1 className="font-display text-2xl font-bold">Pengguna</h1>
           <p className="text-sm text-muted-foreground">Kelola akun & hak akses</p>
         </div>
-        <Button variant="accent" onClick={openNew}>+ Tambah Pengguna</Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <GuideDialog variant="chip" initialCategory="users" />
+          <Button variant="accent" onClick={openNew}>+ Tambah Pengguna</Button>
+        </div>
       </div>
 
       <Card className="overflow-hidden">

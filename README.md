@@ -20,6 +20,22 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Testing (E2E walkthrough onboarding)
+
+Tes Playwright untuk walkthrough onboarding (tur muncul sekali, urutan sorotan Kasir → Produk → Pengaturan di desktop & mobile, tombol Lewati menyimpan flag):
+
+```bash
+# sekali saja: pasang browser Chromium
+npm i -D @playwright/test
+npx playwright install chromium
+
+# pastikan DB sudah di-seed (akun demo: admin@kasir.com / admin123)
+npx prisma db seed
+
+# jalankan (otomatis memakai dev server yang berjalan, atau menyalakan sendiri di port 14786)
+npm run test:e2e
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

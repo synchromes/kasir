@@ -38,6 +38,7 @@ export function SimpleCrud({
   onDelete,
   searchKey,
   consequences,
+  headerAction,
 }: {
   title: string;
   subtitle: string;
@@ -46,6 +47,8 @@ export function SimpleCrud({
   onSave: (data: Record<string, unknown>) => Promise<unknown>;
   onDelete: (id: number) => Promise<unknown>;
   searchKey?: string;
+  // Elemen aksi opsional di header (mis. tombol Bantuan kontekstual).
+  headerAction?: React.ReactNode;
   // Konsekuensi penghapusan per baris (mis. "5 produk akan kehilangan
   // kategorinya") — ditampilkan sebagai chip amber di tombol hapus dan
   // ditambahkan ke dialog konfirmasi agar kasir tahu dampaknya.
@@ -120,7 +123,10 @@ export function SimpleCrud({
           <h1 className="font-display text-2xl font-bold">{title}</h1>
           <p className="text-sm text-muted-foreground">{subtitle}</p>
         </div>
-        <Button variant="accent" onClick={openNew}>+ Tambah</Button>
+        <div className="flex flex-wrap items-center gap-2">
+          {headerAction}
+          <Button variant="accent" onClick={openNew}>+ Tambah</Button>
+        </div>
       </div>
 
       <Card className="overflow-hidden">

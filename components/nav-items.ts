@@ -24,12 +24,15 @@ export type NavItem = {
   label: string;
   icon: LucideIcon;
   adminOnly?: boolean;
+  // Penanda untuk walkthrough onboarding (data-tour) — elemen yang punya
+  // nilai ini disorot saat pengguna baru pertama kali masuk.
+  tour?: string;
 };
 
 export const allNav: NavItem[] = [
   { href: "/", label: "Dasbor", icon: LayoutDashboard },
-  { href: "/pos", label: "Kasir", icon: ShoppingCart },
-  { href: "/products", label: "Inventaris", icon: Package },
+  { href: "/pos", label: "Kasir", icon: ShoppingCart, tour: "kasir" },
+  { href: "/products", label: "Inventaris", icon: Package, tour: "products" },
   { href: "/categories", label: "Kategori", icon: Boxes },
   { href: "/units", label: "Satuan", icon: Ruler },
   { href: "/suppliers", label: "Supplier", icon: Truck },

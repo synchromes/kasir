@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingCart, ReceiptText, BarChart3 } from "lucide-react";
+import { Home, ShoppingCart, ReceiptText, BarChart3, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const tabs = [
+const tabs: { href: string; label: string; icon: LucideIcon; tour?: string }[] = [
   { href: "/", label: "Beranda", icon: Home },
-  { href: "/pos", label: "Kasir", icon: ShoppingCart },
+  { href: "/pos", label: "Kasir", icon: ShoppingCart, tour: "kasir" },
   { href: "/sales", label: "Transaksi", icon: ReceiptText },
   { href: "/reports", label: "Laporan", icon: BarChart3 },
-] as const;
+];
 
 // Tab bar bawah ala aplikasi native: 4 shortcut utama. Menu lainnya
 // dijangkau lewat grid beranda. Hanya tampil di viewport mobile.
@@ -30,6 +30,7 @@ export function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
+              data-tour={tab.tour}
               aria-current={active ? "page" : undefined}
               className={cn(
                 "flex cursor-pointer flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-semibold transition-colors",

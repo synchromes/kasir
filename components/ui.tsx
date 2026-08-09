@@ -170,7 +170,10 @@ function DialogContent({ className, children, ...props }: React.ComponentPropsWi
       <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
       <DialogPrimitive.Content
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl border bg-card p-6 shadow-lg focus:outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 max-h-[90dvh] overflow-y-auto",
+          // w-[calc(100vw-2rem)]: semua dialog diberi jeda 16px kiri-kanan di
+          // layar sempit (mobile) agar tidak menempel ke tepi; di layar lebar
+          // tetap dibatasi max-w masing-masing (lg/2xl/3xl).
+          "fixed left-1/2 top-1/2 z-50 w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl border bg-card p-6 shadow-lg focus:outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 max-h-[90dvh] overflow-y-auto",
           className
         )}
         {...props}

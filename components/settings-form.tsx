@@ -9,7 +9,8 @@ import { validateQRIS } from "@/lib/qris";
 import { Button, Input, Textarea, Label, Card, CardHeader, CardTitle, CardContent } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { useConfirm } from "@/components/confirm-dialog";
-import { Bell, CheckCircle2, Info, PackageSearch, QrCode as QrCodeIcon, ReceiptText, ScanLine, ShoppingBag, Trash2, UploadCloud, X } from "lucide-react";
+import { GuideDialog } from "@/components/guide-dialog";
+import { Bell, PackageSearch, QrCode as QrCodeIcon, ReceiptText, ScanLine, ShoppingBag, Trash2, UploadCloud, X } from "lucide-react";
 import { resizeImageToDataUrl } from "@/lib/image";
 
 export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
@@ -309,21 +310,18 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold">Pengaturan</h1>
-        <p className="text-sm text-muted-foreground">Konfigurasi toko & struk</p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-bold">Pengaturan</h1>
+          <p className="text-sm text-muted-foreground">Konfigurasi toko & struk</p>
+        </div>
+        <GuideDialog variant="chip" initialCategory="settings" />
       </div>
 
       {!hasSettings && (
-        <div className="flex items-start gap-3 rounded-xl border border-tertiary-fixed-dim bg-tertiary-fixed/25 p-4 text-sm">
-          <Info className="mt-0.5 h-5 w-5 shrink-0 text-tertiary" />
-          <div>
-            <p className="font-semibold text-on-surface">Lengkapi pengaturan toko Anda</p>
-            <p className="mt-0.5 text-on-surface-variant">
-              Toko ini belum punya pengaturan tersimpan — struk & pajak masih memakai nilai bawaan. Isi nama toko, alamat, dan pajak, lalu klik Simpan Pengaturan agar transaksi memakai data yang benar.
-            </p>
-          </div>
-        </div>
+        <p className="text-sm leading-relaxed text-on-surface-variant">
+          <span className="font-semibold text-foreground">Catatan:</span> Toko ini belum punya pengaturan tersimpan — struk &amp; pajak masih memakai nilai bawaan. Isi nama toko, alamat, dan pajak, lalu klik Simpan Pengaturan agar transaksi memakai data yang benar.
+        </p>
       )}
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -367,16 +365,17 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
           </CardHeader>
           <CardContent className="space-y-3">
             {clearNotice && (
-              <div className="flex items-start gap-2.5 rounded-xl border border-secondary-fixed-dim bg-secondary-container/40 px-3 py-2.5 text-sm">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
-                <p className="flex-1 font-medium text-on-secondary-container">{clearNotice}</p>
+              <div className="flex items-start justify-between gap-2 text-sm">
+                <p className="flex-1 text-on-surface-variant">
+                  <span className="font-semibold text-foreground">Catatan:</span> {clearNotice}
+                </p>
                 <button
                   type="button"
                   onClick={() => setClearNotice(null)}
                   aria-label="Tutup notifikasi"
-                  className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-on-secondary-container transition-colors hover:bg-secondary-container"
+                  className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3.5 w-3.5" />
                 </button>
               </div>
             )}
@@ -567,7 +566,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
                     <span className="block text-sm font-semibold">Stok menipis / habis</span>
                     <span className="block text-xs text-on-surface-variant">Peringatan saat stok produk di bawah minimum</span>
                     {form.notifyStock === false && oldNotifyCounts.stock > 0 && (
-                      <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+                      <span className="mt-1 block text-xs text-on-surface-variant">
                         {oldNotifyCounts.stock} notif lama akan terhapus
                       </span>
                     )}
@@ -595,7 +594,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
                     <span className="block text-sm font-semibold">Transaksi baru</span>
                     <span className="block text-xs text-on-surface-variant">Setiap penjualan selesai di kasir</span>
                     {form.notifySale === false && oldNotifyCounts.sale > 0 && (
-                      <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+                      <span className="mt-1 block text-xs text-on-surface-variant">
                         {oldNotifyCounts.sale} notif lama akan terhapus
                       </span>
                     )}
@@ -623,7 +622,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
                     <span className="block text-sm font-semibold">Pembelian baru</span>
                     <span className="block text-xs text-on-surface-variant">Saat stok masuk lewat pembelian</span>
                     {form.notifyPurchase === false && oldNotifyCounts.purchase > 0 && (
-                      <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+                      <span className="mt-1 block text-xs text-on-surface-variant">
                         {oldNotifyCounts.purchase} notif lama akan terhapus
                       </span>
                     )}

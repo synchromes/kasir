@@ -3,14 +3,49 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { formatRupiah } from "@/lib/utils";
-import { Card, Button, Table, TableHeader, TableBody, TableRow, TableHead, TableCell, Input } from "@/components/ui";
+import { Card, Button, Badge, Table, TableHeader, TableBody, TableRow, TableHead, TableCell, Input } from "@/components/ui";
 import { TrendBar, DonutChart, DONUT_COLORS } from "@/components/charts/report-charts";
-import { Download, ArrowUpRight, ArrowDownRight, CalendarDays, Banknote, TrendingUp, ReceiptText } from "lucide-react";
+import { MiniDonut, SparkArea, WeeklyBars } from "@/components/charts/dashboard-charts";
+import { DeltaPill } from "@/components/delta-pill";
+import { GuideDialog } from "@/components/guide-dialog";
+import {
+  Download,
+  ArrowUpRight,
+  ArrowDownRight,
+  ArrowLeftRight,
+  CalendarDays,
+  Banknote,
+  QrCode,
+  TrendingUp,
+  ReceiptText,
+  PackageOpen,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 const methodLabel: Record<string, string> = { CASH: "Tunai", QRIS: "QRIS", TRANSFER: "Transfer" };
+const methodIcon: Record<string, React.ComponentType<{ className?: string }>> = {
+  CASH: Banknote,
+  QRIS: QrCode,
+  TRANSFER: ArrowLeftRight,
+};
+const methodStyle: Record<string, { bg: string; text: string }> = {
+  CASH: { bg: "bg-[#E6FFFA]", text: "text-[#00C292]" },
+  QRIS: { bg: "bg-[#E8F0FF]", text: "text-[#0085FF]" },
+  TRANSFER: { bg: "bg-[#E5E7FF]", text: "text-[#6B46C1]" },
+};
+
+// Local YYYY-MM-DD key — timezone-safe (toISOString adalah UTC dan bisa
+// menggeser hari jika dipakai untuk mengelompokkan tanggal).
+function localKey(d: Date) {
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${m}-${day}`;
+}
+function rupiahCompact(n: number) {
+  return new Intl.NumberFormat("id-ID", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+}
 
 function startOfDay(d: Date) {
   const x = new Date(d);
@@ -110,7 +145,7 @@ export default async function ReportsPage({
   const prevTo = new Date(fromDate.getTime() - 1);
   const prevFrom = new Date(prevTo.getTime() - rangeLen);
 
-  const [sales, expenses, productAgg, prevSales, prevItems] = await Promise.all([
+  const [sales, expenses, productAgg, prevSales, prevItems, prevExpenses, lowStock] = await Promise.all([
     prisma.sale.findMany({
       where: { ownerId, createdAt: { gte: fromDate, lte: toDate } },
       // Select eksplisit: jangan muat LONGTEXT paymentProof/qrisPayload per baris.
@@ -140,6 +175,13 @@ export default async function ReportsPage({
       where: { sale: { ownerId, createdAt: { gte: prevFrom, lte: prevTo } } },
       select: { qty: true, cost: true },
     }),
+    prisma.expense.aggregate({ where: { ownerId, createdAt: { gte: prevFrom, lte: prevTo } }, _sum: { amount: true } }),
+    prisma.product.findMany({
+      where: { ownerId, active: true, stock: { lte: prisma.product.fields.minStock } },
+      include: { unit: true },
+      orderBy: { stock: "asc" },
+      take: 6,
+    }),
   ]);
 
   const revenue = sales.reduce((s, x) => s + x.total, 0);
@@ -158,18 +200,22 @@ export default async function ReportsPage({
   const revDelta = deltaPct(revenue, prevRevenue);
   const profitDelta = deltaPct(grossProfit, prevProfit);
   const avgDelta = deltaPct(avgTransaction, prevAvg);
+  const expenseDelta = deltaPct(totalExpense, prevExpenses._sum.amount ?? 0);
 
   // Daily trend within the range (keyed by ISO date so ordering is chronological)
   const dayFmt = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short" });
+  // Key lokal (bukan toISOString UTC) agar konsisten dengan kartu Transaksi
+  // Mingguan & dashboard desktop — transaksi lewat tengah malam tidak terlempar
+  // ke hari sebelumnya.
   const byDay = new Map<string, { key: string; total: number; cost: number }>();
   for (const s of sales) {
-    const key = s.createdAt.toISOString().slice(0, 10);
+    const key = localKey(s.createdAt);
     const cur = byDay.get(key) ?? { key, total: 0, cost: 0 };
     cur.total += s.total;
     byDay.set(key, cur);
   }
   for (const i of productAgg) {
-    const key = i.sale.createdAt.toISOString().slice(0, 10);
+    const key = localKey(i.sale.createdAt);
     const cur = byDay.get(key);
     if (cur) cur.cost += i.cost * i.qty;
   }
@@ -193,6 +239,43 @@ export default async function ReportsPage({
 
   const byMethod = new Map<string, number>();
   for (const s of sales) byMethod.set(s.paymentMethod, (byMethod.get(s.paymentMethod) ?? 0) + s.total);
+  const methodData = [...byMethod.entries()]
+    .map(([key, value]) => ({ key, name: methodLabel[key] ?? key, value }))
+    .sort((a, b) => b.value - a.value);
+  const topMethodRows = methodData.slice(0, 3);
+
+  // Transaksi 7 hari terakhir (hingga akhir rentang): split Tunai vs Non-tunai,
+  // zero-filled agar sumbu grafik kontinu — ala kartu Transaksi Mingguan di
+  // dashboard desktop.
+  const weekKeyFmt = new Intl.DateTimeFormat("id-ID", { weekday: "short" });
+  const weekStart = endOfDay(new Date(toDate.getTime() - 6 * 86400000));
+  const byWeek = new Map<string, { tunai: number; nontunai: number; count: number }>();
+  for (const s of sales) {
+    if (s.createdAt < weekStart) continue;
+    const key = localKey(s.createdAt);
+    const cur = byWeek.get(key) ?? { tunai: 0, nontunai: 0, count: 0 };
+    if (s.paymentMethod === "CASH") cur.tunai += s.total;
+    else cur.nontunai += s.total;
+    cur.count += 1;
+    byWeek.set(key, cur);
+  }
+  const weekData: { label: string; tunai: number; nontunai: number }[] = [];
+  let weekTotal = 0;
+  let weekCount = 0;
+  for (let d = 6; d >= 0; d--) {
+    const day = endOfDay(new Date(toDate.getTime() - d * 86400000));
+    const cur = byWeek.get(localKey(day));
+    const tunai = cur?.tunai ?? 0;
+    const nontunai = cur?.nontunai ?? 0;
+    weekTotal += tunai + nontunai;
+    weekCount += cur?.count ?? 0;
+    weekData.push({ label: weekKeyFmt.format(day), tunai, nontunai });
+  }
+  const weekTunai = weekData.reduce((s, d) => s + d.tunai, 0);
+  const weekSum = weekTotal;
+
+  // Series laba harian untuk sparkline (dari tren yang sudah dihitung).
+  const profitSeries = trendData.map((d) => ({ value: d.profit }));
 
   const csvRows = [
     ["Invoice", "Tanggal", "Pelanggan", "Metode", "Subtotal", "Diskon", "Pajak", "Total", "Bayar", "Kembalian"],
@@ -264,6 +347,7 @@ export default async function ReportsPage({
             <Download className="h-4 w-4" />
             Ekspor
           </a>
+          <GuideDialog variant="chip" initialCategory="reports" />
         </div>
       </div>
 
@@ -349,6 +433,120 @@ export default async function ReportsPage({
           </div>
         </Card>
       </div>
+
+      {/* Metode pembayaran + transaksi mingguan + laba — analitik ala dashboard
+          desktop, responsif: menumpuk di mobile, grid di desktop. */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <Card className="flex flex-col p-5 lg:col-span-5">
+          <h3 className="font-display text-base font-bold">Metode Pembayaran</h3>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-4">
+              {topMethodRows.map((m) => {
+                const Icon = methodIcon[m.key] ?? Banknote;
+                const st = methodStyle[m.key] ?? { bg: "bg-muted", text: "text-on-surface-variant" };
+                const pct = revenue ? Math.round((m.value / revenue) * 100) : 0;
+                return (
+                  <div key={m.key} className="flex items-center gap-3">
+                    <span className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-full", st.bg, st.text)}>
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm text-on-surface-variant">{m.name}</p>
+                      <p className="truncate font-display text-base font-bold leading-tight">{formatRupiah(m.value)}</p>
+                    </div>
+                    <span className="font-mono text-xs font-semibold text-on-surface-variant">{pct}%</span>
+                  </div>
+                );
+              })}
+              {topMethodRows.length === 0 && <p className="text-sm text-on-surface-variant">Belum ada pembayaran di rentang ini</p>}
+            </div>
+            <div className="flex items-center justify-center">
+              <MiniDonut
+                data={topMethodRows.map((m) => ({ name: m.name, value: m.value }))}
+                centerValue={rupiahCompact(revenue)}
+                centerLabel="pendapatan"
+              />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="flex flex-col p-5 lg:col-span-3">
+          <h3 className="font-display text-base font-bold">Transaksi Mingguan</h3>
+          <div className="mt-3 flex items-center gap-2">
+            <span className="font-display text-2xl font-bold leading-none">{weekCount}</span>
+          </div>
+          <p className="mt-1.5 text-sm text-on-surface-variant">transaksi · 7 hari terakhir</p>
+          <div className="mt-4 flex-1">
+            <WeeklyBars data={weekData} />
+          </div>
+          <div className="mt-3 space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 text-on-surface-variant">
+                <span className="h-2.5 w-2.5 rounded-full bg-primary" /> Tunai
+              </span>
+              <span className="font-mono text-xs font-medium">{weekSum ? Math.round((weekTunai / weekSum) * 100) : 0}%</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 text-on-surface-variant">
+                <span className="h-2.5 w-2.5 rounded-full bg-outline-variant" /> Non-tunai
+              </span>
+              <span className="font-mono text-xs font-medium">{weekSum ? 100 - Math.round((weekTunai / weekSum) * 100) : 0}%</span>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="flex flex-col p-5 lg:col-span-4">
+          <h3 className="font-display text-base font-bold">Laba</h3>
+          <div className="mt-3 rounded-md bg-primary/10 p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold text-on-surface-variant">Laba bersih</span>
+              <span className="font-display text-lg font-bold">{formatRupiah(netProfit)}</span>
+            </div>
+            <div className="-mx-1 mt-2">
+              <SparkArea data={profitSeries} />
+            </div>
+          </div>
+          <div className="mt-4 flex flex-1 flex-col justify-between gap-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium">Pendapatan</p>
+                <span className="text-xs text-on-surface-variant">{formatRupiah(revenue)}</span>
+              </div>
+              <DeltaPill value={revDelta} />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium">Pengeluaran</p>
+                <span className="text-xs text-on-surface-variant">{formatRupiah(totalExpense)}</span>
+              </div>
+              <DeltaPill value={expenseDelta} invert />
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Stok menipis */}
+      <Card className="p-5">
+        <div className="mb-3 flex items-center justify-between">
+          <h3 className="flex items-center gap-2 font-display text-base font-bold">
+            <PackageOpen className="h-4 w-4 text-tertiary" /> Stok Menipis
+          </h3>
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/stock">Kelola Stok</Link>
+          </Button>
+        </div>
+        {lowStock.length === 0 ? (
+          <p className="text-sm text-on-surface-variant">Semua stok aman</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {lowStock.map((p) => (
+              <Badge key={p.id} variant={p.stock === 0 ? "destructive" : "warning"} className="px-3 py-1.5">
+                {p.name} · {p.stock} {p.unit?.short ?? ""}
+              </Badge>
+            ))}
+          </div>
+        )}
+      </Card>
 
       {/* Transactions table */}
       <Card className="overflow-hidden">          <div className="flex items-center justify-between border-b border-outline-variant bg-surface-container-low px-5 py-4">

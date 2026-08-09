@@ -6,10 +6,8 @@ import { auth } from "@/lib/auth";
 import { cn, formatRupiah, formatNumber, todayRange } from "@/lib/utils";
 import { Card, Badge, Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui";
 import {
-  ArrowDownRight,
   ArrowLeftRight,
   ArrowRight,
-  ArrowUpRight,
   Banknote,
   CircleDollarSign,
   QrCode,
@@ -20,7 +18,9 @@ import {
 } from "lucide-react";
 import { DonutChart, DONUT_COLORS } from "@/components/charts/report-charts";
 import { TrendArea, MiniDonut, SparkArea, WeeklyBars } from "@/components/charts/dashboard-charts";
+import { DeltaPill } from "@/components/delta-pill";
 import { HomeMobile } from "@/components/home-mobile";
+import { OnboardingTour } from "@/components/onboarding-tour";
 
 export const dynamic = "force-dynamic";
 
@@ -67,25 +67,6 @@ function categoryColor(name: string) {
   let h = 0;
   for (const c of name) h += c.charCodeAt(0);
   return categoryColors[h % categoryColors.length];
-}
-
-function DeltaPill({ value, invert = false }: { value: number | null; invert?: boolean }) {
-  if (value === null) {
-    return <span className="rounded-full border border-outline-variant px-2.5 py-0.5 text-[11px] font-semibold text-on-surface-variant">—</span>;
-  }
-  const good = invert ? value <= 0 : value >= 0;
-  const up = value >= 0;
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-0.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold",
-        good ? "bg-[#E6FFFA] text-[#00C292]" : "bg-[#FFE5E5] text-[#FF4D4D]"
-      )}
-    >
-      {up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-      {Math.abs(value).toFixed(1)}%
-    </span>
-  );
 }
 
 function StatCard({
@@ -193,7 +174,13 @@ export default async function DashboardPage() {
   // Tanpa wrapper lg:hidden — tablet/wide dengan UA mobile tetap menampilkan grid.
   const ua = (await headers()).get("user-agent") ?? "";
   if (isMobileUA(ua)) {
-    return <HomeMobile role={session.user.role} data={homeData} />;
+    return (
+      <>
+        <HomeMobile role={session.user.role} data={homeData} />
+        {/* Walkthrough pertama kali masuk — sorot Kasir, Inventaris, Pengaturan (+ admin: Panduan Pengguna) */}
+        <OnboardingTour userId={Number(session.user.id)} isAdmin={session.user.role === "ADMIN"} />
+      </>
+    );
   }
 
   const yStart = new Date(start.getTime() - 86400000);
@@ -676,7 +663,7 @@ export default async function DashboardPage() {
             </Button>
           </div>
           {lowStock.length === 0 ? (
-            <p className="text-sm text-on-surface-variant">Semua stok aman 🎉</p>
+            <p className="text-sm text-on-surface-variant">Semua stok aman</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {lowStock.map((p) => (
@@ -688,6 +675,8 @@ export default async function DashboardPage() {
           )}
       </Card>
       </div>
+      {/* Walkthrough pertama kali masuk — sorot Kasir, Inventaris, Pengaturan (+ admin: Panduan Pengguna) */}
+      <OnboardingTour userId={Number(session.user.id)} isAdmin={session.user.role === "ADMIN"} />
     </>
   );
 }

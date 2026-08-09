@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import QRCode from "qrcode";
-import { ArrowLeft, CheckCircle2, Loader2, QrCode, ReceiptText, UploadCloud, X } from "lucide-react";
+import { ArrowLeft, Loader2, QrCode, ReceiptText, UploadCloud, X } from "lucide-react";
 import { checkout } from "@/lib/actions";
 import { convertQRIS } from "@/lib/qris";
 import { resizeImageToDataUrl, PROOF_IMAGE_MAX_DIM, PROOF_IMAGE_QUALITY } from "@/lib/image";
@@ -224,8 +224,8 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
                 <p className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">Total yang harus dibayar</p>
                 <p className="mt-1 font-display text-3xl font-bold text-primary">{formatRupiah(amount)}</p>
               </div>
-              <p className="mt-3 flex items-center gap-1.5 rounded-full bg-secondary-container/40 px-3 py-1 text-xs font-semibold text-on-secondary-container">
-                <CheckCircle2 className="h-4 w-4" /> QRIS Dinamis — nominal otomatis terisi
+              <p className="mt-3 text-xs text-on-surface-variant">
+                Catatan: QRIS Dinamis — nominal otomatis terisi saat dipindai
               </p>
             </>
           ) : (

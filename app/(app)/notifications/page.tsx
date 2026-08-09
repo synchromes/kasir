@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { NotificationsList } from "@/components/notifications-list";
+import { GuideDialog } from "@/components/guide-dialog";
 
 export const dynamic = "force-dynamic";
 
@@ -21,11 +22,14 @@ export default async function NotificationsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="mb-5">
-        <h1 className="font-display text-xl font-bold">Notifikasi</h1>
-        <p className="mt-1 text-sm text-on-surface-variant">
-          Aktivitas transaksi, pembelian, dan peringatan stok toko Anda.
-        </p>
+      <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-xl font-bold">Notifikasi</h1>
+          <p className="mt-1 text-sm text-on-surface-variant">
+            Aktivitas transaksi, pembelian, dan peringatan stok toko Anda.
+          </p>
+        </div>
+        <GuideDialog variant="chip" initialCategory="notifications" />
       </div>
       <NotificationsList
         initial={items.map((n) => ({

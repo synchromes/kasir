@@ -43,6 +43,7 @@ export function Sidebar({ role }: { role: string }) {
             <Link
               key={item.href}
               href={item.href}
+              data-tour={item.tour}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-semibold tracking-wide transition-colors duration-200",
                 active
@@ -60,6 +61,7 @@ export function Sidebar({ role }: { role: string }) {
       <div className="mt-auto border-t border-outline-variant px-2 py-3">
         <Link
           href="/settings"
+          data-tour="settings"
           className={cn(
             "mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-semibold tracking-wide transition-colors duration-200",
             pathname.startsWith("/settings")

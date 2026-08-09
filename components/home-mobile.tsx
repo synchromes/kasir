@@ -65,7 +65,7 @@ const heroHrefs = new Set(["/pos", "/reports", "/stock"]);
 
 export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
   const nav = navForRole(role).filter((item) => !heroHrefs.has(item.href));
-  const cards = [...nav, { href: "/settings", label: "Pengaturan", icon: Settings }];
+  const cards = [...nav, { href: "/settings", label: "Pengaturan", icon: Settings, tour: "settings" }];
   const [q, setQ] = React.useState("");
   const query = q.trim().toLowerCase();
   const filtered = query ? cards.filter((c) => c.label.toLowerCase().includes(query)) : cards;
@@ -147,7 +147,7 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
             const Icon = item.icon;
             const tile = tileColor(item.href);
             return (
-              <Link key={item.href} href={item.href} className="flex w-full flex-col items-center gap-2">
+              <Link key={item.href} href={item.href} data-tour={item.tour} className="flex w-full flex-col items-center gap-2">
                 <span
                   className={cn(
                     "flex h-[60px] w-[60px] items-center justify-center rounded-[18px] transition-transform active:scale-90",
@@ -178,18 +178,15 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
       {data.lowStockCount > 0 && (
         <Link
           href="/stock"
-          className="group flex items-center gap-3 rounded-2xl border border-[#FFE0B2] bg-[#FFF4E5] p-4 text-[#B45309] transition-colors hover:bg-[#FFEDD0]"
+          className="group flex items-center gap-3 rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 transition-colors hover:bg-surface-container-low"
         >
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FF9800]/15">
-            <AlertTriangle className="h-6 w-6" />
-          </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-bold">Stok menipis</span>
-            <span className="block truncate text-xs text-[#B45309]/80">
+            <span className="block truncate text-xs text-on-surface-variant">
               {formatNumber(data.lowStockCount)} produk butuh restock
             </span>
           </span>
-          <ChevronRight className="h-5 w-5 shrink-0 opacity-60 transition-transform group-hover:translate-x-0.5" />
+          <ChevronRight className="h-5 w-5 shrink-0 text-on-surface-variant opacity-60 transition-transform group-hover:translate-x-0.5" />
         </Link>
       )}
 
@@ -248,7 +245,7 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
         </div>
         {data.lowStock.length === 0 ? (
           <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 text-center text-sm text-on-surface-variant">
-            Semua stok aman 🎉
+            Semua stok aman
           </div>
         ) : (
           <div className={cn("-mx-4 flex gap-3 overflow-x-auto px-4 pb-1", noScrollbar)}>

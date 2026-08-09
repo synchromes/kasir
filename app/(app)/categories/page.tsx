@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { SimpleCrud } from "@/components/simple-crud";
+import { GuideDialog } from "@/components/guide-dialog";
 import { saveCategory, deleteCategory } from "@/lib/actions";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +32,7 @@ export default async function CategoriesPage() {
       onDelete={deleteCategory}
       searchKey="name"
       consequences={consequences}
+      headerAction={<GuideDialog variant="chip" initialCategory="categories" />}
     />
   );
 }

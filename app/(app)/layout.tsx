@@ -4,7 +4,8 @@ import { Sidebar } from "@/components/sidebar";
 import { MobileNav } from "@/components/mobile-nav";
 import { ConfirmProvider } from "@/components/confirm-dialog";
 import { NotificationBell } from "@/components/notification-bell";
-import { Search, HelpCircle } from "lucide-react";
+import { GuideDialog } from "@/components/guide-dialog";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -13,6 +14,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const role = session.user.role as string;
   const name = session.user.name ?? "Pengguna";
   const initial = (name.trim().charAt(0) || "K").toUpperCase();
+  const userId = Number(session.user.id);
 
   return (
     <ConfirmProvider>
@@ -35,20 +37,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             </form>
             <div className="flex items-center gap-1 text-on-surface-variant">
               <NotificationBell />
-              <button
-                type="button"
-                aria-label="Bantuan"
-                className="hidden cursor-pointer rounded-full p-2 transition-colors hover:bg-surface-container-high hover:text-primary sm:block"
-              >
-                <HelpCircle className="h-5 w-5" />
-              </button>
+              <GuideDialog userId={userId} />
               <div className="ml-2 flex h-9 w-9 items-center justify-center rounded-full border border-outline-variant bg-surface-container-high text-sm font-bold text-primary">
                 {initial}
               </div>
             </div>
           </header>
           <div className="print:hidden">
-            <MobileNav name={name} />
+            <MobileNav name={name} userId={userId} />
           </div>
           {/* pb-24 memberi ruang agar konten tidak tertutup bottom tab bar di mobile;
               padding dinetralkan saat cetak agar tinggi halaman @page mengikuti struk */}

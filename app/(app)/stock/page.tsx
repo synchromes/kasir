@@ -6,6 +6,7 @@ import { formatDate, formatRupiah, formatNumber } from "@/lib/utils";
 import { Card, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui";
 import { TablePagination } from "@/components/table-pagination";
 import { AdjustStockDialog } from "@/components/adjust-stock";
+import { GuideDialog } from "@/components/guide-dialog";
 import { Package, Warehouse, CircleDollarSign, AlertTriangle, ArrowLeftRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -115,26 +116,29 @@ export default async function StockPage({ searchParams }: { searchParams: Promis
           <h1 className="font-display text-2xl font-bold">Manajemen Stok</h1>
           <p className="text-sm text-on-surface-variant">Pantau tingkat stok dan riwayat mutasi produk.</p>
         </div>
-        <div className="flex max-w-full overflow-x-auto rounded-md border border-outline-variant bg-surface-container-lowest">
-          <Link
-            href="/stock"
-            className={cn(
-              "shrink-0 px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
-              view === "products" ? "bg-surface-container-high" : "hover:bg-surface-container-low"
-            )}
-          >
-            Stok Produk
-          </Link>
-          <Link
-            href="/stock?tab=movements"
-            className={cn(
-              "flex shrink-0 items-center gap-1.5 rounded-r-md border-l border-outline-variant px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
-              view === "movements" ? "bg-surface-container-high" : "hover:bg-surface-container-low"
-            )}
-          >
-            <ArrowLeftRight className="h-4 w-4" />
-            Riwayat Mutasi
-          </Link>
+        <div className="flex items-center gap-2">
+          <div className="flex max-w-full overflow-x-auto rounded-md border border-outline-variant bg-surface-container-lowest">
+            <Link
+              href="/stock"
+              className={cn(
+                "shrink-0 px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
+                view === "products" ? "bg-surface-container-high" : "hover:bg-surface-container-low"
+              )}
+            >
+              Stok Produk
+            </Link>
+            <Link
+              href="/stock?tab=movements"
+              className={cn(
+                "flex shrink-0 items-center gap-1.5 rounded-r-md border-l border-outline-variant px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
+                view === "movements" ? "bg-surface-container-high" : "hover:bg-surface-container-low"
+              )}
+            >
+              <ArrowLeftRight className="h-4 w-4" />
+              Riwayat Mutasi
+            </Link>
+          </div>
+          <GuideDialog variant="chip" initialCategory="stock" />
         </div>
       </div>
 

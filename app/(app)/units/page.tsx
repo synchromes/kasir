@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { SimpleCrud } from "@/components/simple-crud";
+import { GuideDialog } from "@/components/guide-dialog";
 import { saveUnit, deleteUnit } from "@/lib/actions";
 
 export const dynamic = "force-dynamic";
@@ -34,6 +35,7 @@ export default async function UnitsPage() {
       onDelete={deleteUnit}
       searchKey="name"
       consequences={consequences}
+      headerAction={<GuideDialog variant="chip" initialCategory="categories" />}
     />
   );
 }

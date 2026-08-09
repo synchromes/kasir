@@ -23,6 +23,7 @@ import {
 } from "@/components/ui";
 import { TablePagination } from "@/components/table-pagination";
 import { useConfirm } from "@/components/confirm-dialog";
+import { GuideDialog } from "@/components/guide-dialog";
 import { Pencil, Trash2 } from "lucide-react";
 
 type Expense = { id: number; amount: number; note: string; createdAt: Date };
@@ -86,7 +87,10 @@ export default function ExpensesPage({
           <h1 className="font-display text-2xl font-bold">Pengeluaran</h1>
           <p className="text-sm text-muted-foreground">Catat biaya operasional</p>
         </div>
-        <Button variant="accent" onClick={openNew}>+ Catat Pengeluaran</Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <GuideDialog variant="chip" initialCategory="reports" />
+          <Button variant="accent" onClick={openNew}>+ Catat Pengeluaran</Button>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

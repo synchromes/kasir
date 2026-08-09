@@ -5,6 +5,7 @@ import { formatDate, formatRupiah } from "@/lib/utils";
 import { Card, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui";
 import { TablePagination } from "@/components/table-pagination";
 import { PurchaseForm } from "@/components/purchase-form";
+import { GuideDialog } from "@/components/guide-dialog";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +42,10 @@ export default async function PurchasesPage({ searchParams }: { searchParams: Pr
           <h1 className="font-display text-2xl font-bold">Pembelian</h1>
           <p className="text-sm text-muted-foreground">Stok masuk dari supplier</p>
         </div>
-        <PurchaseForm suppliers={suppliers} products={products} />
+        <div className="flex items-center gap-2">
+          <PurchaseForm suppliers={suppliers} products={products} />
+          <GuideDialog variant="chip" initialCategory="purchases" />
+        </div>
       </div>
 
       <Card className="overflow-hidden">

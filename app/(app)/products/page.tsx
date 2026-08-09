@@ -6,6 +6,7 @@ import { Badge, Button, Input, Table, TableHeader, TableBody, TableRow, TableHea
 import { Package } from "lucide-react";
 import { ProductForm } from "@/components/product-form";
 import { DeleteProductButton, ToggleActiveButton } from "@/components/product-actions";
+import { GuideDialog } from "@/components/guide-dialog";
 import { TablePagination } from "@/components/table-pagination";
 import { Download } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -115,6 +116,7 @@ export default async function ProductsPage({
             Ekspor CSV
           </a>
           <ProductForm categories={categories} units={units} />
+          <GuideDialog variant="chip" initialCategory="products" />
         </div>
       </div>
 

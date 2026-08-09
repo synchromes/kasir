@@ -5,10 +5,11 @@ import { LogOut, ShoppingCart } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { BottomNav } from "@/components/bottom-nav";
 import { NotificationBell } from "@/components/notification-bell";
+import { GuideDialog } from "@/components/guide-dialog";
 
 // Header mobile: logo, avatar (ke Pengaturan), keluar. Bottom bar berisi
 // 4 tab utama; menu lainnya dijangkau dari grid beranda.
-export function MobileNav({ name }: { name: string }) {
+export function MobileNav({ name, userId }: { name: string; userId?: number }) {
   const initial = (name.trim().charAt(0) || "K").toUpperCase();
 
   return (
@@ -20,6 +21,7 @@ export function MobileNav({ name }: { name: string }) {
         </Link>
         <div className="flex items-center gap-1.5">
           <NotificationBell className="[&>button]:h-10 [&>button]:w-10" />
+          <GuideDialog userId={userId} />
           <Link
             href="/settings"
             aria-label="Pengaturan akun"

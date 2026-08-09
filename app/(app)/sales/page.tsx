@@ -7,6 +7,7 @@ import { formatRupiah, formatDate, formatNumber } from "@/lib/utils";
 import { Card, Table, TableHeader, TableBody, TableRow, TableHead, TableCell, Button } from "@/components/ui";
 import { TablePagination } from "@/components/table-pagination";
 import { SalesFilters } from "@/components/sales-filters";
+import { GuideDialog } from "@/components/guide-dialog";
 import { Eye, ReceiptText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -81,9 +82,12 @@ export default async function SalesPage({
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="font-display text-2xl font-bold">Transaksi</h1>
-        <p className="text-sm text-on-surface-variant">Riwayat penjualan toko.</p>
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="font-display text-2xl font-bold">Transaksi</h1>
+          <p className="text-sm text-on-surface-variant">Riwayat penjualan toko.</p>
+        </div>
+        <GuideDialog variant="chip" initialCategory="sales" />
       </div>
 
       <Card className="overflow-hidden">
