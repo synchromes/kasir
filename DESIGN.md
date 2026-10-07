@@ -14,7 +14,7 @@ Material 3 terang seed biru + pola super-app di mobile (hero saldo, grid menu 4 
 
 ## Palet terkunci (R-29)
 
-Inti: `primary #004AC6`, `secondary #006C49` (hijau laba/stok aman), `tertiary #784B00` (amber peringatan). Aksen: `destructive #BA1A1A` (bahaya/habis). Netral: surface `#FAF8FF`, teks `#131B2E`, varian `#434655`, outline `#666979`. Tombol aksi memakai hijau gelap `accent #00714D` agar teks putih lolos AA. Menu mobile memakai token biru untuk navigasi umum, hijau untuk inventaris, amber untuk pengeluaran; merah hanya untuk kondisi bahaya. Kartu produk terlaris memakai primary, bukan warna acak per peringkat. Gunakan token semantik, bukan hex hardcode baru. Palet lama di grafik dan halaman desktop perlu mengikuti pemetaan yang sama saat disentuh.
+Inti: `primary #004AC6`, `secondary #006C49` (hijau laba/stok aman), `tertiary #784B00` (amber peringatan). Aksen: `destructive #BA1A1A` (bahaya/habis). Netral: surface `#FAF8FF`, teks `#131B2E`, varian `#434655`, outline `#666979`. Tombol aksi memakai hijau gelap `accent #00714D` agar teks putih lolos AA. Menu mobile memakai palet tile ceria 7 warna (hash stabil per href) dan kartu Produk Terlaris memakai 6 warna solid berotasi — override pemilik: grid menu harus terlihat hidup/fun seperti super-app, bukan monokrom biru. Gunakan token semantik, bukan hex hardcode baru. Palet lama di grafik dan halaman desktop perlu mengikuti pemetaan yang sama saat disentuh.
 
 ## Tipografi (R-06)
 
@@ -44,4 +44,4 @@ Skala: input/button `rounded-lg`, kartu/dialog `rounded-xl`, status/badge `round
 - StatCard flagship: kartu Penjualan lebih besar karena itu angka yang dilihat tiap pagi.
 - Panah: hanya untuk aksi yang butuh isyarat arah, sisanya teks polos.
 - Badge: hanya status nyata (Habis/Menipis, hitungan panduan). `Hari Ini` dan `#1` duplikatif dihapus.
-- Override yang dipertahankan: tidak ada pola bernama yang dipertahankan. Bila nanti ada, catat di sini satu baris.
+- Override yang dipertahankan: tile menu mobile + kartu Produk Terlaris memakai palet ceria multi-warna (bukan token monokrom) atas permintaan pemilik.

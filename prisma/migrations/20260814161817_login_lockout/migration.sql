@@ -1,3 +1,3 @@
 -- AlterTable
-ALTER TABLE `user` ADD COLUMN `failedLoginAttempts` INTEGER NOT NULL DEFAULT 0,
+ALTER TABLE `User` ADD COLUMN `failedLoginAttempts` INTEGER NOT NULL DEFAULT 0,
     ADD COLUMN `lockUntil` DATETIME(3) NULL;

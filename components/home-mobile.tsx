@@ -17,23 +17,35 @@ import {
 import { navForRole } from "@/components/nav-items";
 import { cn, formatRupiah, formatNumber } from "@/lib/utils";
 
-// Biru untuk navigasi umum, hijau inventaris, amber pengeluaran.
+// Palet tile lembut Material (tanpa gradient) — satu warna per menu,
+// dipakai berurutan agar grid terlihat hidup seperti super-app.
 const tilePalette = [
-  { bg: "bg-primary-soft", text: "text-primary" },
-  { bg: "bg-secondary-container", text: "text-on-secondary-container" },
-  { bg: "bg-tertiary-soft", text: "text-tertiary" },
+  { bg: "bg-[#E8F0FF]", text: "text-[#0085FF]" },
+  { bg: "bg-[#E6FFFA]", text: "text-[#00C292]" },
+  { bg: "bg-[#E5E7FF]", text: "text-[#6B46C1]" },
+  { bg: "bg-[#FFF4E5]", text: "text-[#FF9800]" },
+  { bg: "bg-[#FFE5E5]", text: "text-[#FF4D4D]" },
+  { bg: "bg-[#F3E5F5]", text: "text-[#8E24AA]" },
+  { bg: "bg-[#E0F2F1]", text: "text-[#00897B]" },
 ];
 
 // Warna solid untuk kartu "Produk Terlaris" (gaya promo native).
-const topColors = ["bg-primary"];
+const topColors = [
+  "bg-[#00C292]",
+  "bg-[#0085FF]",
+  "bg-[#6B46C1]",
+  "bg-[#FF9800]",
+  "bg-[#FF4D4D]",
+  "bg-[#00897B]",
+];
 
 const noScrollbar = "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
-// Kelompok tetap sama saat menu difilter.
+// Warna tile stabil per menu (hash href) — tidak bergeser saat grid difilter.
 function tileColor(href: string) {
-  if (["/products", "/categories", "/units", "/suppliers", "/purchases"].includes(href)) return tilePalette[1];
-  if (href === "/expenses") return tilePalette[2];
-  return tilePalette[0];
+  let h = 0;
+  for (const c of href) h += c.charCodeAt(0);
+  return tilePalette[h % tilePalette.length];
 }
 
 export type HomeData = {
