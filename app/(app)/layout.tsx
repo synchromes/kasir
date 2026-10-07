@@ -32,7 +32,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               <Input
                 name="q"
                 placeholder="Cari produk, SKU..."
-                className="h-9 rounded-md border-outline-variant bg-surface-container-lowest pl-9 text-sm shadow-none"
+                className="h-11 rounded-md border-outline-variant bg-surface-container-lowest pl-9 text-sm shadow-none"
               />
             </form>
             <div className="flex items-center gap-1 text-on-surface-variant">

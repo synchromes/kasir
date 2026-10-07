@@ -31,7 +31,7 @@ function StockPill({ stock, minStock }: { stock: number; minStock: number }) {
     <span
       className={cn(
         "inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold",
-        st === "ok" && "bg-secondary-container/50 text-on-secondary-container",
+        st === "ok" && "bg-secondary-container text-on-secondary-container",
         st === "low" && "bg-tertiary-fixed text-on-tertiary-fixed",
         st === "out" && "bg-destructive-container text-on-destructive-container"
       )}
@@ -144,11 +144,11 @@ export default async function StockPage({ searchParams }: { searchParams: Promis
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="TOTAL PRODUK" value={formatNumber(products.length)} sub="produk tercatat" icon={Package} />
-        <StatCard title="TOTAL STOK" value={formatNumber(totalStock)} sub="unit gabungan semua produk" icon={Warehouse} />
-        <StatCard title="NILAI STOK" value={formatRupiah(stockValue)} sub="berdasarkan harga beli (HPP)" icon={CircleDollarSign} />
+        <StatCard title="Total produk" value={formatNumber(products.length)} sub="produk tercatat" icon={Package} />
+        <StatCard title="Total stok" value={formatNumber(totalStock)} sub="unit gabungan semua produk" icon={Warehouse} />
+        <StatCard title="Nilai stok" value={formatRupiah(stockValue)} sub="berdasarkan harga beli (HPP)" icon={CircleDollarSign} />
         <StatCard
-          title="STOK MENIPIS"
+          title="Stok menipis"
           value={formatNumber(lowCount)}
           sub={outCount > 0 ? `${formatNumber(outCount)} produk habis` : "butuh perhatian"}
           icon={AlertTriangle}
@@ -230,7 +230,7 @@ export default async function StockPage({ searchParams }: { searchParams: Promis
                     <span
                       className={cn(
                         "inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold",
-                        m.type === "IN" && "bg-secondary-container/50 text-on-secondary-container",
+                        m.type === "IN" && "bg-secondary-container text-on-secondary-container",
                         m.type === "OUT" && "bg-destructive-container text-on-destructive-container",
                         m.type !== "IN" && m.type !== "OUT" && "bg-tertiary-fixed text-on-tertiary-fixed"
                       )}

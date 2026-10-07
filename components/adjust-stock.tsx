@@ -57,10 +57,10 @@ export function AdjustStockDialog({ product }: { product: { id: number; name: st
             {showStockWarning && (
               <WarningNote>
                 {newStock <= 0
-                  ? `Stok baru 0 ${product.unit} — produk menjadi HABIS dan memicu notifikasi stok. Tambahkan stok bila tidak diinginkan.`
+                  ? `Stok baru 0 ${product.unit}. Produk menjadi HABIS dan memicu notifikasi stok. Tambahkan stok bila tidak diinginkan.`
                   : product.stock <= product.minStock
-                    ? `Stok baru ${newStock} ${product.unit} akan tetap berada di bawah minimum ${product.minStock} ${product.unit} — produk tetap di daftar &ldquo;Stok menipis&rdquo;.`
-                    : `Stok baru ${newStock} ${product.unit} akan berada di bawah minimum ${product.minStock} ${product.unit} — produk masuk daftar &ldquo;Stok menipis&rdquo; dan memicu notifikasi stok. Kurangi atau tambah stok bila tidak diinginkan.`}
+                    ? `Stok baru ${newStock} ${product.unit} akan tetap berada di bawah minimum ${product.minStock} ${product.unit}. Produk tetap di daftar &ldquo;Stok menipis&rdquo;.`
+                    : `Stok baru ${newStock} ${product.unit} akan berada di bawah minimum ${product.minStock} ${product.unit}. Produk masuk daftar &ldquo;Stok menipis&rdquo; dan memicu notifikasi stok. Kurangi atau tambah stok bila tidak diinginkan.`}
               </WarningNote>
             )}
             {error && <p className="text-sm text-destructive">{error}</p>}

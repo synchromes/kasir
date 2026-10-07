@@ -14,15 +14,50 @@ import {
 type Point = { label: string; total: number };
 
 export default function SalesChart() {
-  const [data, setData] = useState<Point[]>([]);
+  const [data, setData] = useState<Point[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/reports/sales-trend")
-      .then((r) => r.json())
-      .then((d: Point[]) => setData(d));
+    const ctrl = new AbortController();
+    fetch("/api/reports/sales-trend", { signal: ctrl.signal })
+      .then((r) => {
+        if (!r.ok) throw new Error("Gagal memuat data penjualan");
+        return r.json();
+      })
+      .then((d: unknown) => {
+        if (!Array.isArray(d)) throw new Error("Data tidak valid");
+        setData(d as Point[]);
+      })
+      .catch((e: unknown) => {
+        if ((e as Error)?.name === "AbortError") return;
+        setError("Gagal memuat grafik penjualan.");
+      });
+    return () => ctrl.abort();
   }, []);
 
-  if (!data.length) return <div className="h-64 animate-pulse bg-muted rounded-lg" />;
+  if (error) {
+    return (
+      <div className="flex h-36 items-center justify-center rounded-lg bg-muted/50 text-sm text-destructive">
+        {error}
+      </div>
+    );
+  }
+
+  if (data === null)
+    return (
+      <div className="flex h-64 items-center justify-center gap-2 rounded-lg bg-muted text-sm text-muted-foreground" role="status" aria-live="polite">
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-outline-variant border-t-primary" aria-hidden />
+        Memuat grafik penjualan...
+      </div>
+    );
+
+  if (!data.length) {
+    return (
+      <div className="flex h-36 items-center justify-center rounded-lg bg-muted/50 text-sm text-muted-foreground">
+        Belum ada data penjualan
+      </div>
+    );
+  }
 
   return (
     <div className="h-64">

@@ -125,15 +125,15 @@ export default async function ProductsPage({
         <form className="flex flex-col gap-3 md:flex-row md:items-end" action="/products">
           <input type="hidden" name="per" value={per} />
           <div className="flex-1">
-            <label className="mb-1 block text-xs font-semibold text-on-surface-variant">Cari Produk</label>
-            <Input name="q" defaultValue={q} placeholder="Cari berdasarkan nama atau SKU..." className="h-9 bg-surface" />
+            <label htmlFor="products-search" className="mb-1 block text-xs font-semibold text-on-surface-variant">Cari Produk</label>
+            <Input id="products-search" name="q" defaultValue={q} placeholder="Cari berdasarkan nama atau SKU..." className="h-11 bg-surface" />
           </div>
           <div className="w-full md:w-52">
-            <label className="mb-1 block text-xs font-semibold text-on-surface-variant">Kategori</label>
+            <label htmlFor="products-category" className="mb-1 block text-xs font-semibold text-on-surface-variant">Kategori</label>
             <select
-              name="category"
+              id="products-category" name="category"
               defaultValue={sp.category ?? ""}
-              className="h-9 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              className="h-11 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Semua Kategori</option>
               {categories.map((c) => (
@@ -142,11 +142,11 @@ export default async function ProductsPage({
             </select>
           </div>
           <div className="w-full md:w-52">
-            <label className="mb-1 block text-xs font-semibold text-on-surface-variant">Status Stok</label>
+            <label htmlFor="products-status" className="mb-1 block text-xs font-semibold text-on-surface-variant">Status Stok</label>
             <select
-              name="status"
+              id="products-status" name="status"
               defaultValue={status === "all" ? "" : status}
-              className="h-9 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              className="h-11 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Semua Status</option>
               <option value="ok">Tersedia</option>
@@ -154,7 +154,7 @@ export default async function ProductsPage({
               <option value="out">Habis</option>
             </select>
           </div>
-          <Button type="submit" className="h-9 px-6">Terapkan</Button>
+          <Button type="submit" className="h-11 px-6">Terapkan</Button>
         </form>
       </div>
 
@@ -206,7 +206,7 @@ export default async function ProductsPage({
                       <span
                         className={cn(
                           "inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold",
-                          st === "ok" && "bg-secondary-container/50 text-on-secondary-container",
+                           st === "ok" && "bg-secondary-container text-on-secondary-container",
                           st === "low" && "bg-tertiary-fixed text-on-tertiary-fixed",
                           st === "out" && "bg-destructive-container text-on-destructive-container"
                         )}
@@ -217,6 +217,7 @@ export default async function ProductsPage({
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
                         <ProductForm
+                          key={p.id}
                           categories={categories}
                           units={units}
                           product={{

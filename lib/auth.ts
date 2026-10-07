@@ -25,8 +25,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: { email: parsed.data.email.toLowerCase() },
         });
         if (!user || !user.active) return null;
+        // Lockout: setelah 5x gagal, akun terkunci dengan durasi eksponensial
+        // (15m → 30m → 1j → 2j → ... , maks 24 jam). Tidak menambah counter
+        // selama masih terkunci agar masa kunci tidak diperpanjang.
+        if (user.lockUntil && user.lockUntil > new Date()) return null;
         const valid = await bcrypt.compare(parsed.data.password, user.password);
-        if (!valid) return null;
+        if (!valid) {
+          const now = new Date();
+          const attempts = user.failedLoginAttempts + 1;
+          if (attempts >= 5) {
+            const lockMs = Math.min(15 * 60_000 * Math.pow(2, attempts - 5), 24 * 3_600_000);
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { failedLoginAttempts: attempts, lockUntil: new Date(now.getTime() + lockMs) },
+            });
+          } else {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { failedLoginAttempts: attempts },
+            });
+          }
+          return null;
+        }
+        // Login sukses: reset counter & kunci.
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { failedLoginAttempts: 0, lockUntil: null },
+        });
         return { id: String(user.id), email: user.email, name: user.name, role: user.role };
       },
     }),
@@ -38,6 +63,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.name = user.name;
       }
+      // Re-validasi ke DB setiap request: akun yang dinonaktifkan, dihapus,
+      // atau role-nya berubah langsung kehilangan sesi (token lama tidak lagi
+      // dipercaya; role/name di-stempel ulang dari sumber kebenaran).
+      const id = Number(token.id ?? token.sub);
+      if (!Number.isInteger(id)) return null;
+      const dbUser = await prisma.user.findUnique({
+        where: { id },
+        select: { active: true, role: true, name: true },
+      });
+      if (!dbUser || !dbUser.active) return null;
+      token.role = dbUser.role;
+      token.name = dbUser.name;
       return token;
     },
     async session({ session, token }) {

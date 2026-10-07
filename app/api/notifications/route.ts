@@ -49,10 +49,11 @@ export async function POST(req: Request) {
 
   const body = (await req.json().catch(() => null)) as { action?: string; id?: number } | null;
   const action = body?.action;
+  const id = Number(body?.id);
 
-  if (action === "read" && body?.id) {
+  if (action === "read" && Number.isInteger(id) && id > 0) {
     // Hanya notifikasi milik akun ini yang boleh ditandai.
-    await prisma.notification.updateMany({ where: { id: body.id, ownerId }, data: { read: true } });
+    await prisma.notification.updateMany({ where: { id, ownerId }, data: { read: true } });
   } else if (action === "readAll") {
     await prisma.notification.updateMany({ where: { ownerId, read: false }, data: { read: true } });
   } else {

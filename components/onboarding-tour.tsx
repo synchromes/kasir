@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronLeft, ChevronRight, Sparkles, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Compass, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { firstVisible } from "@/lib/dom";
 import { OPEN_GUIDE_EVENT, RESTART_TOUR_EVENT } from "@/components/guide-dialog";
@@ -13,7 +13,7 @@ const BASE_STEPS: TourStep[] = [
   {
     target: "kasir",
     title: "Mulai dari Kasir",
-    desc: "Tombol Kasir membuka halaman penjualan baru — pilih produk, atur diskon, lalu terima pembayaran Tunai, QRIS, atau Transfer di sini.",
+    desc: "Tombol Kasir membuka halaman penjualan baru. Pilih produk, atur diskon, lalu terima pembayaran Tunai, QRIS, atau Transfer di sini.",
   },
   {
     target: "products",
@@ -28,11 +28,11 @@ const BASE_STEPS: TourStep[] = [
 ];
 
 // Langkah ekstra khusus ADMIN: serah-terima ke dialog Panduan, kategori
-// \"Pengguna (Admin)\" — menu pengguna memang hanya tampil untuk akun admin.
+// \"Pengguna (Admin)\", menu pengguna memang hanya tampil untuk akun admin.
 const ADMIN_STEP: TourStep = {
   target: "guide",
   title: "Panduan Pengguna (Admin)",
-  desc: "Menu Pengguna hanya tersedia untuk admin — di sana Anda bisa menambah akun kasir & admin baru. Buka panduan untuk langkah lengkapnya.",
+  desc: "Menu Pengguna hanya tersedia untuk admin, di sana Anda bisa menambah akun kasir & admin baru. Buka panduan untuk langkah lengkapnya.",
   openGuide: "users",
 };
 
@@ -133,7 +133,7 @@ export function OnboardingTour({ userId, isAdmin = false }: { userId: number; is
       });
     };
     // setTimeout (bukan rAF) agar andal bahkan di tab/webview yang sedang
-    // tidak aktif — dua kali sebagai pengaman setelah scrollIntoView.
+    // tidak aktif, dua kali sebagai pengaman setelah scrollIntoView.
     const t1 = window.setTimeout(measure, 60);
     const t2 = window.setTimeout(measure, 300);
     const onScroll = () => measure();
@@ -147,7 +147,7 @@ export function OnboardingTour({ userId, isAdmin = false }: { userId: number; is
     };
   }, [active, findVisible]);
 
-  // Navigasi maju/mundur — lewati step yang targetnya tidak tersedia.
+  // Navigasi maju/mundur, lewati step yang targetnya tidak tersedia.
   function handleNext() {
     for (let i = stepIdx + 1; i < steps.length; i++) {
       if (findVisible(steps[i].target)) {
@@ -220,7 +220,7 @@ export function OnboardingTour({ userId, isAdmin = false }: { userId: number; is
   }, [active, finish]);
 
   // Fokus tombol utama (Berikutnya/Selesai/Buka Panduan) setiap langkah
-  // berganti — baru setelah tooltip terposisikan (visibility:hidden tidak bisa
+  // berganti, baru setelah tooltip terposisikan (visibility:hidden tidak bisa
   // menerima fokus).
   React.useEffect(() => {
     if (active && tipPos) primaryBtnRef.current?.focus();
@@ -268,13 +268,13 @@ export function OnboardingTour({ userId, isAdmin = false }: { userId: number; is
       >
         <div className="flex items-start justify-between gap-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-fixed-dim/50 text-primary">
-            <Sparkles className="h-5 w-5" />
+            <Compass className="h-5 w-5" />
           </span>
           <button
             type="button"
             onClick={finish}
             aria-label="Tutup panduan"
-            className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
+            className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
           >
             <X className="h-4 w-4" />
           </button>
@@ -302,7 +302,7 @@ export function OnboardingTour({ userId, isAdmin = false }: { userId: number; is
           <button
             type="button"
             onClick={finish}
-            className="cursor-pointer text-xs font-semibold text-on-surface-variant transition-colors hover:text-on-surface"
+            className="inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 px-3 text-xs font-semibold text-on-surface-variant transition-colors hover:text-on-surface"
           >
             Lewati
           </button>
@@ -312,7 +312,7 @@ export function OnboardingTour({ userId, isAdmin = false }: { userId: number; is
                 type="button"
                 onClick={handlePrev}
                 aria-label="Sebelumnya"
-                className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-outline-variant text-on-surface transition-colors hover:bg-surface-container-high"
+                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-outline-variant text-on-surface transition-colors hover:bg-surface-container-high"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -321,7 +321,7 @@ export function OnboardingTour({ userId, isAdmin = false }: { userId: number; is
               ref={primaryBtnRef}
               type="button"
               onClick={handlePrimary}
-              className="inline-flex h-9 cursor-pointer items-center gap-1 rounded-full bg-primary px-4 text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90 active:scale-95"
+              className="inline-flex h-11 cursor-pointer items-center gap-1 rounded-full bg-primary px-4 text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90 active:scale-95"
             >
               {primaryLabel}
               {!isHandoff && !isLast && <ChevronRight className="h-4 w-4" />}

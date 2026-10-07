@@ -46,7 +46,7 @@ export function ProductForm({
   units,
   product,
   triggerLabel,
-  triggerVariant = "default",
+  triggerVariant = "accent",
   triggerSize = "default",
 }: {
   categories: Category[];
@@ -154,15 +154,14 @@ export function ProductForm({
           <div className="space-y-3">
             {/* Foto produk */}
             <div className="space-y-1.5">
-              <Label>Foto Produk</Label>
-              <div
+               <Label htmlFor="product-image">Foto Produk</Label>
+               <div
                 onDragOver={(e) => {
                   e.preventDefault();
                   setDragOver(true);
                 }}
                 onDragLeave={() => setDragOver(false)}
                 onDrop={handleDrop}
-                onClick={() => fileRef.current?.click()}
                 className={cn(
                   "relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-6 text-center transition-colors",
                   dragOver
@@ -170,7 +169,8 @@ export function ProductForm({
                     : "border-outline-variant bg-surface-container-lowest hover:border-primary/60 hover:bg-surface-container-low"
                 )}
               >
-                <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                 <input id="product-image" ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                 <button type="button" onClick={() => fileRef.current?.click()} aria-label={image ? "Ganti foto produk" : "Upload foto produk"} className="absolute inset-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
                 {image ? (
                   <>
                     {/* eslint-disable-next-line @next/next/no-img-element -- data URL base64, tidak bisa dioptimasi next/image */}
@@ -194,7 +194,7 @@ export function ProductForm({
                       setImage(null);
                     }}
                     aria-label="Hapus foto"
-                    className="absolute -right-2 -top-2 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-destructive text-on-error shadow transition-transform hover:scale-110"
+                     className="absolute -right-2 -top-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow transition-transform hover:scale-110"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -219,9 +219,9 @@ export function ProductForm({
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label>Kategori</Label>
-                <Select value={form.categoryId || undefined} onValueChange={(v) => set("categoryId", v)}>
-                  <SelectTrigger><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
+                 <Label htmlFor="product-category">Kategori</Label>
+                 <Select value={form.categoryId || undefined} onValueChange={(v) => set("categoryId", v)}>
+                   <SelectTrigger id="product-category"><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
                   <SelectContent>
                     {categories.map((c) => (
                       <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
@@ -230,9 +230,9 @@ export function ProductForm({
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label>Satuan</Label>
-                <Select value={form.unitId || undefined} onValueChange={(v) => set("unitId", v)}>
-                  <SelectTrigger><SelectValue placeholder="Pilih satuan" /></SelectTrigger>
+                 <Label htmlFor="product-unit">Satuan</Label>
+                 <Select value={form.unitId || undefined} onValueChange={(v) => set("unitId", v)}>
+                   <SelectTrigger id="product-unit"><SelectValue placeholder="Pilih satuan" /></SelectTrigger>
                   <SelectContent>
                     {units.map((u) => (
                       <SelectItem key={u.id} value={String(u.id)}>{u.name}</SelectItem>

@@ -27,11 +27,11 @@
   --on-primary-container: #eeefff;
   --secondary: #006c49;
   --secondary-foreground: #ffffff;
-  --secondary-container: #6cf8bb;
+  --secondary-container: #e6fffa;
   --on-secondary-container: #00714d;
   --muted: #eaedff;
   --muted-foreground: #434655;
-  --accent: #059669;
+  --accent: #00714d;
   --accent-foreground: #ffffff;
   --destructive: #ba1a1a;
   --destructive-foreground: #ffffff;
@@ -50,7 +50,7 @@
   --surface-container: #eaedff;
   --surface-container-high: #e2e7ff;
   --surface-container-highest: #dae2fd;
-  --outline: #737686;
+  --outline: #666979;
   --outline-variant: #c3c6d7;
   --inverse-surface: #283044;
   --inverse-on-surface: #eef0ff;
@@ -63,6 +63,15 @@
   --tertiary-fixed-dim: #ffb95f;
   --surface-tint: #0053db;
   --primary-fixed-dim: #b4c5ff;
+  --on-primary-fixed: #131b2e;
+  --primary-soft: #e8f0ff;
+  --tertiary-soft: #fff4e5;
+  --chart-1: #004ac6;
+  --chart-2: #00714d;
+  --chart-3: #784b00;
+  --chart-4: #434655;
+  --chart-5: #526b20;
+  --chart-6: #006579;
 
   /* Constant hero/brand colors */
   --brand: #2563eb;
@@ -116,6 +125,9 @@
   --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
   --color-surface-tint: var(--surface-tint);
   --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-primary-soft: var(--primary-soft);
+  --color-tertiary-soft: var(--tertiary-soft);
   --color-brand: var(--brand);
   --color-on-brand: var(--on-brand);
   --font-sans: var(--font-inter);

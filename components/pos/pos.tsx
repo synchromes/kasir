@@ -6,7 +6,7 @@ import { Search, Plus, Minus, Trash2, Package, Coins, ArrowRight, Banknote, QrCo
 import { checkout } from "@/lib/actions";
 import { validateQRIS } from "@/lib/qris";
 import { resizeImageToDataUrl, PROOF_IMAGE_MAX_DIM, PROOF_IMAGE_QUALITY } from "@/lib/image";
-import { formatRupiah, cn } from "@/lib/utils";
+import { formatRupiah, formatNumber, cn } from "@/lib/utils";
 import { Button, Input, Label, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui";
 import { CART_KEY, PENDING_KEY } from "@/lib/storage";
 
@@ -43,6 +43,13 @@ type Setting = {
 };
 type CartLine = { productId: number; name: string; price: number; qty: number; stock: number; unit: string };
 
+// Kunci idempotensi: dipakai server untuk mencegah sale ganda saat retry
+// (mis. response hilang karena timeout lalu kasir menekan bayar lagi).
+function genKey() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  return `pos-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+}
+
 const methods = [
   { id: "CASH", label: "Tunai", icon: Banknote },
   { id: "QRIS", label: "QRIS", icon: QrCode },
@@ -73,6 +80,14 @@ export default function POSClient({
 
   const router = useRouter();
 
+  // Kunci idempotensi transaksi. Harus STABIL selama retry keranjang yang sama
+  // (agar tidak menciptakan sale ganda), tetapi BERUBAH saat isi keranjang
+  // berubah (transaksi baru). Dibaca lewat microtask karena lint set-state-in-effect.
+  const [saleKey, setSaleKey] = React.useState(() => genKey());
+  React.useEffect(() => {
+    Promise.resolve().then(() => setSaleKey(genKey()));
+  }, [cart]);
+
   // Foto bukti pembayaran (Transfer)
   const [proofImage, setProofImage] = React.useState<string | null>(null);
   const [proofError, setProofError] = React.useState<string | null>(null);
@@ -100,19 +115,19 @@ export default function POSClient({
   const maxPoints = selectedCustomer?.isMember ? Math.min(selectedCustomer.points, Math.floor(totalBeforePoints / 100)) : 0;
   const pointsToUse = usePoints ? maxPoints : 0;
   const total = Math.max(totalBeforePoints - pointsToUse, 0);
-  const paidNum = Number(paid) || 0;
+  const paidNum = Number(paid.replace(/\D/g, "")) || 0;
   const change = paidNum - total;
   const pointsEarned = Math.floor(total / 10000) * setting.pointsPer10k;
 
   // QRIS: QR dinamis berukuran besar ditampilkan di halaman Konfirmasi
-  // Pembayaran — di sini cukup validasi konfigurasi QRIS statis toko.
+  // Pembayaran, di sini cukup validasi konfigurasi QRIS statis toko.
   const showQris = paymentMethod === "QRIS" && cart.length > 0 && total > 0;
   const qrisStaticTrim = setting.qrisStatic?.trim() ?? "";
   const qrisValidation = qrisStaticTrim ? validateQRIS(qrisStaticTrim) : null;
   const qrisConfigError =
     showQris
       ? !qrisStaticTrim
-        ? "QRIS statis belum diatur — buka menu Pengaturan lalu upload/tempel string QRIS statis."
+        ? "QRIS statis belum diatur, buka menu Pengaturan lalu upload/tempel string QRIS statis."
         : qrisValidation && !qrisValidation.valid
           ? "QRIS statis tidak valid: " + qrisValidation.errors[0]
           : null
@@ -127,10 +142,9 @@ export default function POSClient({
     Promise.resolve().then(() => {
       if (!alive) return;
       try {
-        // Transaksi pending yang ditinggalkan (mis. kasir tekan browser-back
-        // dari halaman konfirmasi) tidak boleh muncul lagi — keranjang tetap
-        // tersimpan terpisah di CART_KEY, jadi tidak ada data yang hilang.
-        sessionStorage.removeItem(PENDING_KEY);
+        // Keranjang disimpan terpisah (CART_KEY). Pending QRIS TIDAK dihapus
+        // di sini: menghapusnya di mount membuat kasir kehilangan transaksi
+        // berjalan saat menekan browser-back dari konfirmasi lalu forward lagi.
         const raw = sessionStorage.getItem(CART_KEY);
         if (raw) {
           const d = JSON.parse(raw);
@@ -146,7 +160,7 @@ export default function POSClient({
         /* abaikan data korup */
       }
       // Baru izinkan efek penyimpanan menulis storage setelah percobaan
-      // restore selesai — mencegah keranjang kosong menimpa data saat mount.
+      // restore selesai, mencegah keranjang kosong menimpa data saat mount.
       restoredRef.current = true;
     });
     return () => {
@@ -227,20 +241,31 @@ export default function POSClient({
   };
 
   async function handleCheckout() {
+    if (loading) return;
     setError(null);
     setLoading(true);
-    const res = await checkout({
-      items: cart,
-      discountType,
-      discountValue,
-      paid: paymentMethod === "CASH" ? paidNum || total : total,
-      paymentMethod,
-      customerId: selectedCustomer ? Number(selectedCustomer.id) : null,
-      usePoints: pointsToUse > 0,
-      paymentProof: proofImage,
-    });
-    if (res?.error) {
-      setError(res.error);
+    try {
+      const res = await checkout({
+        items: cart,
+        discountType,
+        discountValue,
+        paid: paymentMethod === "CASH" ? paidNum || total : total,
+        paymentMethod,
+        customerId: selectedCustomer ? Number(selectedCustomer.id) : null,
+        usePoints: pointsToUse > 0,
+        paymentProof: proofImage,
+        saleKey,
+        pointsUsed: pointsToUse,
+      });
+      if (res?.error) {
+        setError(res.error);
+        return;
+      }
+      // Sukses → server melakukan redirect ke halaman sukses.
+    } catch {
+      // Jangan biarkan tombol "Bayar" terkunci selamanya saat request gagal.
+      setError("Gagal memproses pembayaran. Periksa koneksi lalu coba lagi.");
+    } finally {
       setLoading(false);
     }
   }
@@ -279,9 +304,9 @@ export default function POSClient({
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4 lg:h-[calc(100vh-8rem)] lg:grid-cols-[1fr_400px]">
+    <div className="grid grid-cols-1 gap-4 lg:h-[calc(100vh-8rem)] lg:grid-cols-[minmax(0,1fr)_400px]">
       {/* Left: products */}
-      <div className="flex min-h-0 flex-col gap-3">
+      <div className="flex min-h-0 min-w-0 flex-col gap-3">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
           <Input
@@ -300,7 +325,7 @@ export default function POSClient({
           <button
             onClick={() => setCategory("all")}
             className={cn(
-              "shrink-0 cursor-pointer whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
+              "shrink-0 inline-flex min-h-[44px] cursor-pointer items-center whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
               category === "all"
                 ? "bg-primary-fixed-dim text-on-primary-fixed"
                 : "border border-outline-variant text-on-surface-variant hover:bg-surface-container-low"
@@ -313,7 +338,7 @@ export default function POSClient({
               key={c}
               onClick={() => setCategory(c)}
               className={cn(
-                "shrink-0 cursor-pointer whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
+                "shrink-0 inline-flex min-h-[44px] cursor-pointer items-center whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
                 category === c
                   ? "bg-primary-fixed-dim text-on-primary-fixed"
                   : "border border-outline-variant text-on-surface-variant hover:bg-surface-container-low"
@@ -369,8 +394,10 @@ export default function POSClient({
         </div>
       </div>
 
-      {/* Right: cart & checkout */}
-      <div className="flex min-h-0 flex-col gap-4">
+      {/* Right: cart & checkout. Kolom yang scroll di desktop; daftar item
+          setinggi aslinya (tidak terjepit kartu total), kartu total menempel
+          di bawah (sticky) agar tombol Bayar selalu terlihat. */}
+      <div className="flex min-h-0 min-w-0 flex-col gap-4 lg:overflow-y-auto">
         {/* Order header */}
         <div className="shrink-0 rounded-xl border border-outline-variant bg-card p-4 shadow-sm">
           <div className="mb-3 flex items-center justify-between">
@@ -380,7 +407,7 @@ export default function POSClient({
           <div className="relative">
             <UserRound className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
             <Select value={customerId} onValueChange={changeCustomer}>
-              <SelectTrigger className="h-10 rounded-md border-outline-variant bg-surface pl-9 text-sm">
+              <SelectTrigger className="h-11 rounded-md border-outline-variant bg-surface pl-9 text-sm">
                 <SelectValue placeholder="Tambah Pelanggan (Opsional)" />
               </SelectTrigger>
               <SelectContent>
@@ -403,7 +430,7 @@ export default function POSClient({
                   <button
                     onClick={() => setUsePoints(!usePoints)}
                     className={cn(
-                      "cursor-pointer text-xs font-semibold",
+                      "min-h-11 min-w-11 cursor-pointer px-2 text-xs font-semibold",
                       usePoints ? "text-accent" : "text-on-surface-variant hover:text-on-surface"
                     )}
                   >
@@ -416,28 +443,30 @@ export default function POSClient({
           )}
         </div>
 
-        {/* Cart items */}
-        <div className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-outline-variant bg-card p-3 shadow-sm">
+        {/* Cart items: tinggi natural mengikuti isi, tidak di-scroll paksa di
+            dalam kotak kecil. Pengaman clip horizontal agar tidak ada
+            scroll/sobekan ke samping. */}
+        <div className="min-h-[180px] w-full shrink-0 overflow-x-clip rounded-xl border border-outline-variant bg-card p-3 shadow-sm">
           {cart.length === 0 && (
             <p className="py-10 text-center text-sm text-on-surface-variant">Keranjang kosong</p>
           )}
           <ul className="space-y-2">
             {cart.map((l) => (
-              <li key={l.productId} className="rounded-lg border border-outline-variant bg-surface p-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-semibold">{l.name}</div>
-                    <div className="text-xs text-on-surface-variant">
+              <li key={l.productId} className="min-w-0 rounded-lg border border-outline-variant bg-surface p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold leading-snug break-words">{l.name}</div>
+                    <div className="mt-0.5 text-xs text-on-surface-variant">
                       {formatRupiah(l.price)} × {l.qty}
                     </div>
                   </div>
-                  <div className="shrink-0 font-mono text-sm font-semibold">{formatRupiah(l.price * l.qty)}</div>
+                  <div className="shrink-0 text-right font-mono text-sm font-semibold">{formatRupiah(l.price * l.qty)}</div>
                 </div>
-                <div className="mt-2.5 flex items-center gap-3">
+                <div className="mt-2.5 flex min-w-0 flex-wrap items-center gap-3">
                   <button
                     onClick={() => changeQty(l.productId, -1)}
                     aria-label="Kurangi"
-                    className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-outline-variant text-on-surface-variant transition-colors hover:bg-surface-container-low"
+                    className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-outline-variant text-on-surface-variant transition-colors hover:bg-surface-container-low"
                   >
                     <Minus className="h-3.5 w-3.5" />
                   </button>
@@ -445,14 +474,14 @@ export default function POSClient({
                   <button
                     onClick={() => changeQty(l.productId, 1)}
                     aria-label="Tambah"
-                    className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-outline-variant text-on-surface-variant transition-colors hover:bg-surface-container-low"
+                    className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-outline-variant text-on-surface-variant transition-colors hover:bg-surface-container-low"
                   >
                     <Plus className="h-3.5 w-3.5" />
                   </button>
                   <button
                     onClick={() => removeLine(l.productId)}
                     aria-label="Hapus"
-                    className="ml-auto flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-destructive transition-colors hover:bg-destructive-container"
+                    className="ml-auto flex min-h-[44px] shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-destructive transition-colors hover:bg-destructive-container"
                   >
                     <Trash2 className="h-3.5 w-3.5" /> Hapus
                   </button>
@@ -462,7 +491,8 @@ export default function POSClient({
           </ul>
         </div>
 
-        {/* Totals & payment */}
+        {/* Totals & payment: alur normal setelah daftar, tidak sticky agar
+            tidak pernah menindih item */}
         <div className="shrink-0 rounded-xl border border-outline-variant bg-card p-4 shadow-sm">
           <div className="mb-4 space-y-1.5 text-sm">
             <div className="mb-2 flex items-center justify-between gap-2">
@@ -476,7 +506,7 @@ export default function POSClient({
                     onClick={() => setDiscountType("FIXED")}
                     aria-pressed={discountType === "FIXED"}
                     className={cn(
-                      "cursor-pointer px-2 py-1 text-xs font-semibold transition-colors",
+                      "min-h-[44px] cursor-pointer px-3 py-1 text-xs font-semibold transition-colors",
                       discountType === "FIXED"
                         ? "bg-primary-fixed-dim text-on-primary-fixed"
                         : "bg-surface text-on-surface-variant hover:bg-surface-container-low"
@@ -489,7 +519,7 @@ export default function POSClient({
                     onClick={() => setDiscountType("PERCENT")}
                     aria-pressed={discountType === "PERCENT"}
                     className={cn(
-                      "cursor-pointer border-l border-outline-variant px-2 py-1 text-xs font-semibold transition-colors",
+                      "min-h-[44px] cursor-pointer border-l border-outline-variant px-3 py-1 text-xs font-semibold transition-colors",
                       discountType === "PERCENT"
                         ? "bg-primary-fixed-dim text-on-primary-fixed"
                         : "bg-surface text-on-surface-variant hover:bg-surface-container-low"
@@ -514,7 +544,7 @@ export default function POSClient({
                     )
                   }
                   placeholder="0"
-                  className="h-8 w-28 rounded-md border-outline-variant bg-surface pr-8 text-right text-sm"
+                  className="h-11 w-32 rounded-md border-outline-variant bg-surface pr-8 text-right text-sm"
                 />
                 <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-on-surface-variant">
                   {discountType === "PERCENT" ? "%" : "Rp"}
@@ -556,7 +586,7 @@ export default function POSClient({
                 key={m.id}
                 onClick={() => {
                   setPaymentMethod(m.id);
-                  // Bukti hanya relevan untuk Transfer — bersihkan saat pindah metode lain
+                  // Bukti hanya relevan untuk Transfer, bersihkan saat pindah metode lain
                   if (m.id !== "TRANSFER") setProofImage(null);
                 }}
                 className={cn(
@@ -579,17 +609,25 @@ export default function POSClient({
                   <Label htmlFor="paid" className="sr-only">Dibayar</Label>
                   <Input
                     id="paid"
-                    type="number"
-                    value={paid}
-                    onChange={(e) => setPaid(e.target.value)}
-                    placeholder="Masukkan nominal tunai"
-                    className="h-10 rounded-md border-outline-variant bg-surface"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    value={paid ? formatNumber(paidNum) : ""}
+                    onChange={(e) => setPaid(e.target.value.replace(/\D/g, ""))}
+                    placeholder="Masukkan nominal tunai, contoh 50.000"
+                    aria-describedby={paid ? "paid-preview" : undefined}
+                    className="h-11 rounded-md border-outline-variant bg-surface"
                   />
                 </div>
-                <Button variant="outline" size="sm" onClick={() => setPaid(String(Math.ceil(total / 1000) * 1000))} className="h-10">
+                <Button variant="outline" size="sm" onClick={() => setPaid(String(Math.ceil(total / 1000) * 1000))} className="px-4">
                   Pas
                 </Button>
               </div>
+              {paid && (
+                <p id="paid-preview" aria-live="polite" className="text-xs text-on-surface-variant">
+                  Nominal dibayar: <span className="font-mono font-semibold text-on-surface">{formatRupiah(paidNum)}</span>
+                </p>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-on-surface-variant">Kembalian</span>
                 <span className={cn("font-mono font-semibold", change < 0 ? "text-destructive" : "text-accent")}>
@@ -637,7 +675,7 @@ export default function POSClient({
                       setProofImage(null);
                       if (proofRef.current) proofRef.current.value = "";
                     }}
-                    className="flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-destructive transition-colors hover:bg-destructive-container"
+                    className="flex min-h-[44px] cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-destructive transition-colors hover:bg-destructive-container"
                   >
                     <X className="h-3.5 w-3.5" /> Hapus
                   </button>
@@ -648,7 +686,7 @@ export default function POSClient({
                   onClick={() => proofRef.current?.click()}
                   className="flex w-full cursor-pointer flex-col items-center gap-1 rounded-lg border border-dashed border-outline-variant py-4 text-xs text-on-surface-variant transition-colors hover:border-primary/60 hover:bg-surface-container-low"
                 >
-                  <UploadCloud className="h-5 w-5" /> Foto bukti transfer — klik untuk pilih
+                  <UploadCloud className="h-5 w-5" /> Foto bukti transfer, klik untuk pilih
                 </button>
               )}
               {proofError && <p className="mt-1 text-xs text-destructive">{proofError}</p>}

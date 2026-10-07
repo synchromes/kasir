@@ -61,8 +61,15 @@ export async function syncLowStockAlerts(ownerId: number, productIds?: number[])
   // alert lama tetap tampil sampai ditandai dibaca/dihapus manual.
   if (!(await isTypeEnabled(ownerId, "STOCK"))) return;
 
+    // Produk di bawah minimum (dibatasi ke productIds bila diberikan — polling
+  // GET /api/notifications tidak membatasi, memanggil sync penuh).
   const low = await prisma.product.findMany({
-    where: { ownerId, active: true, stock: { lte: prisma.product.fields.minStock } },
+    where: {
+      ownerId,
+      active: true,
+      stock: { lte: prisma.product.fields.minStock },
+      ...(productIds ? { id: { in: productIds } } : {}),
+    },
     select: { id: true, name: true, stock: true },
   });
   const lowIds = new Set(low.map((p) => p.id));

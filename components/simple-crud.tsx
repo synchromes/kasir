@@ -112,7 +112,8 @@ export function SimpleCrud({
         : "Data akan dihapus permanen dan tidak bisa dikembalikan.",
     });
     if (!ok) return;
-    await onDelete(id);
+    const res = (await onDelete(id)) as { error?: string } | null | undefined;
+    if (res?.error) { setError(res.error); return; }
     router.refresh();
   }
 

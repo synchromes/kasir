@@ -20,9 +20,9 @@ export const NotificationTypeIcon: Record<NotificationType, LucideIcon> = {
 };
 
 export const NotificationTypeStyle: Record<NotificationType, string> = {
-  STOCK: "bg-[#FFF4E5] text-[#FF9800]",
-  SALE: "bg-[#E8F0FF] text-[#0085FF]",
-  PURCHASE: "bg-[#E6FFFA] text-[#00C292]",
+  STOCK: "bg-tertiary-soft text-tertiary",
+  SALE: "bg-primary-soft text-primary",
+  PURCHASE: "bg-secondary-container text-on-secondary-container",
   SYSTEM: "bg-surface-container-high text-on-surface-variant",
 };
 

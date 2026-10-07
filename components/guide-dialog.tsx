@@ -90,7 +90,7 @@ const GUIDE: GuideCategory[] = [
     id: "dashboard",
     label: "Dashboard",
     icon: LayoutDashboard,
-    chipClass: "bg-primary-fixed-dim/40 text-primary",
+    chipClass: "bg-primary-soft text-primary",
     items: [
       {
         title: "Menjelajahi aplikasi",
@@ -98,7 +98,7 @@ const GUIDE: GuideCategory[] = [
         steps: [
           "Masuk dengan akun toko Anda (1 akun = 1 toko).",
           "Di desktop, gunakan menu sidebar di kiri untuk berpindah halaman.",
-          "Di HP, gunakan tab bawah (Beranda, Kasir, Transaksi, Laporan) — menu lainnya ada di grid halaman beranda.",
+          "Di HP, gunakan tab bawah (Beranda, Kasir, Transaksi, Laporan), menu lainnya ada di grid halaman beranda.",
           "Menu Pengguna hanya tampil untuk akun admin.",
         ],
         tip: "Kotak pencarian di header desktop mencari produk & SKU dengan cepat.",
@@ -109,7 +109,7 @@ const GUIDE: GuideCategory[] = [
     id: "pos",
     label: "Kasir (POS)",
     icon: ShoppingCart,
-    chipClass: "bg-secondary-container/50 text-on-secondary-container",
+    chipClass: "bg-primary-soft text-primary",
     items: [
       {
         title: "Menjual produk",
@@ -126,7 +126,7 @@ const GUIDE: GuideCategory[] = [
         desc: "Diskon bisa berupa nominal (Rp) atau persen (%).",
         steps: [
           "Di halaman pembayaran, pilih jenis diskon: nominal atau persen.",
-          "Isi nilai diskon — total otomatis dihitung ulang.",
+          "Isi nilai diskon, total otomatis dihitung ulang.",
           "Diskon dihitung ulang di server, jadi tidak bisa melebihi total.",
         ],
       },
@@ -135,7 +135,7 @@ const GUIDE: GuideCategory[] = [
         desc: "Tunai, QRIS dinamis, atau transfer bank.",
         steps: [
           "Tunai: masukkan nominal dibayar, kembalian dihitung otomatis.",
-          "QRIS: klik Lanjutkan Pembayaran — QRIS dinamis berisi nominal transaksi muncul besar untuk dipindai pelanggan.",
+          "QRIS: klik Lanjutkan Pembayaran, QRIS dinamis berisi nominal transaksi muncul besar untuk dipindai pelanggan.",
           "Transfer: pilih metode Transfer, lampirkan foto bukti transfer.",
         ],
         tip: "QRIS & Transfer membutuhkan foto bukti pembayaran agar transaksi bisa diverifikasi.",
@@ -164,7 +164,7 @@ const GUIDE: GuideCategory[] = [
     id: "products",
     label: "Produk & Inventaris",
     icon: Package,
-    chipClass: "bg-tertiary-fixed text-on-tertiary-fixed",
+    chipClass: "bg-secondary-container text-on-secondary-container",
     items: [
       {
         title: "Menambah produk",
@@ -183,7 +183,7 @@ const GUIDE: GuideCategory[] = [
           "Klik Edit pada baris produk untuk mengubah data.",
           "Gunakan tombol daya untuk menonaktifkan/mengaktifkan produk.",
           "Produk nonaktif tidak muncul di kasir, tapi riwayatnya tetap aman.",
-          "Cek chip peringatan di tombol hapus — produk berriwayat transaksi diblokir dari penghapusan.",
+          "Cek chip peringatan di tombol hapus, produk berriwayat transaksi diblokir dari penghapusan.",
         ],
       },
       {
@@ -200,13 +200,13 @@ const GUIDE: GuideCategory[] = [
     id: "stock",
     label: "Stok",
     icon: Warehouse,
-    chipClass: "bg-tertiary-fixed text-on-tertiary-fixed",
+    chipClass: "bg-secondary-container text-on-secondary-container",
     items: [
       {
         title: "Memantau status stok",
         desc: "Status Tersedia, Stok Rendah, dan Habis.",
         steps: [
-          "Buka menu Stok — kartu statistik menampilkan total produk, total stok, nilai stok, dan produk menipis.",
+          "Buka menu Stok, kartu statistik menampilkan total produk, total stok, nilai stok, dan produk menipis.",
           "Pill status di tabel menandai produk yang perlu perhatian.",
         ],
       },
@@ -233,7 +233,7 @@ const GUIDE: GuideCategory[] = [
     id: "purchases",
     label: "Pembelian & Supplier",
     icon: ShoppingBag,
-    chipClass: "bg-[#FCE4EC] text-[#D81B60]",
+    chipClass: "bg-secondary-container text-on-secondary-container",
     items: [
       {
         title: "Mencatat pembelian",
@@ -242,7 +242,7 @@ const GUIDE: GuideCategory[] = [
           "Buka menu Pembelian → + Pembelian Baru.",
           "Pilih supplier (atau kosongkan untuk pembelian umum).",
           "Tambah item: produk, qty, dan harga beli.",
-          "Simpan — stok bertambah & harga beli terbaru dipakai untuk nilai stok.",
+          "Simpan, stok bertambah & harga beli terbaru dipakai untuk nilai stok.",
         ],
         tip: "Peringatan muncul jika supplier terpilih belum punya kontak (telepon/alamat).",
       },
@@ -261,7 +261,7 @@ const GUIDE: GuideCategory[] = [
     id: "customers",
     label: "Pelanggan",
     icon: Users,
-    chipClass: "bg-[#E0F2F1] text-teal-600",
+    chipClass: "bg-primary-soft text-primary",
     items: [
       {
         title: "Member & poin",
@@ -278,7 +278,7 @@ const GUIDE: GuideCategory[] = [
     id: "categories",
     label: "Kategori & Satuan",
     icon: Tags,
-    chipClass: "bg-[#FFF3E0] text-orange-600",
+    chipClass: "bg-secondary-container text-on-secondary-container",
     items: [
       {
         title: "Kelola kategori & satuan",
@@ -295,14 +295,14 @@ const GUIDE: GuideCategory[] = [
     id: "sales",
     label: "Transaksi",
     icon: ReceiptText,
-    chipClass: "bg-[#E8F0FF] text-[#0085FF]",
+    chipClass: "bg-primary-soft text-primary",
     items: [
       {
         title: "Melihat transaksi",
         desc: "Daftar penjualan lengkap dengan filter real-time.",
         steps: [
-          "Buka menu Transaksi — daftar terurut dari yang terbaru.",
-          "Gunakan filter (tanggal, metode, status) — hasil berubah real-time tanpa tombol Terapkan.",
+          "Buka menu Transaksi, daftar terurut dari yang terbaru.",
+          "Gunakan filter (tanggal, metode, status), hasil berubah real-time tanpa tombol Terapkan.",
           "Klik transaksi untuk melihat detail, item, dan bukti pembayaran.",
           "Cetak ulang struk dari halaman detail.",
         ],
@@ -313,7 +313,7 @@ const GUIDE: GuideCategory[] = [
     id: "reports",
     label: "Laporan",
     icon: BarChart3,
-    chipClass: "bg-[#F3E5F5] text-purple-600",
+    chipClass: "bg-primary-soft text-primary",
     items: [
       {
         title: "Ringkasan & tren penjualan",
@@ -330,7 +330,7 @@ const GUIDE: GuideCategory[] = [
     id: "settings",
     label: "Pengaturan",
     icon: Settings,
-    chipClass: "bg-[#ECEFF1] text-slate-600",
+    chipClass: "bg-primary-soft text-primary",
     items: [
       {
         title: "Info toko & struk",
@@ -358,7 +358,7 @@ const GUIDE: GuideCategory[] = [
     id: "notifications",
     label: "Notifikasi",
     icon: Bell,
-    chipClass: "bg-[#FFF4E5] text-[#FF9800]",
+    chipClass: "bg-primary-soft text-primary",
     items: [
       {
         title: "Lonceng & halaman notifikasi",
@@ -374,7 +374,7 @@ const GUIDE: GuideCategory[] = [
         desc: "Aktifkan/matikan jenis notifikasi per akun.",
         steps: [
           "Di Pengaturan → kartu Notifikasi, matikan jenis yang tidak diinginkan.",
-          "Saat mematikan, konfirmasi muncul — notif lama jenis itu ikut terhapus (cek chip amber).",
+          "Saat mematikan, konfirmasi muncul, notif lama jenis itu ikut terhapus (cek chip amber).",
           "Nyalakan kembali notifikasi stok: alert untuk produk yang masih di bawah minimum dibuat ulang otomatis.",
         ],
       },
@@ -384,7 +384,7 @@ const GUIDE: GuideCategory[] = [
     id: "users",
     label: "Pengguna (Admin)",
     icon: UserCog,
-    chipClass: "bg-destructive-container text-on-destructive-container",
+    chipClass: "bg-primary-soft text-primary",
     items: [
       {
         title: "Kelola akun pengguna",
@@ -393,7 +393,7 @@ const GUIDE: GuideCategory[] = [
           "Buka menu Pengguna (hanya admin yang bisa).",
           "Klik + Tambah Pengguna, isi nama, email, password, role (Kasir/Admin), dan status.",
           "Setiap akun = 1 toko dengan datanya sendiri.",
-          "Saat menghapus akun, periksa chip amber — seluruh data tokonya ikut terhapus permanen.",
+          "Saat menghapus akun, periksa chip amber, seluruh data tokonya ikut terhapus permanen.",
         ],
       },
     ],
@@ -414,7 +414,7 @@ export function GuideDialog({
   // icon = tombol bulat ? (header); chip = tombol bertuliskan label (header halaman).
   variant?: "icon" | "chip";
   label?: string;
-  // Dikirim dari layout — untuk tombol "Ulangi tur" (menghapus flag per akun).
+  // Dikirim dari layout, untuk tombol "Ulangi tur" (menghapus flag per akun).
   userId?: number;
 }) {
   const router = useRouter();
@@ -424,7 +424,7 @@ export function GuideDialog({
     GUIDE.some((c) => c.id === initialCategory) ? (initialCategory as string) : GUIDE[0].id
   );
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-  // Baris chips kategori di mobile: ref + status scroll untuk fade di tepi —
+  // Baris chips kategori di mobile: ref + status scroll untuk fade di tepi -
   // tanpa itu, chip yang terpotong di tepi kanan terlihat seperti bug padahal
   // barisnya bisa digeser.
   const chipsRef = React.useRef<HTMLDivElement>(null);
@@ -439,12 +439,12 @@ export function GuideDialog({
   }, []);
 
   // Buka dari luar (walkthrough onboarding): hanya instance dengan trigger
-  // VISIBEL pertama yang merespons — mencegah dialog menumpuk (header desktop,
+  // VISIBEL pertama yang merespons, mencegah dialog menumpuk (header desktop,
   // header mobile, dan chip halaman semuanya memasang listener).
   React.useEffect(() => {
     const onOpenGuide = (e: Event) => {
       // Instance yang trigger-nya terlihat pertama (header desktop/mobile atau
-      // chip halaman) yang merespons — cegah dialog menumpuk.
+      // chip halaman) yang merespons, cegah dialog menumpuk.
       if (firstVisible("[data-guide-trigger]") !== triggerRef.current) return;
       const detail = (e as CustomEvent<{ category?: string }>).detail;
       if (detail?.category) {
@@ -502,15 +502,15 @@ export function GuideDialog({
   React.useEffect(() => {
     if (!open) return;
     // Ditunda sebentar: konten dialog di-mount Radix Presence satu render
-    // setelah efek parent berjalan — ref baris chips masih null di titik ini.
+    // setelah efek parent berjalan, ref baris chips masih null di titik ini.
     const t = window.setTimeout(() => {
       const el = chipsRef.current;
       if (!el) return;
       const chip = el.querySelector<HTMLButtonElement>('[aria-current="true"]');
       // Scroll ke tengah tanpa animasi: scrollIntoView smooth memakai rAF yang
-      // bisa macet (webview throttled / tab background) — hitung langsung saja.
+      // bisa macet (webview throttled / tab background), hitung langsung saja.
       // Catatan: offsetLeft diukur relatif ke wrapper (relative) sehingga sudah
-      // termasuk padding px-4 baris — angka itu ikut ter-scan di target dan
+      // termasuk padding px-4 baris, angka itu ikut ter-scan di target dan
       // saling menghapus, jadi hasilnya tetap presisi tengah.
       if (chip) {
         const target = chip.offsetLeft - el.clientWidth / 2 + chip.offsetWidth / 2;
@@ -533,11 +533,11 @@ export function GuideDialog({
           type="button"
           data-guide-trigger
           data-tour="guide"
-          aria-label={variant === "chip" ? `${label} — panduan ${activeCat.label}` : "Bantuan — panduan aplikasi"}
+          aria-label={variant === "chip" ? `${label}, panduan ${activeCat.label}` : "Bantuan, panduan aplikasi"}
           className={cn(
             variant === "chip"
-              ? "inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-md border border-outline-variant bg-surface-container-lowest px-4 text-xs font-semibold text-on-surface transition-colors hover:bg-surface-container-high hover:text-primary"
-              : "inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-primary",
+              ? "inline-flex h-11 min-h-[44px] shrink-0 cursor-pointer items-center gap-2 rounded-md border border-outline-variant bg-surface-container-lowest px-4 text-xs font-semibold text-on-surface transition-colors hover:bg-surface-container-high hover:text-primary"
+              : "inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-primary",
             triggerClassName
           )}
         >
@@ -545,7 +545,7 @@ export function GuideDialog({
           {variant === "chip" && <span className="whitespace-nowrap">{label}</span>}
         </button>
       </DialogTrigger>
-      {/* Lebar & gutter sudah ditangani di DialogContent dasar (ui.tsx) — di
+      {/* Lebar & gutter sudah ditangani di DialogContent dasar (ui.tsx), di
           sini cukup perbesar batas maksimum untuk desktop. */}
       <DialogContent className="max-w-3xl overflow-hidden p-0">
         <div className="flex max-h-[85dvh] flex-col">
@@ -579,7 +579,7 @@ export function GuideDialog({
                   onClick={() => selectCategory(c.id)}
                   aria-current={active === c.id && !query ? "true" : undefined}
                   className={cn(
-                    "shrink-0 cursor-pointer rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
+                    "shrink-0 cursor-pointer rounded-full px-3 py-1.5 text-xs font-semibold transition-colors min-h-[44px] inline-flex items-center",
                     active === c.id && !query
                       ? "bg-primary text-primary-foreground"
                       : "border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high"
@@ -644,7 +644,7 @@ export function GuideDialog({
                   <div className="space-y-5">
                     {shownCats?.map((c) => (
                       <div key={c.id}>
-                        <h3 className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+                        <h3 className="mb-2 flex items-center gap-2 text-xs font-bold text-on-surface-variant">
                           <c.icon className="h-4 w-4" /> {c.label}
                         </h3>
                         <div className="space-y-3">
@@ -662,7 +662,7 @@ export function GuideDialog({
                 )
               ) : (
                 <div className="space-y-3">
-                  <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+                  <h3 className="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
                     <activeCat.icon className="h-4 w-4" /> {activeCat.label}
                   </h3>
                   {activeCat.items.map((it) => (
@@ -673,7 +673,7 @@ export function GuideDialog({
             </div>
           </div>
 
-          {/* Ulangi tur pengenalan — hanya jika userId tersedia (layout beranda). */}
+          {/* Ulangi tur pengenalan, hanya jika userId tersedia (layout beranda). */}
           {userId !== undefined && (
             <div className="flex items-center justify-between gap-3 border-t border-outline-variant px-5 py-2.5">
               <p className="text-xs text-on-surface-variant">Ingin melihat panduan singkat langkah demi langkah lagi?</p>

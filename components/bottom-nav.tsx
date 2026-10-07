@@ -33,7 +33,7 @@ export function BottomNav() {
               data-tour={tab.tour}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex cursor-pointer flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-semibold transition-colors",
+                "flex min-h-[44px] cursor-pointer flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-semibold transition-colors",
                 active ? "text-primary" : "text-on-surface-variant hover:text-on-surface"
               )}
             >

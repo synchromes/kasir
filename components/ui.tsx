@@ -8,7 +8,7 @@ import * as Slot from "@radix-ui/react-slot";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/* ---------------- Button ---------------- */
+/* Button */
 const buttonVariants = {
   default: "bg-primary text-primary-foreground hover:bg-primary/90",
   accent: "bg-accent text-accent-foreground hover:bg-accent/90",
@@ -18,10 +18,10 @@ const buttonVariants = {
   secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90",
 };
 const buttonSizes = {
-  default: "h-10 px-4 py-2",
-  sm: "h-9 rounded-md px-3 text-sm",
+  default: "h-11 px-4 py-2",
+  sm: "h-11 rounded-md px-3 text-sm",
   lg: "h-12 px-8 text-lg",
-  icon: "h-10 w-10",
+  icon: "h-11 w-11",
 };
 
 export type ButtonVariant = keyof typeof buttonVariants;
@@ -53,13 +53,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-/* ---------------- Input ---------------- */
+/* Input */
 const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => (
     <input
       ref={ref}
       className={cn(
-        "flex h-10 w-full rounded-lg border border-input bg-card px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-11 w-full rounded-lg border border-input bg-card px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props}
@@ -82,7 +82,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttribu
 );
 Textarea.displayName = "Textarea";
 
-/* ---------------- Label ---------------- */
+/* Label */
 const Label = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttributes<HTMLLabelElement>>(
   ({ className, ...props }, ref) => (
     <label
@@ -94,7 +94,7 @@ const Label = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttributes<HTMLL
 );
 Label.displayName = "Label";
 
-/* ---------------- Card ---------------- */
+/* Card */
 function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn("rounded-xl border bg-card text-card-foreground shadow-sm", className)} {...props} />
@@ -113,7 +113,7 @@ function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   return <div className={cn("flex items-center p-6 pt-0", className)} {...props} />;
 }
 
-/* ---------------- Badge ---------------- */
+/* Badge */
 function Badge({
   className,
   variant = "default",
@@ -122,7 +122,7 @@ function Badge({
   const variants = {
     default: "bg-primary text-primary-foreground",
     outline: "border border-outline-variant text-on-surface-variant",
-    success: "bg-secondary-container/40 text-on-secondary-container",
+    success: "bg-secondary-container text-on-secondary-container",
     destructive: "bg-destructive-container text-on-destructive-container",
     warning: "bg-tertiary-fixed text-on-tertiary-fixed",
   };
@@ -131,7 +131,7 @@ function Badge({
   );
 }
 
-/* ---------------- Table ---------------- */
+/* Table */
 function Table({ className, ...props }: React.TableHTMLAttributes<HTMLTableElement>) {
   return <table className={cn("w-full caption-bottom text-sm", className)} {...props} />;
 }
@@ -145,7 +145,7 @@ function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElem
   return (
     <tr
       className={cn(
-        "transition-colors even:bg-primary-fixed-dim/25 hover:bg-surface-container-low/60 dark:even:bg-primary-fixed-dim/20",
+        "transition-colors even:bg-primary-fixed-dim/25 hover:bg-surface-container-low/60",
         className
       )}
       {...props}
@@ -159,7 +159,7 @@ function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCell
   return <td className={cn("whitespace-nowrap px-4 py-3 align-middle", className)} {...props} />;
 }
 
-/* ---------------- Dialog ---------------- */
+/* Dialog */
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 const DialogClose = DialogPrimitive.Close;
@@ -179,7 +179,7 @@ function DialogContent({ className, children, ...props }: React.ComponentPropsWi
         {...props}
       >
         {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none cursor-pointer">
+        <DialogPrimitive.Close aria-label="Tutup dialog" className="absolute right-3 top-3 flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg opacity-70 transition-opacity hover:bg-muted hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
           <X className="h-4 w-4" />
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>
@@ -199,7 +199,7 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   return <div className={cn("flex flex-row justify-end gap-2 mt-6", className)} {...props} />;
 }
 
-/* ---------------- Select ---------------- */
+/* Select */
 const Select = SelectPrimitive.Root;
 const SelectValue = SelectPrimitive.Value;
 
@@ -207,7 +207,7 @@ function SelectTrigger({ className, children, ...props }: React.ComponentPropsWi
   return (
     <SelectPrimitive.Trigger
       className={cn(
-        "flex h-10 w-full items-center justify-between rounded-lg border border-input bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer",
+        "flex h-11 w-full items-center justify-between rounded-lg border border-input bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer",
         className
       )}
       {...props}
@@ -253,7 +253,7 @@ function SelectItem({ className, children, ...props }: React.ComponentPropsWitho
   );
 }
 
-/* ---------------- Dropdown Menu ---------------- */
+/* Dropdown Menu */
 const DropdownMenu = DropdownMenuPrimitive.Root;
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 

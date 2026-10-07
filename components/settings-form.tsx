@@ -17,7 +17,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
   hasSettings: boolean;
   initial: { storeName: string; address: string; phone: string; receiptTitle: string; receiptFooter: string; taxRate: number; pointsPer10k: number; qrisStatic: string; notifyStock: boolean; notifySale: boolean; notifyPurchase: boolean };
   // Jumlah notifikasi lama per tipe (dari server). Ditampilkan di samping
-  // toggle yang sedang OFF — hanya saat itu notif lama benar-benar terhapus
+  // toggle yang sedang OFF, hanya saat itu notif lama benar-benar terhapus
   // ketika pengaturan disimpan.
   oldNotifyCounts: { stock: number; sale: number; purchase: number };
 }) {
@@ -27,7 +27,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState(initial);
 
-  // Validasi QRIS statis real-time (derived — tanpa setState di effect).
+  // Validasi QRIS statis real-time (derived, tanpa setState di effect).
   const trimmedQris = form.qrisStatic.trim();
   const qrisValidation = trimmedQris ? validateQRIS(trimmedQris) : null;
   const qrisOk = !!trimmedQris && !!qrisValidation?.valid;
@@ -36,7 +36,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
   // scan/upload (string bisa sama persis, jadi deps effect tak berubah).
   const [qrisPreviewTick, setQrisPreviewTick] = useState(0);
 
-  // Scan QRIS langsung dari kamera (getUserMedia + jsqr) — kasir cukup
+  // Scan QRIS langsung dari kamera (getUserMedia + jsqr), kasir cukup
   // mengarahkan kamera ke QR statis, tanpa perlu upload/mengetik string.
   const [qrisImage, setQrisImage] = useState<string | null>(null);
   const [scanning, setScanning] = useState(false);
@@ -50,7 +50,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
   const [qrisDecoding, setQrisDecoding] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const qrisFileRef = useRef<HTMLInputElement>(null);
-  // Menandai bahwa konfigurasi QRIS baru saja dihapus — dipakai untuk mencegah
+  // Menandai bahwa konfigurasi QRIS baru saja dihapus, dipakai untuk mencegah
   // hasil decode upload yang masih berjalan mengisi ulang string setelah Hapus.
   const clearedRef = useRef(false);
 
@@ -144,7 +144,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
     setQrisPreviewTick((t) => t + 1);
     setScanError(null);
     setUploadError(null);
-    showClearNotice("QRIS dihapus — jangan lupa Simpan Pengaturan.");
+    showClearNotice("QRIS dihapus, jangan lupa Simpan Pengaturan.");
   }
 
   async function handleQrisFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -169,9 +169,9 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
       // QR biasanya mendominasi frame jadi tetap terbaca setelah resize.
       const dataUrl = await resizeImageToDataUrl(file, 1600, 0.9);
       const decoded = await decodeQrFromDataUrl(dataUrl);
-      if (!decoded) throw new Error("QR tidak terbaca dari gambar — pastikan gambar jelas & tidak miring.");
+      if (!decoded) throw new Error("QR tidak terbaca dari gambar, pastikan gambar jelas & tidak miring.");
       // Scan kamera baru dimulai, atau konfigurasi dihapus saat decode berjalan?
-      // Kalau ya, biarkan kondisi terbaru yang menang — jangan timpa.
+      // Kalau ya, biarkan kondisi terbaru yang menang, jangan timpa.
       if (scanningRef.current || clearedRef.current) return;
       setQrisImage(dataUrl);
       setForm((f) => ({ ...f, qrisStatic: decoded }));
@@ -250,7 +250,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
     };
   }, []);
 
-  // Effect hanya untuk generate gambar QR (async) — preview lama disembunyikan
+  // Effect hanya untuk generate gambar QR (async), preview lama disembunyikan
   // lewat kondisi render saat string berubah/tdk valid.
   useEffect(() => {
     let alive = true;
@@ -264,7 +264,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
   }, [qrisOk, trimmedQris, qrisPreviewTick]);
 
   // Ganti state toggle notifikasi. Saat MEMATIKAN tipe yang masih punya
-  // notifikasi lama, minta konfirmasi dulu — notif lama akan ikut terhapus
+  // notifikasi lama, minta konfirmasi dulu, notif lama akan ikut terhapus
   // dari panel ketika pengaturan disimpan (lihat saveSettings).
   async function toggleNotify(
     key: "notifyStock" | "notifySale" | "notifyPurchase",
@@ -280,7 +280,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
     if (oldCount > 0) {
       const ok = await confirm({
         title: `Matikan notifikasi ${typeLabel}?`,
-        message: `Masih ada ${oldCount} notifikasi ${typeLabel} lama di panel. Notifikasi lama tersebut akan ikut terhapus saat pengaturan disimpan — hanya notifikasi baru yang berhenti.`,
+        message: `Masih ada ${oldCount} notifikasi ${typeLabel} lama di panel. Notifikasi lama tersebut akan ikut terhapus saat pengaturan disimpan, hanya notifikasi baru yang berhenti.`,
         confirmLabel: "Matikan & Hapus",
         danger: true,
       });
@@ -320,7 +320,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
 
       {!hasSettings && (
         <p className="text-sm leading-relaxed text-on-surface-variant">
-          <span className="font-semibold text-foreground">Catatan:</span> Toko ini belum punya pengaturan tersimpan — struk &amp; pajak masih memakai nilai bawaan. Isi nama toko, alamat, dan pajak, lalu klik Simpan Pengaturan agar transaksi memakai data yang benar.
+          <span className="font-semibold text-foreground">Catatan:</span> Toko ini belum punya pengaturan tersimpan, struk &amp; pajak masih memakai nilai bawaan. Isi nama toko, alamat, dan pajak, lalu klik Simpan Pengaturan agar transaksi memakai data yang benar.
         </p>
       )}
 
@@ -522,14 +522,14 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
               />
               {!trimmedQris && (
                 <p className="text-xs text-on-surface-variant">
-                  QRIS statis ini dikonversi otomatis menjadi <strong>QRIS dinamis</strong> berisi nominal saat kasir memilih metode QRIS — pelanggan cukup pindai, tanpa memasukkan nominal manual.
+                  QRIS statis ini dikonversi otomatis menjadi <strong>QRIS dinamis</strong> berisi nominal saat kasir memilih metode QRIS, pelanggan cukup pindai, tanpa memasukkan nominal manual.
                 </p>
               )}
               {qrisValidation && !qrisValidation.valid && (
                 <p className="text-sm text-destructive">QRIS statis tidak valid: {qrisValidation.errors[0]}</p>
               )}
             </div>
-            {/* Pratinjau untuk string yang ditempel manual (tanpa scan/upload) —
+            {/* Pratinjau untuk string yang ditempel manual (tanpa scan/upload) -
                 saat panel hasil scan/upload tampil, QR besar sudah ada di sana. */}
             {qrisOk && qrisPreview && !qrisImage && (
               <div className="flex items-center gap-4 rounded-xl border border-outline-variant bg-surface-container-lowest p-4">
@@ -538,7 +538,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
                 <div className="text-xs text-on-surface-variant">
                   <p className="font-semibold text-on-surface">QRIS statis valid ✓</p>
                   <p className="mt-1">
-                    Saat kasir memilih <strong>QRIS</strong>, aplikasi menyuntikkan nominal transaksi ke payload ini (Point of Initiation Method berubah ke dinamis) lalu menghitung ulang CRC16 — QR yang muncul di POS langsung bisa dipindai pelanggan.
+                    Saat kasir memilih <strong>QRIS</strong>, aplikasi menyuntikkan nominal transaksi ke payload ini (Point of Initiation Method berubah ke dinamis) lalu menghitung ulang CRC16, QR yang muncul di POS langsung bisa dipindai pelanggan.
                   </p>
                 </div>
               </div>
@@ -559,7 +559,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
             <div className="space-y-2">
               <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-outline-variant bg-surface-container-lowest px-4 py-3 transition-colors hover:border-primary/40">
                 <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFF4E5] text-[#FF9800]">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-tertiary-soft text-tertiary">
                     <PackageSearch className="h-4.5 w-4.5" />
                   </span>
                   <span>
@@ -587,7 +587,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
 
               <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-outline-variant bg-surface-container-lowest px-4 py-3 transition-colors hover:border-primary/40">
                 <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E8F0FF] text-[#0085FF]">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
                     <ReceiptText className="h-4.5 w-4.5" />
                   </span>
                   <span>
@@ -615,7 +615,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
 
               <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-outline-variant bg-surface-container-lowest px-4 py-3 transition-colors hover:border-primary/40">
                 <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E6FFFA] text-[#00C292]">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary-container text-on-secondary-container">
                     <ShoppingBag className="h-4.5 w-4.5" />
                   </span>
                   <span>
@@ -658,7 +658,7 @@ export function SettingsForm({ hasSettings, initial, oldNotifyCounts }: {
           </CardContent>
         </Card>
 
-        {/* Aksi simpan di luar kartu — baris sendiri (full width) agar tidak
+        {/* Aksi simpan di luar kartu, baris sendiri (full width) agar tidak
             membingungkan: tombol bukan bagian dari kartu "Pajak & Poin". */}
         <div className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface-container-lowest p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between lg:col-span-2">
           <div>

@@ -2,9 +2,9 @@
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
-const COLORS = ["#059669", "#334155", "#f59e0b", "#dc2626", "#8b5cf6", "#0ea5e9"];
+import { paymentColors } from "@/lib/colors";
 
-export const DONUT_COLORS = ["#0085FF", "#00C292", "#6B46C1", "#FF4D4D", "#f59e0b", "#737686"];
+export const DONUT_COLORS = Array.from({ length: 6 }, (_, i) => `var(--chart-${i + 1})`);
 
 const money = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
 const tooltipStyle = { background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8 };
@@ -61,9 +61,9 @@ export function TrendBar({ data }: { data: { label: string; total: number; profi
           <XAxis dataKey="label" tick={{ fontSize: 11 }} className="text-muted-foreground" />
           <YAxis tick={{ fontSize: 11 }} className="text-muted-foreground" />
           <Tooltip formatter={(v) => money.format(Number(v))} contentStyle={tooltipStyle} />
-          <Legend wrapperStyle={{ fontSize: 12 }} />
-          <Bar dataKey="total" name="Pendapatan" fill="#004ac6" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="profit" name="Laba" fill="#10b981" radius={[4, 4, 0, 0]} />
+          <Legend wrapperStyle={{ fontSize: 12 }} formatter={(value) => <span style={{ color: "var(--foreground)" }}>{value}</span>} />
+          <Bar dataKey="total" name="Pendapatan" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="profit" name="Laba" fill="var(--accent)" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -89,13 +89,13 @@ export function CategoryBar({ data }: { data: { name: string; total: number }[] 
   );
 }
 
-export function MethodPie({ data }: { data: { name: string; value: number }[] }) {
+export function MethodPie({ data }: { data: { key: string; name: string; value: number }[] }) {
   return (
     <div className="h-72">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label={({ name, percent }) => `${name} ${Math.round(percent! * 100)}%`}>
-            {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+            {data.map((item) => <Cell key={item.key} fill={paymentColors[item.key]?.fill ?? "var(--outline)"} />)}
           </Pie>
           <Tooltip
             formatter={(v) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(Number(v))}

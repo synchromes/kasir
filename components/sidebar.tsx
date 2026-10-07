@@ -31,7 +31,7 @@ export function Sidebar({ role }: { role: string }) {
           className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary-container text-on-primary-container transition-all duration-200 hover:bg-surface-tint hover:text-on-primary active:scale-95"
         >
           <Plus className="h-5 w-5" />
-          <span className="text-xs font-semibold tracking-wide">PENJUALAN BARU</span>
+          <span className="text-xs font-semibold">Penjualan Baru</span>
         </Link>
       </div>
 

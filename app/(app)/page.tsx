@@ -30,24 +30,12 @@ const methodIcon: Record<string, React.ComponentType<{ className?: string }>> = 
   QRIS: QrCode,
   TRANSFER: ArrowLeftRight,
 };
-const methodStyle: Record<string, { bg: string; text: string }> = {
-  CASH: { bg: "bg-[#E6FFFA]", text: "text-[#00C292]" },
-  QRIS: { bg: "bg-[#E8F0FF]", text: "text-[#0085FF]" },
-  TRANSFER: { bg: "bg-[#E5E7FF]", text: "text-[#6B46C1]" },
-};
+import { paymentColors as methodStyle } from "@/lib/colors";
 const rankColors = [
-  "bg-blue-100 text-[#0085FF]",
-  "bg-purple-100 text-[#6B46C1]",
-  "bg-green-100 text-[#00C292]",
-  "bg-orange-100 text-orange-500",
-  "bg-red-100 text-red-500",
+  "bg-primary-soft text-primary",
 ];
 const categoryColors = [
-  "bg-[#E5E7FF] text-[#6B46C1]",
-  "bg-[#E6FFFA] text-[#00C292]",
-  "bg-[#E8F0FF] text-[#0085FF]",
-  "bg-[#FFF4E5] text-[#FF9800]",
-  "bg-[#FFE5E5] text-[#FF4D4D]",
+  "bg-secondary-container text-on-secondary-container",
 ];
 
 function rupiahCompact(n: number) {
@@ -78,6 +66,7 @@ function StatCard({
   badge,
   label,
   sub,
+  featured = false,
 }: {
   bg: string;
   iconBg: string;
@@ -87,15 +76,16 @@ function StatCard({
   badge: React.ReactNode;
   label: string;
   sub: string;
+  featured?: boolean;
 }) {
   return (
     <div className={cn("relative overflow-hidden rounded-xl p-5 transition-shadow hover:shadow-md", bg)}>
       <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full opacity-15" style={{ background: tint }} />
-      <div className={cn("mb-3 flex h-12 w-12 items-center justify-center rounded-full text-white", iconBg)}>
-        <Icon className="h-6 w-6" />
+      <div className={cn("mb-3 flex items-center justify-center rounded-full text-white", featured ? "h-14 w-14" : "h-12 w-12", iconBg)}>
+        <Icon className={featured ? "h-7 w-7" : "h-6 w-6"} />
       </div>
       <div className="flex items-center gap-2">
-        <span className="truncate font-display text-lg font-bold leading-none">{value}</span>
+        <span className={cn("truncate font-display font-bold leading-none", featured ? "text-xl" : "text-lg")}>{value}</span>
         {badge}
       </div>
       <p className="mt-1.5 text-sm font-medium text-on-surface-variant">{label}</p>
@@ -366,9 +356,10 @@ export default async function DashboardPage() {
 
         <div className="col-span-12 grid grid-cols-1 gap-4 sm:grid-cols-3 xl:col-span-6">
           <StatCard
-            bg="bg-[#FFE5E5] dark:bg-[#43151f]"
-            iconBg="bg-[#FF4D4D]"
-            tint="#FF4D4D"
+            featured
+            bg="bg-secondary-container"
+            iconBg="bg-accent"
+            tint="var(--accent)"
             icon={CircleDollarSign}
             value={formatRupiah(todayTotal)}
             badge={<DeltaPill value={todayDelta} />}
@@ -376,9 +367,9 @@ export default async function DashboardPage() {
             sub={`${todaySales._count} transaksi`}
           />
           <StatCard
-            bg="bg-[#E5E7FF] dark:bg-[#23284d]"
-            iconBg="bg-[#6B46C1]"
-            tint="#6B46C1"
+            bg="bg-primary-soft"
+            iconBg="bg-primary"
+            tint="var(--primary)"
             icon={ReceiptText}
             value={formatNumber(monthCount)}
             badge={<DeltaPill value={monthCountDelta} />}
@@ -386,9 +377,9 @@ export default async function DashboardPage() {
             sub={formatRupiah(monthTotal)}
           />
           <StatCard
-            bg="bg-[#E6FFFA] dark:bg-[#0f3a33]"
-            iconBg="bg-[#38B2AC]"
-            tint="#38B2AC"
+            bg="bg-destructive-container"
+            iconBg="bg-destructive"
+            tint="var(--destructive)"
             icon={Wallet}
             value={formatRupiah(monthExpense)}
             badge={<DeltaPill value={expenseDelta} invert />}
@@ -423,7 +414,7 @@ export default async function DashboardPage() {
             </div>
             <Button variant="outline" size="sm" asChild>
               <Link href="/reports">
-                Lihat Laporan <ArrowRight className="h-4 w-4" />
+                Lihat Laporan
               </Link>
             </Button>
           </div>
@@ -432,7 +423,7 @@ export default async function DashboardPage() {
         <Card className="flex flex-col p-5 lg:col-span-4">
           <div className="flex items-center justify-between">
             <h3 className="font-display text-base font-bold">Produk Terlaris</h3>
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#E6FFFA] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#00C292]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-secondary-container px-2.5 py-1 text-[10px] font-bold text-on-secondary-container">
               <TrendingUp className="h-3 w-3" /> Terlaris
             </span>
           </div>
@@ -454,7 +445,11 @@ export default async function DashboardPage() {
                 </div>
               );
             })}
-            {topProducts.length === 0 && <p className="col-span-2 text-sm text-on-surface-variant">Belum ada penjualan bulan ini</p>}
+            {topProducts.length === 0 && (
+              <p className="col-span-2 text-sm text-on-surface-variant">
+                Belum ada penjualan bulan ini. <Link href="/pos" className="font-semibold text-primary hover:underline">Mulai di Kasir</Link>
+              </p>
+            )}
           </div>
           <p className="mt-auto pt-4 text-center text-xs text-on-surface-variant">Ringkasan produk paling laku bulan ini</p>
         </Card>
@@ -487,7 +482,7 @@ export default async function DashboardPage() {
             </div>
             <div className="flex items-center justify-center">
               <MiniDonut
-                data={topMethodRows.map((m) => ({ name: m.name, value: m.value }))}
+                data={topMethodRows.map((m) => ({ key: m.key, name: m.name, value: m.value }))}
                 centerValue={rupiahCompact(monthTotal)}
                 centerLabel="bulan ini"
               />
@@ -497,7 +492,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-on-surface-variant">Lihat rincian pembayaran</p>
             <Link
               href="/sales"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity hover:opacity-90"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity hover:opacity-90"
             >
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -517,13 +512,13 @@ export default async function DashboardPage() {
           <div className="mt-3 space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2 text-on-surface-variant">
-                <span className="h-2.5 w-2.5 rounded-full bg-primary" /> Tunai
+                <span className="h-2.5 w-2.5 rounded-full bg-accent" /> Tunai
               </span>
               <span className="font-mono text-xs font-medium">{weekSum ? Math.round((weekTunai / weekSum) * 100) : 0}%</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2 text-on-surface-variant">
-                <span className="h-2.5 w-2.5 rounded-full bg-outline-variant" /> Non-tunai
+                <span className="h-2.5 w-2.5 rounded-full bg-on-surface-variant" /> Non-tunai
               </span>
               <span className="font-mono text-xs font-medium">{weekSum ? 100 - Math.round((weekTunai / weekSum) * 100) : 0}%</span>
             </div>
@@ -570,7 +565,7 @@ export default async function DashboardPage() {
             <h3 className="font-display text-base font-bold">Produk Terlaris</h3>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/reports">
-                Lihat Semua <ArrowRight className="h-4 w-4" />
+                Lihat Semua
               </Link>
             </Button>
           </div>
@@ -610,7 +605,7 @@ export default async function DashboardPage() {
                 {topProducts.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={4} className="py-8 text-center text-on-surface-variant">
-                      Belum ada penjualan bulan ini
+                      Belum ada penjualan bulan ini. <Link href="/pos" className="font-semibold text-primary hover:underline">Mulai di Kasir</Link>
                     </TableCell>
                   </TableRow>
                 )}
@@ -624,7 +619,7 @@ export default async function DashboardPage() {
             <h3 className="font-display text-base font-bold">Transaksi Terbaru</h3>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/sales">
-                Lihat Semua <ArrowRight className="h-4 w-4" />
+                Lihat Semua
               </Link>
             </Button>
           </div>
@@ -658,12 +653,14 @@ export default async function DashboardPage() {
             <h3 className="font-display text-base font-bold">Stok Menipis</h3>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/stock">
-                Kelola Stok <ArrowRight className="h-4 w-4" />
+                Kelola Stok
               </Link>
             </Button>
           </div>
           {lowStock.length === 0 ? (
-            <p className="text-sm text-on-surface-variant">Semua stok aman</p>
+            <p className="text-sm text-on-surface-variant">
+              Semua stok aman. <Link href="/products" className="font-semibold text-primary hover:underline">Lihat produk</Link>
+            </p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {lowStock.map((p) => (

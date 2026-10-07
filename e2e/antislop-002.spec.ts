@@ -1,0 +1,50 @@
+import { test, expect } from "@playwright/test";
+
+test("audit 002: dialog, notifikasi gagal, rentang tanggal, dan lebar POS", async ({ page, isMobile }) => {
+  await page.goto("/login");
+  await page.getByLabel("Email").fill("admin@kasir.com");
+  await page.getByLabel("Password").fill("admin123");
+  await page.getByRole("button", { name: "Masuk", exact: true }).click();
+  await page.waitForURL("/");
+  await page.getByRole("button", { name: "Lewati", exact: true }).click({ timeout: 45000 });
+  await page.goto("/products");
+  await expect(page.getByRole("button", { name: "+ Produk Baru", exact: true })).toHaveCSS("background-color", "rgb(0, 113, 77)");
+  await page.getByRole("button", { name: "+ Produk Baru", exact: true }).click();
+  const close = page.getByRole("button", { name: "Tutup dialog", exact: true });
+  await expect(close).toBeVisible();
+  await page.keyboard.press("Tab");
+  await close.focus();
+  expect(await close.evaluate(e => getComputedStyle(e).boxShadow)).not.toBe("none");
+  const upload = page.getByRole("button", { name: "Upload foto produk", exact: true });
+  await upload.focus();
+  await expect(upload).toBeFocused();
+  const chooser = page.waitForEvent("filechooser");
+  if (isMobile) await upload.tap();
+  else await upload.press("Enter");
+  await chooser;
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page.route("**/api/notifications", route => route.fulfill({ status: 500, body: "error" }));
+  await page.reload();
+  const bell = page.getByRole("button", { name: /^Notifikasi/ }).filter({ visible: true });
+  await bell.click();
+  await expect(page.getByRole("alert").filter({ hasText: "Notifikasi gagal dimuat" })).toBeVisible();
+  await expect(page.getByText("Tidak ada notifikasi", { exact: true })).toHaveCount(0);
+  await page.route("**/api/notifications", route => route.fulfill({ json: { items: [], unread: 0 } }));
+  await page.getByRole("button", { name: "Coba lagi", exact: true }).click();
+  await expect(page.getByText("Tidak ada notifikasi", { exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(bell).toBeFocused();
+  await expect(page.getByRole("button", { name: "Tutup notifikasi" })).toHaveCount(0);
+  await page.goto("/reports?custom=1");
+  for (const name of ["Dari", "Sampai"]) {
+    const input = page.getByLabel(name, { exact: true });
+    await expect(input).toBeVisible();
+    expect((await input.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+  }
+  await page.goto("/pos");
+  await expect(page.getByRole("button", { name: "Semua Item", exact: true })).toHaveCSS("color", "rgb(19, 27, 46)");
+  const card = page.getByRole("heading", { name: "Pesanan Saat Ini" }).locator("../..");
+  if (!isMobile) expect((await card.boundingBox())!.width).toBe(400);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

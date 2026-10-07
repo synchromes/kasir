@@ -43,9 +43,21 @@ export async function checkout(data: {
   customerId: number | null;
   usePoints: boolean;
   paymentProof?: string | null;
+  // Kunci idempotensi: dibuat sekali per transaksi di client; retry memakai
+  // kunci yang sama sehingga tidak pernah membuat sale ganda.
+  saleKey?: string;
+  // Poin yang dipakai — dibekukan client saat QR dibuat; diverifikasi ulang
+  // di sini agar nominal QR selalu sama dengan total yang tercatat.
+  pointsUsed?: number;
 }) {
   const ownerId = await requireOwnerId();
   if (!data.items.length) return { error: "Keranjang kosong" };
+  if (!Number.isFinite(data.discountValue) || data.discountValue < 0) {
+    return { error: "Nilai diskon tidak valid" };
+  }
+  if (data.paid !== null && (!Number.isFinite(data.paid) || data.paid < 0)) {
+    return { error: "Nominal pembayaran tidak valid" };
+  }
 
   const method = data.paymentMethod as (typeof PAYMENT_METHODS)[number];
   if (!PAYMENT_METHODS.includes(method)) return { error: "Metode pembayaran tidak valid" };
@@ -64,7 +76,7 @@ export async function checkout(data: {
   // Merge duplicate product lines and validate quantities server-side.
   const lines = new Map<number, number>();
   for (const item of data.items) {
-    if (!Number.isInteger(item.qty) || item.qty <= 0) {
+    if (!Number.isInteger(item.productId) || !Number.isInteger(item.qty) || item.qty <= 0) {
       return { error: "Jumlah item tidak valid" };
     }
     lines.set(item.productId, (lines.get(item.productId) ?? 0) + item.qty);
@@ -93,7 +105,9 @@ export async function checkout(data: {
 
   const setting = await prisma.setting.findUnique({ where: { ownerId } });
   const taxRate = setting?.taxRate ?? 0;
-  const tax = (afterDiscount * taxRate) / 100;
+  // Pajak dibulatkan ke rupiah penuh agar tidak ada artefak desimal (0.999...)
+  // yang mengotori laporan.
+  const tax = Math.round((afterDiscount * taxRate) / 100);
   const total = Math.round(afterDiscount + tax);
   const pointsPer10k = setting?.pointsPer10k ?? 1;
 
@@ -115,13 +129,27 @@ export async function checkout(data: {
     try {
       invoiceNo = await generateInvoiceNo(ownerId);
       saleId = await prisma.$transaction(async (tx) => {
+        // Idempotensi: retry client (timeout/network) memakai saleKey yang sama
+        // → kembalikan sale yang sudah dibuat, JANGAN buat sale baru.
+        if (data.saleKey) {
+          const existing = await tx.sale.findUnique({ where: { saleKey: data.saleKey } });
+          if (existing) return existing.id;
+        }
         const customer = data.customerId
           ? await tx.customer.findFirst({ where: { id: data.customerId, ownerId } })
           : null;
 
+        // Poin yang dipakai memakai nilai yang dibekukan client (nominal QR
+        // konsisten dengan sale). Divalidasi terhadap saldo saat ini; jika
+        // pelanggan kehabisan poin di antara → batalkan dan minta ulang.
         let pointsUsed = 0;
         if (data.usePoints && customer?.isMember && customer.points > 0) {
-          pointsUsed = Math.min(customer.points, Math.floor(total / 100));
+          const maxPoints = Math.min(customer.points, Math.floor(total / 100));
+          const frozen = Number(data.pointsUsed) || 0;
+          if (!Number.isInteger(frozen) || frozen > maxPoints) {
+            throw new Error("CHECKOUT_ERROR:Poin pelanggan berubah. Kembali ke kasir lalu ulangi konfirmasi.");
+          }
+          pointsUsed = frozen;
         }
         const finalTotal = Math.max(total - pointsUsed, 0);
         if (paid < finalTotal) throw new Error("CHECKOUT_ERROR:Pembayaran kurang dari total");
@@ -152,6 +180,7 @@ export async function checkout(data: {
             paymentProof,
             qrisPayload,
             pointsEarned,
+            saleKey: data.saleKey ?? null,
             items: {
               create: [...lines.entries()].map(([productId, qty]) => ({
                 productId,
@@ -187,10 +216,16 @@ export async function checkout(data: {
         }
 
         if (customer && pointsUsed > 0) {
-          await tx.customer.update({
-            where: { id: customer.id },
+          // Guarded decrement: kalau poin sudah dipakai transaksi lain secara
+          // bersamaan dan sisa kurang dari pointsUsed → batalkan (rollback),
+          // mencegah saldo poin negatif.
+          const dec = await tx.customer.updateMany({
+            where: { id: customer.id, ownerId, points: { gte: pointsUsed } },
             data: { points: { decrement: pointsUsed } },
           });
+          if (dec.count === 0) {
+            throw new Error("CHECKOUT_ERROR:Poin pelanggan berubah. Kembali ke kasir lalu ulangi konfirmasi.");
+          }
         }
         if (customer && pointsEarned > 0) {
           await tx.customer.update({
@@ -289,8 +324,9 @@ export async function saveProduct(data: {
     image,
     categoryId: data.categoryId || null,
     unitId: data.unitId || null,
-    costPrice: Number(data.costPrice) || 0,
-    sellPrice: Number(data.sellPrice) || 0,
+    // Harga tidak boleh negatif — client bisa kirim -5000 melalui payload.
+    costPrice: Math.max(Number(data.costPrice) || 0, 0),
+    sellPrice: Math.max(Number(data.sellPrice) || 0, 0),
     minStock: Math.max(Number(data.minStock) || 0, 0),
   };
 
@@ -328,7 +364,18 @@ export async function deleteProduct(id: number) {
       error: `Produk sudah tercatat dalam ${sold + purchased} item transaksi sehingga tidak dapat dihapus. Nonaktifkan saja agar tidak muncul di kasir.`,
     };
   }
-  await prisma.product.deleteMany({ where: { id, ownerId } });
+  try {
+    await prisma.product.deleteMany({ where: { id, ownerId } });
+  } catch (e) {
+    // Race saat ini: transaksi masuk setelah cek di atas (TOCTOU) — tangkap
+    // FK violation dan beri pesan yang sama alih-alih 500 mentah.
+    if ((e as { code?: string })?.code === "P2003" || (e as { code?: string })?.code === "P2014") {
+      return {
+        error: "Produk sudah tercatat dalam transaksi sehingga tidak dapat dihapus. Nonaktifkan saja agar tidak muncul di kasir.",
+      };
+    }
+    throw e;
+  }
   revalidatePath("/products");
   revalidatePath("/stock");
 }
@@ -429,22 +476,45 @@ export async function deleteCustomer(id: number) {
 /* ---------------- Stock adjustment ---------------- */
 export async function adjustStock(productId: number, qty: number, note: string) {
   const ownerId = await requireOwnerId();
-  const current = await prisma.product.findFirst({ where: { id: productId, ownerId } });
-  if (!current) return { error: "Produk tidak ditemukan" };
-  const newStock = Math.max(current.stock + qty, 0);
-  await prisma.$transaction([
-    prisma.product.update({ where: { id: productId }, data: { stock: newStock } }),
-    prisma.stockMovement.create({
-      data: { productId, type: "ADJUST", qty, note, userId: ownerId },
-    }),
-  ]);
-  try {
-    await syncLowStockAlerts(ownerId, [productId]);
-  } catch {
-    // best-effort
+  if (!Number.isInteger(productId) || !Number.isInteger(qty)) {
+    return { error: "Jumlah penyesuaian harus bilangan bulat" };
   }
-  revalidatePath("/stock");
-  revalidatePath("/products");
+  if (qty === 0) return { error: "Jumlah penyesuaian tidak boleh 0" };
+
+  return await prisma.$transaction(async (tx) => {
+    const current = await tx.product.findFirst({ where: { id: productId, ownerId } });
+    if (!current) return { error: "Produk tidak ditemukan" };
+
+    // Catat delta yang BENAR-BENAR diterapkan (stok tidak boleh negatif).
+    // Karena perhitungan & penulisan ada dalam satu transaksi, penyesuaian
+    // yang berjalan bersamaan tidak lagi saling menimpa.
+    if (qty < 0) {
+      const updated = await tx.product.updateMany({
+        where: { id: productId, ownerId, stock: { gte: -qty } },
+        data: { stock: { increment: qty } },
+      });
+      if (updated.count === 0) {
+        if (current.stock === 0) return { error: "Stok sudah 0. Tidak bisa dikurangi lagi" };
+        const applied = -current.stock;
+        await tx.product.update({ where: { id: productId }, data: { stock: 0 } });
+        await tx.stockMovement.create({ data: { productId, type: "ADJUST", qty: applied, note, userId: ownerId } });
+      } else {
+        await tx.stockMovement.create({ data: { productId, type: "ADJUST", qty, note, userId: ownerId } });
+      }
+    } else {
+      await tx.product.updateMany({ where: { id: productId, ownerId }, data: { stock: { increment: qty } } });
+      await tx.stockMovement.create({ data: { productId, type: "ADJUST", qty, note, userId: ownerId } });
+    }
+  }).then(async () => {
+    try {
+      await syncLowStockAlerts(ownerId, [productId]);
+    } catch {
+      // best-effort
+    }
+    revalidatePath("/stock");
+    revalidatePath("/products");
+    return null;
+  });
 }
 
 /* ---------------- Purchase (stock in) ---------------- */
@@ -455,7 +525,8 @@ export async function createPurchase(data: { supplierId?: number | null; note?: 
   // Validasi item milik akun ini dulu (jangan izinkan mengubah produk toko lain).
   const products = new Map<number, number>();
   for (const i of data.items) {
-    if (!Number.isInteger(i.qty) || i.qty <= 0) return { error: "Jumlah item tidak valid" };
+    if (!Number.isInteger(i.productId) || !Number.isInteger(i.qty) || i.qty <= 0) return { error: "Jumlah item tidak valid" };
+    if (!Number.isFinite(i.cost) || i.cost < 0) return { error: "Harga beli tidak valid" };
     const p = await prisma.product.findFirst({ where: { id: i.productId, ownerId } });
     if (!p) return { error: `Produk tidak ditemukan: ${i.productId}` };
     products.set(i.productId, i.cost);
@@ -513,6 +584,9 @@ export async function createPurchase(data: { supplierId?: number | null; note?: 
 /* ---------------- Expenses ---------------- */
 export async function saveExpense(data: { id?: number; amount: number; note: string }) {
   const ownerId = await requireOwnerId();
+  if (!Number.isFinite(data.amount) || data.amount < 0) {
+    return { error: "Jumlah pengeluaran tidak valid" };
+  }
   if (data.id) {
     const owned = await prisma.expense.findFirst({ where: { id: data.id, ownerId } });
     if (!owned) return { error: "Pengeluaran tidak ditemukan" };
@@ -570,8 +644,9 @@ export async function saveSettings(data: {
       phone: data.phone,
       receiptTitle: data.receiptTitle,
       receiptFooter: data.receiptFooter,
-      taxRate: Number(data.taxRate) || 0,
-      pointsPer10k: Number(data.pointsPer10k) || 0,
+      // Pajak dibatasi 0–100% dan poin tidak boleh negatif.
+      taxRate: Math.min(Math.max(Number(data.taxRate) || 0, 0), 100),
+      pointsPer10k: Math.max(Number(data.pointsPer10k) || 0, 0),
       qrisStatic,
       notifyStock: data.notifyStock ?? true,
       notifySale: data.notifySale ?? true,
@@ -584,8 +659,8 @@ export async function saveSettings(data: {
       phone: data.phone,
       receiptTitle: data.receiptTitle,
       receiptFooter: data.receiptFooter,
-      taxRate: Number(data.taxRate) || 0,
-      pointsPer10k: Number(data.pointsPer10k) || 0,
+      taxRate: Math.min(Math.max(Number(data.taxRate) || 0, 0), 100),
+      pointsPer10k: Math.max(Number(data.pointsPer10k) || 0, 0),
       qrisStatic,
       notifyStock: data.notifyStock ?? true,
       notifySale: data.notifySale ?? true,
@@ -631,57 +706,71 @@ export async function saveUser(data: { id?: number; name: string; email: string;
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") return { error: "Akses ditolak" };
 
-  if (data.id) {
-    const isSelf = data.id === Number(session.user.id);
-    if (isSelf && data.role !== "ADMIN") return { error: "Tidak dapat mengubah role akun sendiri" };
-    if (isSelf && !data.active) return { error: "Tidak dapat menonaktifkan akun sendiri" };
-    const payload: { name: string; email: string; role: "ADMIN" | "KASIR"; active: boolean; password?: string } = {
-      name: data.name,
-      email: data.email,
-      role: data.role as "ADMIN" | "KASIR",
-      active: data.active,
-    };
-    if (data.password) payload.password = await bcrypt.hash(data.password, 10);
-    await prisma.user.update({ where: { id: data.id }, data: payload });
-  } else {
-    if (!data.password) return { error: "Password wajib diisi" };
-    const password = data.password;
-    // Akun baru = toko baru: langsung buat pengaturan default agar struk & pajak
-    // tidak kosong saat akun dipakai pertama kali.
-    await prisma.$transaction(async (tx) => {
-      const user = await tx.user.create({
-        data: {
-          name: data.name,
-          email: data.email,
-          password: await bcrypt.hash(password, 10),
-          role: data.role as "ADMIN" | "KASIR",
-          active: data.active,
-        },
+  // Aturan aplikasi: 1 akun = 1 toko, role toko hanya KASIR. ADMIN adalah akun
+  // developer (satu-satunya) — tidak ada role lain yang boleh diberi ADMIN.
+  const isSelf = data.id === Number(session.user.id);
+  const role: "ADMIN" | "KASIR" = isSelf && data.role === "ADMIN" ? "ADMIN" : "KASIR";
+  // Normalisasi email agar konsisten dengan lookup login (lowercase).
+  const email = data.email.trim().toLowerCase();
+
+  try {
+    if (data.id) {
+      if (isSelf && role !== "ADMIN") return { error: "Tidak dapat mengubah role akun sendiri" };
+      if (isSelf && !data.active) return { error: "Tidak dapat menonaktifkan akun sendiri" };
+      const payload: { name: string; email: string; role: "ADMIN" | "KASIR"; active: boolean; password?: string } = {
+        name: data.name,
+        email,
+        role,
+        active: data.active,
+      };
+      if (data.password) payload.password = await bcrypt.hash(data.password, 10);
+      await prisma.user.update({ where: { id: data.id }, data: payload });
+    } else {
+      if (!data.password) return { error: "Password wajib diisi" };
+      const password = data.password;
+      // Akun baru = toko baru: langsung buat pengaturan default agar struk & pajak
+      // tidak kosong saat akun dipakai pertama kali.
+      await prisma.$transaction(async (tx) => {
+        const user = await tx.user.create({
+          data: {
+            name: data.name,
+            email,
+            password: await bcrypt.hash(password, 10),
+            role,
+            active: data.active,
+          },
+        });
+        await tx.setting.create({
+          data: {
+            ownerId: user.id,
+            storeName: `Toko ${data.name}`,
+            address: "",
+            phone: "",
+            receiptTitle: "STRUK PENJUALAN",
+            receiptFooter: "Terima kasih atas kunjungan Anda",
+            taxRate: 0,
+            pointsPer10k: 1,
+          },
+        });
+        // Selamat datang: akun baru mendapat notifikasi pertama agar tahu bahwa
+        // pengaturan toko perlu dilengkapi.
+        await tx.notification.create({
+          data: {
+            ownerId: user.id,
+            type: "SYSTEM",
+            title: "Selamat datang di Aplikasi Kasir 🎉",
+            message: "Lengkapi pengaturan toko Anda (nama toko, pajak, QRIS) agar struk tercetak benar.",
+            link: "/settings",
+          },
+        });
       });
-      await tx.setting.create({
-        data: {
-          ownerId: user.id,
-          storeName: `Toko ${data.name}`,
-          address: "",
-          phone: "",
-          receiptTitle: "STRUK PENJUALAN",
-          receiptFooter: "Terima kasih atas kunjungan Anda",
-          taxRate: 0,
-          pointsPer10k: 1,
-        },
-      });
-      // Selamat datang: akun baru mendapat notifikasi pertama agar tahu bahwa
-      // pengaturan toko perlu dilengkapi.
-      await tx.notification.create({
-        data: {
-          ownerId: user.id,
-          type: "SYSTEM",
-          title: "Selamat datang di Aplikasi Kasir 🎉",
-          message: "Lengkapi pengaturan toko Anda (nama toko, pajak, QRIS) agar struk tercetak benar.",
-          link: "/settings",
-        },
-      });
-    });
+    }
+  } catch (e) {
+    // Email duplikat → pesan jelas, bukan 500 mentah.
+    if ((e as { code?: string })?.code === "P2002") {
+      return { error: "Email sudah terdaftar" };
+    }
+    throw e;
   }
   revalidatePath("/users");
 }

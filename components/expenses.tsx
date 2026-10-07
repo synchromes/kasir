@@ -48,24 +48,29 @@ export default function ExpensesPage({
   const [open, setOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Expense | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   const [form, setForm] = React.useState({ amount: 0, note: "" });
 
   function openNew() {
     setEditing(null);
     setForm({ amount: 0, note: "" });
+    setError(null);
     setOpen(true);
   }
   function openEdit(e: Expense) {
     setEditing(e);
     setForm({ amount: e.amount, note: e.note });
+    setError(null);
     setOpen(true);
   }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
+    setError(null);
     setLoading(true);
-    await saveExpense({ id: editing?.id, amount: form.amount, note: form.note });
+    const res = await saveExpense({ id: editing?.id, amount: form.amount, note: form.note });
     setLoading(false);
+    if (res?.error) { setError(res.error); return; }
     setOpen(false);
     router.refresh();
   }
@@ -148,6 +153,7 @@ export default function ExpensesPage({
                 <Label htmlFor="note">Catatan *</Label>
                 <Input id="note" required value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} placeholder="Misal: bayar listrik, gaji karyawan" />
               </div>
+              {error && <p className="text-sm text-destructive">{error}</p>}
             </div>
             <DialogFooter>
               <Button variant="accent" type="submit" disabled={loading}>{loading ? "Menyimpan..." : "Simpan"}</Button>

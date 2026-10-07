@@ -16,7 +16,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { cn } from "@/lib/utils";
-import { DONUT_COLORS } from "./report-charts";
+import { paymentColors } from "@/lib/colors";
 
 const money = new Intl.NumberFormat("id-ID", {
   style: "currency",
@@ -123,7 +123,7 @@ export function MiniDonut({
   centerValue,
   centerLabel,
 }: {
-  data: { name: string; value: number }[];
+  data: { key: string; name: string; value: number }[];
   centerValue: string;
   centerLabel: string;
 }) {
@@ -141,8 +141,8 @@ export function MiniDonut({
             paddingAngle={3}
             strokeWidth={0}
           >
-            {data.map((_, i) => (
-              <Cell key={i} fill={DONUT_COLORS[i % DONUT_COLORS.length]} />
+            {data.map((item) => (
+              <Cell key={item.key} fill={paymentColors[item.key]?.fill ?? "var(--outline)"} />
             ))}
           </Pie>
         </PieChart>
@@ -209,8 +209,8 @@ export function WeeklyBars({
             contentStyle={tooltipStyle}
             cursor={{ fill: "color-mix(in srgb, var(--muted) 45%, transparent)" }}
           />
-          <Bar dataKey="tunai" name="Tunai" fill="var(--primary)" radius={[3, 3, 0, 0]} maxBarSize={14} />
-          <Bar dataKey="nontunai" name="Non-tunai" fill="var(--outline-variant)" radius={[3, 3, 0, 0]} maxBarSize={14} />
+          <Bar dataKey="tunai" name="Tunai" fill={paymentColors.CASH.fill} radius={[3, 3, 0, 0]} maxBarSize={14} />
+          <Bar dataKey="nontunai" name="Non-tunai" fill="var(--on-surface-variant)" radius={[3, 3, 0, 0]} maxBarSize={14} />
         </BarChart>
       </ResponsiveContainer>
     </div>

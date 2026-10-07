@@ -38,6 +38,10 @@ model User {
   role         Role     @default(KASIR)
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
+  // Proteksi brute-force: jumlah gagal login beruntun & waktu kunci sampai
+  // (null = tidak terkunci). Direset saat login sukses.
+  failedLoginAttempts Int      @default(0)
+  lockUntil           DateTime?
 
   // Kepemilikan data (1 toko = 1 akun). Menghapus akun = menghapus tokonya.
   ownedCategories Category[]
@@ -167,6 +171,9 @@ model Sale {
   qrisPayload   String?  @db.LongText
   pointsUsed    Int            @default(0)
   pointsEarned  Int            @default(0)
+  // Kunci idempotensi dari client: mencegah sale ganda saat retry (network
+  // timeout dll.). Dibuat sekali per transaksi di halaman POS.
+  saleKey       String?        @unique
   createdAt     DateTime       @default(now())
   items         SaleItem[]
   movements     StockMovement[]

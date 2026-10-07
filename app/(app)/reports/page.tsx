@@ -30,13 +30,9 @@ const methodIcon: Record<string, React.ComponentType<{ className?: string }>> = 
   QRIS: QrCode,
   TRANSFER: ArrowLeftRight,
 };
-const methodStyle: Record<string, { bg: string; text: string }> = {
-  CASH: { bg: "bg-[#E6FFFA]", text: "text-[#00C292]" },
-  QRIS: { bg: "bg-[#E8F0FF]", text: "text-[#0085FF]" },
-  TRANSFER: { bg: "bg-[#E5E7FF]", text: "text-[#6B46C1]" },
-};
+import { paymentColors as methodStyle } from "@/lib/colors";
 
-// Local YYYY-MM-DD key — timezone-safe (toISOString adalah UTC dan bisa
+// Local YYYY-MM-DD key, timezone-safe (toISOString adalah UTC dan bisa
 // menggeser hari jika dipakai untuk mengelompokkan tanggal).
 function localKey(d: Date) {
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -99,7 +95,7 @@ function SummaryCard({
             {Math.abs(delta).toFixed(1)}%
           </span>
         ) : (
-          <span className="rounded-md bg-muted px-2 py-0.5 text-[11px] font-semibold text-on-surface-variant">—</span>
+          <span className="rounded-md bg-muted px-2 py-0.5 text-[11px] font-semibold text-on-surface-variant">-</span>
         )}
         <span className="text-on-surface-variant">vs periode sebelumnya</span>
       </div>
@@ -205,7 +201,7 @@ export default async function ReportsPage({
   // Daily trend within the range (keyed by ISO date so ordering is chronological)
   const dayFmt = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short" });
   // Key lokal (bukan toISOString UTC) agar konsisten dengan kartu Transaksi
-  // Mingguan & dashboard desktop — transaksi lewat tengah malam tidak terlempar
+  // Mingguan & dashboard desktop, transaksi lewat tengah malam tidak terlempar
   // ke hari sebelumnya.
   const byDay = new Map<string, { key: string; total: number; cost: number }>();
   for (const s of sales) {
@@ -245,7 +241,7 @@ export default async function ReportsPage({
   const topMethodRows = methodData.slice(0, 3);
 
   // Transaksi 7 hari terakhir (hingga akhir rentang): split Tunai vs Non-tunai,
-  // zero-filled agar sumbu grafik kontinu — ala kartu Transaksi Mingguan di
+  // zero-filled agar sumbu grafik kontinu, ala kartu Transaksi Mingguan di
   // dashboard desktop.
   const weekKeyFmt = new Intl.DateTimeFormat("id-ID", { weekday: "short" });
   const weekStart = endOfDay(new Date(toDate.getTime() - 6 * 86400000));
@@ -303,7 +299,7 @@ export default async function ReportsPage({
         key={id}
         href={`/reports?preset=${id}`}
         className={cn(
-          "shrink-0 rounded-md px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
+          "inline-flex min-h-11 shrink-0 items-center rounded-md px-4 py-2 text-xs font-semibold transition-colors",
           id !== "month" && "border-r border-outline-variant",
           active ? "bg-surface-container-high" : "hover:bg-surface-container-low"
         )}
@@ -331,7 +327,7 @@ export default async function ReportsPage({
             <Link
               href="/reports?custom=1"
               className={cn(
-                "flex shrink-0 items-center gap-1 rounded-r-md px-4 py-2 text-xs font-semibold tracking-wide transition-colors hover:bg-surface-container-low",
+                "flex min-h-11 shrink-0 items-center gap-1 rounded-r-md px-4 py-2 text-xs font-semibold transition-colors hover:bg-surface-container-low",
                 custom ? "bg-surface-container-high" : ""
               )}
             >
@@ -342,7 +338,7 @@ export default async function ReportsPage({
           <a
             href={`data:text/csv;charset=utf-8,${csvBlob}`}
             download="laporan-penjualan.csv"
-            className="inline-flex items-center gap-2 rounded-md border border-outline-variant bg-surface-container-lowest px-4 py-2 text-xs font-semibold text-on-surface transition-colors hover:bg-surface-container-high"
+            className="inline-flex min-h-11 items-center gap-2 rounded-md border border-outline-variant bg-surface-container-lowest px-4 py-2 text-xs font-semibold text-on-surface transition-colors hover:bg-surface-container-high"
           >
             <Download className="h-4 w-4" />
             Ekspor
@@ -355,15 +351,15 @@ export default async function ReportsPage({
       {custom && (
         <Card className="p-4">
           <form className="flex flex-wrap items-end gap-3" action="/reports">
-            <div className="space-y-1">
-              <span className="text-xs font-semibold text-on-surface-variant">Dari</span>
-              <Input type="date" name="from" defaultValue={from ?? ""} className="h-9" />
+              <div className="space-y-1">
+                <label htmlFor="report-from" className="text-xs font-semibold text-on-surface-variant">Dari</label>
+                <Input id="report-from" type="date" name="from" defaultValue={from ?? ""} />
             </div>
-            <div className="space-y-1">
-              <span className="text-xs font-semibold text-on-surface-variant">Sampai</span>
-              <Input type="date" name="to" defaultValue={to ?? ""} className="h-9" />
+              <div className="space-y-1">
+                <label htmlFor="report-to" className="text-xs font-semibold text-on-surface-variant">Sampai</label>
+                <Input id="report-to" type="date" name="to" defaultValue={to ?? ""} />
             </div>
-            <Button type="submit" className="h-9">
+            <Button type="submit">
               Terapkan
             </Button>
           </form>
@@ -373,21 +369,21 @@ export default async function ReportsPage({
       {/* Summary cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <SummaryCard
-          title="TOTAL PENDAPATAN"
+          title="Total pendapatan"
           value={formatRupiah(revenue)}
           icon={Banknote}
           delta={revDelta}
           sub={`${sales.length} transaksi · ${totalQty} item`}
         />
         <SummaryCard
-          title="LABA KOTOR"
+          title="Laba kotor"
           value={formatRupiah(grossProfit)}
           icon={TrendingUp}
           delta={profitDelta}
           sub={`Pengeluaran: ${formatRupiah(totalExpense)} · Bersih: ${formatRupiah(netProfit)}`}
         />
         <SummaryCard
-          title="RATA-RATA NILAI TRANSAKSI"
+          title="Rata-rata nilai transaksi"
           value={formatRupiah(avgTransaction)}
           icon={ReceiptText}
           delta={avgDelta}
@@ -429,12 +425,16 @@ export default async function ReportsPage({
                 </span>
               </div>
             ))}
-            {topProducts.length === 0 && <p className="text-sm text-on-surface-variant">Tidak ada data</p>}
+            {topProducts.length === 0 && (
+              <p className="text-sm text-on-surface-variant">
+                Tidak ada data. <Link href="/pos" className="font-semibold text-primary hover:underline">Mulai transaksi pertama di Kasir</Link>
+              </p>
+            )}
           </div>
         </Card>
       </div>
 
-      {/* Metode pembayaran + transaksi mingguan + laba — analitik ala dashboard
+      {/* Metode pembayaran + transaksi mingguan + laba, analitik ala dashboard
           desktop, responsif: menumpuk di mobile, grid di desktop. */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <Card className="flex flex-col p-5 lg:col-span-5">
@@ -462,7 +462,7 @@ export default async function ReportsPage({
             </div>
             <div className="flex items-center justify-center">
               <MiniDonut
-                data={topMethodRows.map((m) => ({ name: m.name, value: m.value }))}
+                data={topMethodRows.map((m) => ({ key: m.key, name: m.name, value: m.value }))}
                 centerValue={rupiahCompact(revenue)}
                 centerLabel="pendapatan"
               />
@@ -482,13 +482,13 @@ export default async function ReportsPage({
           <div className="mt-3 space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2 text-on-surface-variant">
-                <span className="h-2.5 w-2.5 rounded-full bg-primary" /> Tunai
+                <span className="h-2.5 w-2.5 rounded-full bg-accent" /> Tunai
               </span>
               <span className="font-mono text-xs font-medium">{weekSum ? Math.round((weekTunai / weekSum) * 100) : 0}%</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2 text-on-surface-variant">
-                <span className="h-2.5 w-2.5 rounded-full bg-outline-variant" /> Non-tunai
+                <span className="h-2.5 w-2.5 rounded-full bg-on-surface-variant" /> Non-tunai
               </span>
               <span className="font-mono text-xs font-medium">{weekSum ? 100 - Math.round((weekTunai / weekSum) * 100) : 0}%</span>
             </div>
@@ -536,7 +536,9 @@ export default async function ReportsPage({
           </Button>
         </div>
         {lowStock.length === 0 ? (
-          <p className="text-sm text-on-surface-variant">Semua stok aman</p>
+          <p className="text-sm text-on-surface-variant">
+            Semua stok aman. <Link href="/products" className="font-semibold text-primary hover:underline">Lihat produk</Link>
+          </p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {lowStock.map((p) => (
@@ -578,7 +580,7 @@ export default async function ReportsPage({
                 <TableCell>{methodLabel[s.paymentMethod] ?? s.paymentMethod}</TableCell>
                 <TableCell className="text-right font-mono text-xs font-semibold">{formatRupiah(s.total)}</TableCell>
                 <TableCell className="text-center">
-                  <span className="inline-flex rounded-full bg-secondary-container/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-on-secondary-container">
+                   <span className="inline-flex rounded-full bg-secondary-container px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-on-secondary-container">
                     Selesai
                   </span>
                 </TableCell>
@@ -587,7 +589,7 @@ export default async function ReportsPage({
             {sales.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} className="py-8 text-center text-on-surface-variant">
-                  Tidak ada data di rentang ini
+                  Tidak ada data di rentang ini. <Link href="/pos" className="font-semibold text-primary hover:underline">Buat transaksi baru</Link>
                 </TableCell>
               </TableRow>
             )}

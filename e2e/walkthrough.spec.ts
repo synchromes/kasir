@@ -151,7 +151,7 @@ test.describe("Walkthrough onboarding", () => {
     await expect(page.getByRole("dialog")).toHaveCount(0);
 
     // Buka dialog Panduan dari header, lalu klik "Ulangi tur".
-    await page.getByRole("button", { name: "Bantuan — panduan aplikasi" }).click();
+    await page.getByRole("button", { name: "Bantuan, panduan aplikasi" }).click();
     const guide = page.getByRole("dialog", { name: "Panduan Aplikasi" });
     await expect(guide).toBeVisible();
     await guide.getByRole("button", { name: "Ulangi tur" }).click();

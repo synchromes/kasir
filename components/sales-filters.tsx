@@ -13,7 +13,7 @@ const METHOD_OPTIONS = [
 ];
 
 const selectCls =
-  "h-9 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
+  "h-11 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
 
 export function SalesFilters({
   q = "",
@@ -107,7 +107,7 @@ export function SalesFilters({
             defaultValue={q}
             onChange={onSearchChange}
             placeholder="Cari nomor invoice atau nama pelanggan..."
-            className="h-9 bg-surface pl-9 text-sm shadow-none"
+            className="h-11 bg-surface pl-9 text-sm shadow-none"
           />
         </div>
       </div>
@@ -133,7 +133,7 @@ export function SalesFilters({
         <button
           type="button"
           onClick={reset}
-          className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
+          className="inline-flex h-11 cursor-pointer items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
         >
           <RotateCcw className="h-3.5 w-3.5" />
           Reset

@@ -129,13 +129,13 @@ export default async function SalesPage({
                   <TableCell className="text-on-surface-variant">{s.cashier?.name ?? "-"}</TableCell>
                   <TableCell className="text-right font-mono text-xs font-semibold">{formatRupiah(s.total)}</TableCell>
                   <TableCell className="text-center">
-                    <span className="inline-flex rounded-full bg-secondary-container/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-on-secondary-container">
+                     <span className="inline-flex rounded-full bg-secondary-container px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-on-secondary-container">
                       Selesai
                     </span>
                   </TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm" asChild>
-                      <Link href={`/sales/${s.id}`} className="text-on-surface-variant hover:text-primary">
+                      <Link href={`/sales/${s.id}`} aria-label={`Lihat transaksi ${s.invoiceNo}`} className="text-on-surface-variant hover:text-primary">
                         <Eye className="h-4 w-4" />
                       </Link>
                     </Button>

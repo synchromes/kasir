@@ -18,38 +18,55 @@ export function NotificationBell({ className }: { className?: string }) {
   const [items, setItems] = React.useState<NotificationItem[]>([]);
   const [unread, setUnread] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
   const panelRef = React.useRef<HTMLDivElement>(null);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
   const firstRender = React.useRef(true);
+  // Urutan request: hanya respons fetch TERBARU yang diterapkan, agar polling
+  // yang selesai lebih lambat tidak menimpa data yang lebih baru.
+  const fetchSeq = React.useRef(0);
+
+  const apply = React.useCallback((seq: number, data: { items?: NotificationItem[]; unread?: number }) => {
+    if (seq !== fetchSeq.current) return;
+    setItems(data.items ?? []);
+    setUnread(data.unread ?? 0);
+  }, []);
 
   const load = React.useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
+    const seq = ++fetchSeq.current;
     try {
       const res = await fetch("/api/notifications", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
-        setItems(data.items ?? []);
-        setUnread(data.unread ?? 0);
+        apply(seq, data);
+        if (seq === fetchSeq.current) setError(null);
+      } else {
+        if (seq === fetchSeq.current) setError("Notifikasi gagal dimuat.");
       }
     } catch {
-      // abaikan error polling; tetap tampilkan data lama
+      if (seq === fetchSeq.current) setError("Notifikasi gagal dimuat.");
     } finally {
-      setLoading(false);
+      if (seq === fetchSeq.current) setLoading(false);
     }
-  }, []);
+  }, [apply]);
 
   // Muat saat mount + polling 30 detik + refresh tiap navigasi.
   React.useEffect(() => {
     let active = true;
     async function tick() {
+      const seq = ++fetchSeq.current;
       try {
         const res = await fetch("/api/notifications", { cache: "no-store" });
         if (res.ok && active) {
           const data = await res.json();
-          setItems(data.items ?? []);
-          setUnread(data.unread ?? 0);
+          apply(seq, data);
+          if (seq === fetchSeq.current) setError(null);
+        } else if (active && seq === fetchSeq.current) {
+          setError("Notifikasi gagal dimuat.");
         }
       } catch {
-        // abaikan error polling; tetap tampilkan data lama
+        if (active && seq === fetchSeq.current) setError("Notifikasi gagal dimuat.");
       } finally {
         if (active) setLoading(false);
       }
@@ -60,7 +77,7 @@ export function NotificationBell({ className }: { className?: string }) {
       active = false;
       clearInterval(t);
     };
-  }, []);
+  }, [apply]);
 
   // Muat ulang setelah navigasi (pathname berubah), kecuali mount pertama.
   React.useEffect(() => {
@@ -81,29 +98,63 @@ export function NotificationBell({ className }: { className?: string }) {
     return () => document.removeEventListener("mousedown", onDoc);
   }, [open]);
 
+  React.useEffect(() => {
+    if (!open) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   async function markRead(id: number) {
+    // Optimistic update; dikembalikan bila request gagal.
     setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
     setUnread((u) => Math.max(0, u - 1));
-    await fetch("/api/notifications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "read", id }),
-    });
+    try {
+      const res = await fetch("/api/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "read", id }),
+      });
+      if (!res.ok) throw new Error();
+      setError(null);
+      return true;
+    } catch {
+      setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: false } : n)));
+      setUnread((u) => u + 1);
+      setError("Gagal menandai notifikasi. Coba lagi.");
+      return false;
+    }
   }
 
   async function markAllRead() {
     if (unread === 0) return;
+    const previousItems = items;
+    const previousUnread = unread;
     setItems((prev) => prev.map((n) => ({ ...n, read: true })));
     setUnread(0);
-    await fetch("/api/notifications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "readAll" }),
-    });
+    try {
+      const res = await fetch("/api/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "readAll" }),
+      });
+      if (!res.ok) throw new Error();
+    } catch {
+      // Gagal: kembalikan ke kondisi sebenarnya dari server.
+      fetchSeq.current++;
+      setItems(previousItems);
+      setUnread(previousUnread);
+      setError("Gagal menandai notifikasi. Coba lagi.");
+    }
   }
 
-  function onItemClick(n: NotificationItem) {
-    if (!n.read) markRead(n.id);
+  async function onItemClick(n: NotificationItem) {
+    if (!n.read && !(await markRead(n.id))) return;
     setOpen(false);
     if (n.link) router.push(n.link);
   }
@@ -111,6 +162,7 @@ export function NotificationBell({ className }: { className?: string }) {
   return (
     <div ref={panelRef} className={cn("relative", className)}>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => {
           setOpen((o) => !o);
@@ -118,7 +170,7 @@ export function NotificationBell({ className }: { className?: string }) {
         }}
         aria-label={`Notifikasi${unread ? `, ${unread} belum dibaca` : ""}`}
         aria-expanded={open}
-        className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-surface-container-high hover:text-primary"
+        className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-surface-container-high hover:text-primary"
       >
         {unread > 0 ? <BellRing className="h-5 w-5" /> : <Bell className="h-5 w-5" />}
         {unread > 0 && (
@@ -129,7 +181,7 @@ export function NotificationBell({ className }: { className?: string }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-outline-variant bg-surface shadow-lg">
+        <div className="fixed left-4 right-4 top-[76px] z-50 overflow-hidden rounded-xl border border-outline-variant bg-surface shadow-lg sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 sm:w-[22rem]">
           {/* Header panel */}
           <div className="flex items-center justify-between border-b border-outline-variant px-4 py-3">
             <div>
@@ -141,7 +193,7 @@ export function NotificationBell({ className }: { className?: string }) {
                 <button
                   type="button"
                   onClick={markAllRead}
-                  className="flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+                  className="flex min-h-[44px] cursor-pointer items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
                 >
                   <CheckCheck className="h-3.5 w-3.5" />
                   Tandai semua dibaca
@@ -149,9 +201,9 @@ export function NotificationBell({ className }: { className?: string }) {
               )}
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={() => { setOpen(false); triggerRef.current?.focus(); }}
                 aria-label="Tutup notifikasi"
-                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -166,7 +218,15 @@ export function NotificationBell({ className }: { className?: string }) {
                 Memuat...
               </div>
             )}
-            {!loading && items.length === 0 && (
+           {!loading && error && (
+             <div className="flex flex-col items-center gap-3 py-10 text-center">
+               <p role="alert" className="text-sm font-medium text-destructive">{error}</p>
+               <button type="button" onClick={() => load()} className="min-h-11 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-primary hover:bg-surface-container-low">
+                 Coba lagi
+               </button>
+             </div>
+           )}
+           {!loading && !error && items.length === 0 && (
               <div className="flex flex-col items-center gap-2 py-10 text-center">
                 <Inbox className="h-8 w-8 text-outline" />
                 <p className="text-sm font-medium">Tidak ada notifikasi</p>
@@ -209,7 +269,7 @@ export function NotificationBell({ className }: { className?: string }) {
                   setOpen(false);
                   router.push("/notifications");
                 }}
-                className="cursor-pointer text-xs font-semibold text-primary transition-colors hover:text-primary/80"
+                className="min-h-11 cursor-pointer px-3 text-xs font-semibold text-primary transition-colors hover:text-primary/80"
               >
                 Lihat semua notifikasi
               </button>

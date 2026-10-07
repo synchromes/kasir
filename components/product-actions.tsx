@@ -24,10 +24,10 @@ export function DeleteProductButton({
 }: {
   id: number;
   name: string;
-  // Jumlah item transaksi (penjualan+pembelian) yang mereferensikan produk —
+  // Jumlah item transaksi (penjualan+pembelian) yang mereferensikan produk -
   // jika > 0 produk TIDAK bisa dihapus (integritas riwayat).
   historyCount?: number;
-  // Jumlah riwayat pergerakan stok — ikut terhapus saat produk dihapus.
+  // Jumlah riwayat pergerakan stok, ikut terhapus saat produk dihapus.
   movementCount?: number;
 }) {
   const router = useRouter();
@@ -69,7 +69,7 @@ export function DeleteProductButton({
               meng-clone span pembungkus sebagai elemen trigger. */}
           {blocked ? (
             <span className="pointer-events-none absolute -right-1.5 -top-1.5">
-              <ConsequenceChip title="Tidak dapat dihapus — sudah tercatat di transaksi">{historyCount}×</ConsequenceChip>
+              <ConsequenceChip title="Tidak dapat dihapus, sudah tercatat di transaksi">{historyCount}×</ConsequenceChip>
             </span>
           ) : movementCount > 0 ? (
             <span className="pointer-events-none absolute -right-1.5 -top-1.5">

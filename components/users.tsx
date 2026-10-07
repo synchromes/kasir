@@ -54,6 +54,7 @@ export default function UsersPage({
   const [editing, setEditing] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [actionError, setActionError] = React.useState<string | null>(null);
   const [form, setForm] = React.useState({ ...empty });
   const [page, setPage] = React.useState(1);
   const [per, setPer] = React.useState(DEFAULT_PER);
@@ -62,11 +63,12 @@ export default function UsersPage({
   const safePage = Math.min(page, pageCount);
   const paged = users.slice((safePage - 1) * per, safePage * per);
 
-  function openNew() { setEditing(null); setForm({ ...empty }); setError(null); setOpen(true); }
+  function openNew() { setEditing(null); setForm({ ...empty }); setError(null); setActionError(null); setOpen(true); }
   function openEdit(u: User) {
     setEditing(u);
     setForm({ name: u.name, email: u.email, role: u.role, active: u.active, password: "" });
     setError(null);
+    setActionError(null);
     setOpen(true);
   }
 
@@ -106,7 +108,8 @@ export default function UsersPage({
         : "Seluruh data tokonya (produk, transaksi, dll.) ikut terhapus permanen dan tidak bisa dikembalikan.",
     });
     if (!ok) return;
-    await deleteUser(id);
+    const res = await deleteUser(id);
+    if (res?.error) { setActionError(res.error); return; }
     router.refresh();
   }
 
@@ -122,6 +125,8 @@ export default function UsersPage({
           <Button variant="accent" onClick={openNew}>+ Tambah Pengguna</Button>
         </div>
       </div>
+
+      {actionError && <p className="rounded-lg bg-destructive-container/60 px-3 py-2 text-sm text-destructive">{actionError}</p>}
 
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
@@ -145,7 +150,9 @@ export default function UsersPage({
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
                     <Button variant="ghost" size="sm" onClick={() => openEdit(u)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDelete(u.id)}><Trash2 className="h-4 w-4" /></Button>
+                    {u.id !== currentUserId && (
+                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDelete(u.id)}><Trash2 className="h-4 w-4" /></Button>
+                    )}
                     {u.id !== currentUserId && (() => {
                       const d = dataCounts[u.id];
                       const parts = [];
@@ -198,7 +205,9 @@ export default function UsersPage({
                   <Select value={form.role} onValueChange={(v) => setForm({ ...form, role: v })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ADMIN">Admin</SelectItem>
+                      {/* Role ADMIN hanya untuk akun developer (akun sendiri) —
+                          akun toko selalu KASIR (1 akun = 1 toko). */}
+                      <SelectItem value="ADMIN" disabled={!!editing && editing.id !== currentUserId}>Admin</SelectItem>
                       <SelectItem value="KASIR">Kasir</SelectItem>
                     </SelectContent>
                   </Select>

@@ -8,7 +8,9 @@ export async function GET(req: NextRequest) {
   const ownerId = Number(session.user.id);
 
   const q = req.nextUrl.searchParams.get("q") ?? "";
-  const take = Math.min(Number(req.nextUrl.searchParams.get("take") ?? 20), 50);
+  const takeRaw = Number(req.nextUrl.searchParams.get("take") ?? 20);
+  // Parameter tidak valid (NaN/negatif/0) → default 20; batas atas 50.
+  const take = Math.min(Math.max(Number.isFinite(takeRaw) ? Math.floor(takeRaw) : 20, 1), 50);
 
   const products = await prisma.product.findMany({
     where: {

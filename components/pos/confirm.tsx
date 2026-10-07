@@ -11,7 +11,7 @@ import { formatRupiah } from "@/lib/utils";
 import { Button, Card, Label } from "@/components/ui";
 import { PENDING_KEY } from "@/lib/storage";
 
-// Payload transaksi yang masih berjalan — diisi oleh POS (components/pos/pos.tsx)
+// Payload transaksi yang masih berjalan, diisi oleh POS (components/pos/pos.tsx)
 // saat kasir menekan "Lanjutkan Pembayaran", dibersihkan di halaman sukses.
 
 type PendingPayment = {
@@ -60,6 +60,12 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const proofRef = React.useRef<HTMLInputElement>(null);
+  // Kunci idempotensi transaksi, stabil untuk semua retry halaman ini.
+  const [saleKey] = React.useState(() =>
+    typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID()
+      : `pos-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`
+  );
 
   React.useEffect(() => {
     let alive = true;
@@ -138,6 +144,8 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
         customerId: pending.customerId,
         usePoints: pending.usePoints,
         paymentProof: proofImage,
+        saleKey,
+        pointsUsed: pending.pointsUsed,
       });
       if (res?.error) {
         setSubmitError(res.error);
@@ -147,7 +155,7 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
       // Sukses: checkout melakukan redirect ke /pos/success/{id}; storage
       // dibersihkan oleh komponen ClearPending di halaman sukses.
     } catch {
-      setSubmitError("Terjadi kesalahan saat memproses pembayaran. Coba lagi.");
+      setSubmitError("Terjadi kesalahan saat memproses pembayaran. Klik tombol lagi untuk mencoba ulang.");
       setLoading(false);
     }
   }
@@ -155,7 +163,7 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
   const configError = !ready
     ? null
     : !staticTrim
-      ? "QRIS statis belum diatur — buka menu Pengaturan lalu upload/tempel string QRIS statis."
+      ? "QRIS statis belum diatur, buka menu Pengaturan lalu upload/tempel string QRIS statis."
       : !dynamicPayload
         ? "Gagal mengonversi QRIS statis menjadi dinamis."
         : null;
@@ -221,11 +229,11 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
                 <img src={qrUrl} alt="QRIS dinamis" className="h-64 w-64 sm:h-72 sm:w-72" />
               </div>
               <div className="mt-4 text-center">
-                <p className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">Total yang harus dibayar</p>
+                <p className="text-xs font-semibold text-on-surface-variant">Total yang harus dibayar</p>
                 <p className="mt-1 font-display text-3xl font-bold text-primary">{formatRupiah(amount)}</p>
               </div>
               <p className="mt-3 text-xs text-on-surface-variant">
-                Catatan: QRIS Dinamis — nominal otomatis terisi saat dipindai
+                Catatan: QRIS Dinamis, nominal otomatis terisi saat dipindai
               </p>
             </>
           ) : (
@@ -236,7 +244,7 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
         {/* Rincian pesanan */}
         <div className="mt-6 border-t border-dashed border-outline-variant pt-4">
           <div className="mb-2 flex items-center justify-between text-xs text-on-surface-variant">
-            <span className="font-semibold uppercase tracking-wide">{setting.storeName || "Toko"}</span>
+            <span className="font-semibold">{setting.storeName || "Toko"}</span>
             <span>{pending.items.reduce((s, i) => s + i.qty, 0)} item</span>
           </div>
           <ul className="space-y-1.5 text-sm">

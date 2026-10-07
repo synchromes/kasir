@@ -20,19 +20,19 @@ export function MobileNav({ name, userId }: { name: string; userId?: number }) {
           Aplikasi Kasir
         </Link>
         <div className="flex items-center gap-1.5">
-          <NotificationBell className="[&>button]:h-10 [&>button]:w-10" />
+          <NotificationBell className="[&>button]:h-11 [&>button]:w-11" />
           <GuideDialog userId={userId} />
           <Link
             href="/settings"
             aria-label="Pengaturan akun"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-outline-variant bg-surface-container-lowest text-sm font-bold text-primary transition-colors hover:border-primary/50"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-outline-variant bg-surface-container-lowest text-sm font-bold text-primary transition-colors hover:border-primary/50"
           >
             {initial}
           </Link>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             aria-label="Keluar"
-            className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-destructive"
+            className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-destructive"
           >
             <LogOut className="h-5 w-5" />
           </button>

@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
-  ArrowRight,
   BarChart3,
   ChevronRight,
   PackageOpen,
@@ -18,35 +17,23 @@ import {
 import { navForRole } from "@/components/nav-items";
 import { cn, formatRupiah, formatNumber } from "@/lib/utils";
 
-// Palet tile lembut Material (tanpa gradient) — satu warna per menu,
-// dipakai berurutan agar grid terlihat hidup seperti super-app.
+// Biru untuk navigasi umum, hijau inventaris, amber pengeluaran.
 const tilePalette = [
-  { bg: "bg-[#E8F0FF]", text: "text-[#0085FF]" },
-  { bg: "bg-[#E6FFFA]", text: "text-[#00C292]" },
-  { bg: "bg-[#E5E7FF]", text: "text-[#6B46C1]" },
-  { bg: "bg-[#FFF4E5]", text: "text-[#FF9800]" },
-  { bg: "bg-[#FFE5E5]", text: "text-[#FF4D4D]" },
-  { bg: "bg-[#F3E5F5]", text: "text-[#8E24AA]" },
-  { bg: "bg-[#E0F2F1]", text: "text-[#00897B]" },
+  { bg: "bg-primary-soft", text: "text-primary" },
+  { bg: "bg-secondary-container", text: "text-on-secondary-container" },
+  { bg: "bg-tertiary-soft", text: "text-tertiary" },
 ];
 
 // Warna solid untuk kartu "Produk Terlaris" (gaya promo native).
-const topColors = [
-  "bg-[#00C292]",
-  "bg-[#0085FF]",
-  "bg-[#6B46C1]",
-  "bg-[#FF9800]",
-  "bg-[#FF4D4D]",
-  "bg-[#00897B]",
-];
+const topColors = ["bg-primary"];
 
 const noScrollbar = "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
-// Warna tile stabil per menu (hash href) — tidak bergeser saat grid difilter.
+// Kelompok tetap sama saat menu difilter.
 function tileColor(href: string) {
-  let h = 0;
-  for (const c of href) h += c.charCodeAt(0);
-  return tilePalette[h % tilePalette.length];
+  if (["/products", "/categories", "/units", "/suppliers", "/purchases"].includes(href)) return tilePalette[1];
+  if (href === "/expenses") return tilePalette[2];
+  return tilePalette[0];
 }
 
 export type HomeData = {
@@ -81,13 +68,13 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
           onChange={(e) => setQ(e.target.value)}
           placeholder="Cari menu..."
           aria-label="Cari menu"
-          className="h-11 w-full rounded-full border border-outline-variant/40 bg-surface-container-lowest pl-12 pr-10 text-sm text-on-surface shadow-sm outline-none transition-all placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary-fixed-dim"
+          className="h-11 w-full rounded-lg border border-outline-variant/40 bg-surface-container-lowest pl-12 pr-10 text-sm text-on-surface shadow-sm outline-none transition-all placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary-fixed-dim"
         />
         {q && (
           <button
             onClick={() => setQ("")}
             aria-label="Bersihkan pencarian"
-            className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high"
+            className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high"
           >
             <X className="h-4 w-4" />
           </button>
@@ -103,9 +90,6 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
             <span className="flex items-center gap-1.5 text-xs font-semibold">
               <Store className="h-4 w-4" />
               {data.storeName}
-            </span>
-            <span className="rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
-              Hari Ini
             </span>
           </div>
           <div className="mt-3 font-display text-3xl font-bold leading-none tracking-tight">
@@ -194,13 +178,13 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-display text-base font-bold">Produk Terlaris</h2>
-          <Link href="/reports" className="flex items-center gap-0.5 text-xs font-semibold text-primary">
-            Lihat semua <ArrowRight className="h-3.5 w-3.5" />
+          <Link href="/reports" className="text-xs font-semibold text-primary">
+            Lihat semua
           </Link>
         </div>
         {data.topProducts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-6 text-center text-sm text-on-surface-variant">
-            Belum ada penjualan bulan ini — mulai transaksi pertama di Kasir.
+            Belum ada penjualan bulan ini. Mulai transaksi pertama di Kasir.
           </div>
         ) : (
           <div className={cn("-mx-4 flex gap-3 overflow-x-auto px-4 pb-1", noScrollbar)}>
@@ -213,9 +197,6 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
                   topColors[i % topColors.length]
                 )}
               >
-                <span className="absolute right-2.5 top-2.5 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold">
-                  #{i + 1}
-                </span>
                 <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/85">
                   <TrendingUp className="h-3.5 w-3.5" /> Terlaris
                 </span>
@@ -239,8 +220,8 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-display text-base font-bold">Perlu Restock</h2>
-          <Link href="/stock" className="flex items-center gap-0.5 text-xs font-semibold text-primary">
-            Kelola stok <ArrowRight className="h-3.5 w-3.5" />
+          <Link href="/stock" className="text-xs font-semibold text-primary">
+            Kelola stok
           </Link>
         </div>
         {data.lowStock.length === 0 ? (
@@ -258,7 +239,7 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
                 <span
                   className={cn(
                     "flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
-                    p.stock === 0 ? "bg-[#FFE5E5] text-[#FF4D4D]" : "bg-[#FFF4E5] text-[#B45309]"
+                    p.stock === 0 ? "bg-destructive-container text-on-destructive-container" : "bg-tertiary-fixed text-on-tertiary-fixed"
                   )}
                 >
                   <AlertTriangle className="h-3 w-3" />
@@ -267,7 +248,7 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
                 <h3 className="mt-2 line-clamp-2 text-sm font-bold leading-snug">{p.name}</h3>
                 <div className="mt-2 flex items-baseline gap-1">
                   <span
-                    className={cn("font-display text-lg font-bold leading-none", p.stock === 0 ? "text-[#FF4D4D]" : "text-[#B45309]")}
+                    className={cn("font-display text-lg font-bold leading-none", p.stock === 0 ? "text-on-destructive-container" : "text-tertiary")}
                   >
                     {formatNumber(p.stock)}
                   </span>
