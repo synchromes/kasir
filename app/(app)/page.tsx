@@ -17,7 +17,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { DonutChart, DONUT_COLORS } from "@/components/charts/report-charts";
-import { TrendArea, MiniDonut, SparkArea, WeeklyBars } from "@/components/charts/dashboard-charts";
+import { TrendArea, MiniDonut, WeeklyBars } from "@/components/charts/dashboard-charts";
 import { DeltaPill } from "@/components/delta-pill";
 import { HomeMobile } from "@/components/home-mobile";
 import { OnboardingTour } from "@/components/onboarding-tour";
@@ -138,15 +138,17 @@ export default async function DashboardPage() {
         })
       : Promise.resolve([] as { productId: number; qty: number; price: number }[]),
     topIds.length
-      ? prisma.product.findMany({ where: { id: { in: topIds } }, select: { id: true, name: true } })
-      : Promise.resolve([] as { id: number; name: string }[]),
+      ? prisma.product.findMany({ where: { id: { in: topIds } }, select: { id: true, name: true, category: { select: { name: true } } } })
+      : Promise.resolve([] as { id: number; name: string; category: { name: string } | null }[]),
   ]);
   const nameById = new Map(topProductsInfo.map((p) => [p.id, p.name]));
+  const categoryById = new Map(topProductsInfo.map((p) => [p.id, p.category?.name ?? ""]));
   const revenueById = new Map<number, number>();
   for (const i of topRevenueItems) revenueById.set(i.productId, (revenueById.get(i.productId) ?? 0) + i.price * i.qty);
   const mobileTopProducts = topByQty.map((t) => ({
     id: t.productId,
     name: nameById.get(t.productId) ?? "Produk",
+    category: categoryById.get(t.productId) ?? "",
     qty: t._sum.qty ?? 0,
     revenue: revenueById.get(t.productId) ?? 0,
   }));
@@ -323,7 +325,6 @@ export default async function DashboardPage() {
 
   const monthCost = monthItems.reduce((s, i) => s + i.cost * i.qty, 0);
   const netProfit = monthTotal - monthCost - monthExpense;
-  const profitSeries = trendData.map((d) => ({ value: d.profit }));
 
   return (
     <>
@@ -535,9 +536,9 @@ export default async function DashboardPage() {
               <span className="text-sm font-semibold text-on-surface-variant">Laba bersih</span>
               <span className="font-display text-lg font-bold">{formatRupiah(netProfit)}</span>
             </div>
-            <div className="-mx-1 mt-2">
-              <SparkArea data={profitSeries} />
-            </div>
+            <p className="mt-1 text-xs text-on-surface-variant">
+              Lihat trennya di grafik <span className="font-semibold">Tren Pendapatan</span> mode Laba
+            </p>
           </div>
           <div className="mt-4 flex flex-1 flex-col justify-between gap-3">
             <div className="flex items-center justify-between">

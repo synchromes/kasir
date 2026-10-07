@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Settings, LogOut, Plus } from "lucide-react";
 import { signOut } from "next-auth/react";
@@ -18,10 +19,7 @@ export function Sidebar({ role }: { role: string }) {
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-outline-variant bg-surface lg:flex">
       <div className="px-5 pb-5 pt-6">
         <Link href="/" className="inline-block">
-          <div className="font-display text-lg font-bold text-primary">Aplikasi Kasir</div>
-          <p className="mt-0.5 text-xs text-on-surface-variant">
-            {role === "ADMIN" ? "Administrator" : "Stasiun Kasir"}
-          </p>
+          <div className="flex items-center gap-2 font-display text-lg font-bold text-primary"><Image src="/logo-kasirku.png" alt="" width={40} height={40} className="rounded-lg" />Kasirku</div>
         </Link>
       </div>
 
@@ -59,6 +57,9 @@ export function Sidebar({ role }: { role: string }) {
       </nav>
 
       <div className="mt-auto border-t border-outline-variant px-2 py-3">
+        <p className="px-3 pb-2 text-[11px] text-on-surface-variant">
+          Masuk sebagai {role === "ADMIN" ? "Administrator" : "Stasiun Kasir"}
+        </p>
         <Link
           href="/settings"
           data-tour="settings"

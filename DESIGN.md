@@ -4,6 +4,10 @@ Arah gaya aplikasi kasir toko retail (internal, bukan landing marketing). Dituli
 
 Dial: ENERGY 1 / RHYTHM 2 / MOTION 1
 
+## Referensi mobile Kasirku (disetujui pemilik)
+
+Beranda mengikuti gambar referensi pemilik: header Kasirku, hero penjualan biru, launcher empat kolom berwarna ceria, carousel produk, dan tab bawah putih dengan indikator aktif. Tile menu memakai ikon flat geometris 2D warna cerah sesuai fungsi tiap menu (kubus = Inventaris, truk = Supplier, dan seterusnya); watermark kartu Terlaris mengikuti kategori produk (mangkuk = makanan, gelas = minuman, box = lainnya) dengan nama produk sebagai cadangan bila kategori kosong; tombol hero dan pil harga memakai kaca putih (putih transfaran + blur); tooltip grafik selalu berlabel jelas (donat terlaris = jumlah terjual, spark laba = nominal rupiah); sidebar desktop tetap memakai Lucide yang seragam pada ukuran kecil. Peringatan stok hanya tampil sebagai lencana pada tombol Stok di hero (ikon + jumlah + tulisan Perlu restock); banner dan carousel restock terpisah dihapus agar tidak redundan. Logo resmi dari file pemilik dipasang sebagai `/logo-kasirku.png`; angka dan nama toko tetap berasal dari data aplikasi. Gradien biru menandai fokus penjualan, ikon struk menguatkan konteks kasir, dan ikon api hanya menandai produk terlaris. Warna tile mengikuti identitas menu; teks tetap gelap dan kartu berwarna memakai dasar yang cukup gelap untuk teks putih. Dial mobile ENERGY 2 / RHYTHM 2 / MOTION 1. Pencarian berlabel sesuai fungsi menu; tidak menampilkan dropdown toko atau badge notifikasi palsu.
+
 - ENERGY 1 (tenang, ala alat kerja): tidak ada hero marketing, tidak ada gradien ungu-biru. Satu fokus per layar, mis. hero biru berisi omzet hari ini di mobile.
 - RHYTHM 2 (konsisten dengan variasi): kartu memakai pola yang sama, tapi kepadatan beda antara dasbor desktop (grid 12 kolom) dan beranda mobile (hero + grid 4 kolom + carousel).
 - MOTION 1 (hover saja): tanpa loop tak berujung. `animate-spin` hanya untuk loading nyata, `transition-transform active:scale` hanya umpan balik sentuh.
@@ -39,7 +43,7 @@ Skala: input/button `rounded-lg`, kartu/dialog `rounded-xl`, status/badge `round
 - Grafik kategorikal: memakai token chart-1 sampai chart-6; warna batang data minimal punya kontras non-teks 3:1 terhadap permukaan.
 - Aksi tambah data, simpan, dan bayar memakai accent hijau; navigasi dan filter memakai primary biru. Merah untuk bahaya dan kartu Pengeluaran Bulan Ini (override pemilik: pengeluaran tampil merah agar langsung terbaca sebagai arus keluar).
 - Agregat Non-tunai memakai on-surface-variant, terpisah dari identitas QRIS/Transfer. Grafik kategorikal memakai biru, hijau, amber, abu, olive, dan teal gelap sebagai palet data tersendiri; label dan pemisah tetap diperlukan untuk membedakan seri.
-- Layout: dasbor mengikuti narasi toko (ringkasan, tren, metode, mingguan, laba, tabel, transaksi, stok). Mobile memakai launcher grid karena kasir memegang HP saat jualan.
+- Layout: dasbor mengikuti narasi toko (ringkasan, tren, metode, mingguan, laba, tabel, transaksi, stok). Kartu Laba murni ringkasan angka; tren laba hanya ada di grafik Tren Pendapatan agar tidak ganda. Mobile memakai launcher grid karena kasir memegang HP saat jualan.
 - POS: kolom pesanan, keranjang, dan total selebar 400px di desktop agar katalog mendapat ruang lebih; mobile mengikuti lebar layar.
 - StatCard flagship: kartu Penjualan lebih besar karena itu angka yang dilihat tiap pagi.
 - Panah: hanya untuk aksi yang butuh isyarat arah, sisanya teks polos.

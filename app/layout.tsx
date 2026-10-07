@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Aplikasi Kasir",
+  title: "Kasirku",
   description: "Aplikasi kasir untuk toko retail",
 };
 

@@ -174,6 +174,12 @@ export function SparkArea({ data }: { data: { value: number }[] }) {
             strokeWidth={2}
             fill="url(#dash-spark)"
           />
+          <Tooltip
+            formatter={(v) => money.format(Number(v))}
+            labelFormatter={() => "Laba"}
+            contentStyle={tooltipStyle}
+            cursor={{ stroke: "var(--outline-variant)" }}
+          />
         </AreaChart>
       </ResponsiveContainer>
     </div>

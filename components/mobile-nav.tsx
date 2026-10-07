@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut, ShoppingCart } from "lucide-react";
+import { LogOut } from "lucide-react";
+import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { BottomNav } from "@/components/bottom-nav";
 import { NotificationBell } from "@/components/notification-bell";
@@ -14,18 +15,18 @@ export function MobileNav({ name, userId }: { name: string; userId?: number }) {
 
   return (
     <>
-      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-outline-variant bg-surface px-4 py-3 lg:hidden">
-        <Link href="/" className="flex items-center gap-2 font-display font-bold text-primary">
-          <ShoppingCart className="h-5 w-5" />
-          Aplikasi Kasir
+      <div className="flex flex-wrap items-center justify-between gap-y-2 bg-surface px-4 py-4 lg:hidden">
+        <Link href="/" className="flex min-h-11 items-center gap-2 font-display text-on-surface">
+          <Image src="/logo-kasirku.png" alt="" width={44} height={44} className="rounded-xl" />
+          <span><span className="block text-xl font-bold tracking-tight">Kasirku</span><span className="hidden text-[10px] font-medium text-on-surface-variant min-[480px]:block">Mudah · Cepat · Terpercaya</span></span>
         </Link>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-0.5">
           <NotificationBell className="[&>button]:h-11 [&>button]:w-11" />
           <GuideDialog userId={userId} />
           <Link
             href="/settings"
             aria-label="Pengaturan akun"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-outline-variant bg-surface-container-lowest text-sm font-bold text-primary transition-colors hover:border-primary/50"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-soft text-sm font-bold text-primary transition-colors hover:bg-primary-fixed-dim"
           >
             {initial}
           </Link>

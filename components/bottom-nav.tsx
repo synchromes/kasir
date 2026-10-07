@@ -20,7 +20,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Menu utama"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-outline-variant bg-surface pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_12px_rgba(0,0,0,0.06)] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 rounded-t-3xl border-t border-outline-variant/40 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_12px_rgba(0,0,0,0.06)] lg:hidden"
     >
       <div className="grid grid-cols-4">
         {tabs.map((tab) => {
@@ -33,19 +33,20 @@ export function BottomNav() {
               data-tour={tab.tour}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex min-h-[44px] cursor-pointer flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-semibold transition-colors",
+                "relative flex min-h-[68px] cursor-pointer flex-col items-center justify-center gap-1 pb-3 pt-2 text-[11px] font-semibold transition-colors",
                 active ? "text-primary" : "text-on-surface-variant hover:text-on-surface"
               )}
             >
               <span
                 className={cn(
                   "flex h-7 w-12 items-center justify-center rounded-full transition-colors",
-                  active ? "bg-primary-fixed-dim/40" : ""
+                  active ? "text-primary" : ""
                 )}
               >
                 <Icon className="h-5 w-5" />
               </span>
               {tab.label}
+              {active && <span aria-hidden="true" className="absolute bottom-1 h-1 w-7 rounded-full bg-primary" />}
             </Link>
           );
         })}

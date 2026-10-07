@@ -38,7 +38,7 @@ export function DonutChart({
               <Cell key={i} fill={DONUT_COLORS[i % DONUT_COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip formatter={(v) => money.format(Number(v))} contentStyle={tooltipStyle} />
+          <Tooltip formatter={(v) => `${v} terjual`} contentStyle={tooltipStyle} />
         </PieChart>
       </ResponsiveContainer>
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
