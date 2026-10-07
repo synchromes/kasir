@@ -178,7 +178,7 @@ export default async function ProductsPage({
                 const st = stockStatus(p.stock, p.minStock);
                 return (
                   <TableRow key={p.id}>
-                    <TableCell className="font-mono text-xs text-on-surface-variant">{p.sku}</TableCell>
+                    <TableCell className="text-xs text-on-surface-variant">{p.sku}</TableCell>
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-3">
                         {p.image ? (
@@ -196,12 +196,12 @@ export default async function ProductsPage({
                       </div>
                     </TableCell>
                     <TableCell className="text-on-surface-variant">{p.category?.name ?? "-"}</TableCell>
-                    <TableCell className="text-right font-mono text-xs">
+                    <TableCell className="text-right text-xs">
                       <span className={cn(st === "out" && "font-bold text-destructive")}>
                         {p.stock} {p.unit?.short ?? ""}
                       </span>
                     </TableCell>
-                    <TableCell className="text-right font-mono text-xs font-semibold">{formatRupiah(p.sellPrice)}</TableCell>
+                    <TableCell className="text-right text-xs font-semibold">{formatRupiah(p.sellPrice)}</TableCell>
                     <TableCell className="text-center">
                       <span
                         className={cn(

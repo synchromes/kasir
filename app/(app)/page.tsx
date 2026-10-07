@@ -442,7 +442,7 @@ export default async function DashboardPage() {
                 <div key={p.id} className="flex items-center gap-2 text-sm">
                   <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: DONUT_COLORS[i % DONUT_COLORS.length] }} />
                   <span className="truncate text-on-surface-variant">{p.name}</span>
-                  <span className="ml-auto font-mono text-xs font-medium">{pct}%</span>
+                  <span className="ml-auto text-xs font-medium">{pct}%</span>
                 </div>
               );
             })}
@@ -475,7 +475,7 @@ export default async function DashboardPage() {
                       <p className="text-sm text-on-surface-variant">{m.name}</p>
                       <p className="truncate font-display text-base font-bold leading-tight">{formatRupiah(m.value)}</p>
                     </div>
-                    <span className="font-mono text-xs font-semibold text-on-surface-variant">{pct}%</span>
+                    <span className="text-xs font-semibold text-on-surface-variant">{pct}%</span>
                   </div>
                 );
               })}
@@ -515,13 +515,13 @@ export default async function DashboardPage() {
               <span className="flex items-center gap-2 text-on-surface-variant">
                 <span className="h-2.5 w-2.5 rounded-full bg-accent" /> Tunai
               </span>
-              <span className="font-mono text-xs font-medium">{weekSum ? Math.round((weekTunai / weekSum) * 100) : 0}%</span>
+              <span className="text-xs font-medium">{weekSum ? Math.round((weekTunai / weekSum) * 100) : 0}%</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2 text-on-surface-variant">
                 <span className="h-2.5 w-2.5 rounded-full bg-on-surface-variant" /> Non-tunai
               </span>
-              <span className="font-mono text-xs font-medium">{weekSum ? 100 - Math.round((weekTunai / weekSum) * 100) : 0}%</span>
+              <span className="text-xs font-medium">{weekSum ? 100 - Math.round((weekTunai / weekSum) * 100) : 0}%</span>
             </div>
           </div>
           <p className="mt-3 border-t border-outline-variant pt-3 text-xs text-on-surface-variant">

@@ -118,7 +118,7 @@ export default async function SalesPage({
             <TableBody>
               {sales.map((s) => (
                 <TableRow key={s.id}>
-                  <TableCell className="font-mono text-xs font-medium text-primary">{s.invoiceNo}</TableCell>
+                  <TableCell className="text-xs font-medium text-primary">{s.invoiceNo}</TableCell>
                   <TableCell className="text-xs text-on-surface-variant">{formatDate(s.createdAt)}</TableCell>
                   <TableCell>{s.customer?.name ?? "Pelanggan Umum"}</TableCell>
                   <TableCell>
@@ -127,7 +127,7 @@ export default async function SalesPage({
                     </span>
                   </TableCell>
                   <TableCell className="text-on-surface-variant">{s.cashier?.name ?? "-"}</TableCell>
-                  <TableCell className="text-right font-mono text-xs font-semibold">{formatRupiah(s.total)}</TableCell>
+                  <TableCell className="text-right text-xs font-semibold">{formatRupiah(s.total)}</TableCell>
                   <TableCell className="text-center">
                      <span className="inline-flex rounded-full bg-secondary-container px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-on-secondary-container">
                       Selesai

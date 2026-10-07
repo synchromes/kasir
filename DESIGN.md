@@ -22,7 +22,7 @@ Inti: `primary #004AC6`, `secondary #006C49` (hijau laba/stok aman), `tertiary #
 
 ## Tipografi (R-06)
 
-Inter 400/500/600/700. Uppercase + tracking hanya untuk status nyata (Habis, Menipis), dengan alasan: status harus bisa dipindai sekilas. Judul section dan CTA memakai sentence-case.
+Inter 400/500/600/700. Uppercase + tracking hanya untuk status nyata (Habis, Menipis), dengan alasan: status harus bisa dipindai sekilas. Judul section dan CTA memakai sentence-case. Monospace tidak dipakai di UI (angka memakai Inter); monospace hanya untuk string data teknis dan struk cetak.
 
 ## Ikon (R-04)
 
@@ -45,6 +45,8 @@ Skala: input/button `rounded-lg`, kartu/dialog `rounded-xl`, status/badge `round
 - Agregat Non-tunai memakai on-surface-variant, terpisah dari identitas QRIS/Transfer. Grafik kategorikal memakai biru, hijau, amber, abu, olive, dan teal gelap sebagai palet data tersendiri; label dan pemisah tetap diperlukan untuk membedakan seri.
 - Layout: dasbor mengikuti narasi toko (ringkasan, tren, metode, mingguan, laba, tabel, transaksi, stok). Kartu Laba murni ringkasan angka; tren laba hanya ada di grafik Tren Pendapatan agar tidak ganda. Mobile memakai launcher grid karena kasir memegang HP saat jualan.
 - POS: kolom pesanan, keranjang, dan total selebar 400px di desktop agar katalog mendapat ruang lebih; mobile mengikuti lebar layar.
+- POS mobile ala GrabFood: daftar produk scroll di area sendiri; tab bawah diganti bar kasir (Beranda + ringkasan) saat keranjang berisi, dengan slide 200ms; seluruh pembayaran ada di halaman Rangkuman Pesanan yang memakai hook dan panel yang sama dengan kolom desktop.
+- Kartu produk POS: tanpa pil harga dan tanpa teks kategori/stok; harga di bawah nama dengan font biasa; tombol bulat + bila kosong; bila terisi hanya lingkaran angka, ketuk untuk membuka stepper (qty 1 = hapus + tambah, qty > 1 = kurang + tambah); setiap aksi atau ketukan di luar menutup stepper; label Habis hanya saat stok nol. Tombol aksi kartu di kanan atas; ukuran dirampingkan di mobile (44px penuh di desktop) atas permintaan pemilik. Kartu Rangkuman tanpa outline di mobile (border penuh di desktop). Baris item Rangkuman: nama + subtotal di atas stepper pil putih yang selalu tampil (qty 1 = hapus + tambah, qty > 1 = kurang + tambah), sama seperti kartu Kasir.
 - StatCard flagship: kartu Penjualan lebih besar karena itu angka yang dilihat tiap pagi.
 - Panah: hanya untuk aksi yang butuh isyarat arah, sisanya teks polos.
 - Badge: hanya status nyata (Habis/Menipis, hitungan panduan). `Hari Ini` dan `#1` duplikatif dihapus.

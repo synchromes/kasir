@@ -547,7 +547,16 @@ export function GuideDialog({
       </DialogTrigger>
       {/* Lebar & gutter sudah ditangani di DialogContent dasar (ui.tsx), di
           sini cukup perbesar batas maksimum untuk desktop. */}
-      <DialogContent className="max-w-3xl overflow-hidden p-0">
+      <DialogContent
+        className="max-w-3xl overflow-hidden p-0"
+        onOpenAutoFocus={(e) => {
+          // Samakan dengan pencarian POS: di HP jangan rebut fokus ke kolom
+          // pencarian agar keyboard tidak terbuka sendiri saat dialog dibuka.
+          if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
+            e.preventDefault();
+          }
+        }}
+      >
         <div className="flex max-h-[85dvh] flex-col">
           <DialogHeader className="border-b border-outline-variant px-6 pb-4 pt-6">
             <DialogTitle className="flex items-center gap-2 text-xl">

@@ -420,7 +420,7 @@ export default async function ReportsPage({
                   <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: DONUT_COLORS[i % DONUT_COLORS.length] }} />
                   <span className="truncate text-on-surface-variant">{p.name}</span>
                 </span>
-                <span className="font-mono text-xs font-medium">
+                <span className="text-xs font-medium">
                   {topQtyTotal ? Math.round((p.qty / topQtyTotal) * 100) : 0}%
                 </span>
               </div>
@@ -454,7 +454,7 @@ export default async function ReportsPage({
                       <p className="text-sm text-on-surface-variant">{m.name}</p>
                       <p className="truncate font-display text-base font-bold leading-tight">{formatRupiah(m.value)}</p>
                     </div>
-                    <span className="font-mono text-xs font-semibold text-on-surface-variant">{pct}%</span>
+                    <span className="text-xs font-semibold text-on-surface-variant">{pct}%</span>
                   </div>
                 );
               })}
@@ -484,13 +484,13 @@ export default async function ReportsPage({
               <span className="flex items-center gap-2 text-on-surface-variant">
                 <span className="h-2.5 w-2.5 rounded-full bg-accent" /> Tunai
               </span>
-              <span className="font-mono text-xs font-medium">{weekSum ? Math.round((weekTunai / weekSum) * 100) : 0}%</span>
+              <span className="text-xs font-medium">{weekSum ? Math.round((weekTunai / weekSum) * 100) : 0}%</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2 text-on-surface-variant">
                 <span className="h-2.5 w-2.5 rounded-full bg-on-surface-variant" /> Non-tunai
               </span>
-              <span className="font-mono text-xs font-medium">{weekSum ? 100 - Math.round((weekTunai / weekSum) * 100) : 0}%</span>
+              <span className="text-xs font-medium">{weekSum ? 100 - Math.round((weekTunai / weekSum) * 100) : 0}%</span>
             </div>
           </div>
         </Card>
@@ -572,13 +572,13 @@ export default async function ReportsPage({
           <TableBody>
             {sales.map((s) => (
               <TableRow key={s.id} className="text-sm">
-                <TableCell className="font-mono text-xs font-medium text-primary">{s.invoiceNo}</TableCell>
+                <TableCell className="text-xs font-medium text-primary">{s.invoiceNo}</TableCell>
                 <TableCell className="text-on-surface-variant">
                   {fmt(s.createdAt)}, {new Intl.DateTimeFormat("id-ID", { hour: "2-digit", minute: "2-digit" }).format(s.createdAt)}
                 </TableCell>
                 <TableCell>{s.items.length} item</TableCell>
                 <TableCell>{methodLabel[s.paymentMethod] ?? s.paymentMethod}</TableCell>
-                <TableCell className="text-right font-mono text-xs font-semibold">{formatRupiah(s.total)}</TableCell>
+                <TableCell className="text-right text-xs font-semibold">{formatRupiah(s.total)}</TableCell>
                 <TableCell className="text-center">
                    <span className="inline-flex rounded-full bg-secondary-container px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-on-secondary-container">
                     Selesai

@@ -174,16 +174,16 @@ export default async function StockPage({ searchParams }: { searchParams: Promis
                 <TableRow key={p.id}>
                   <TableCell>
                     <div className="font-medium">{p.name}</div>
-                    <div className="font-mono text-xs text-on-surface-variant">{p.sku}</div>
+                    <div className="text-xs text-on-surface-variant">{p.sku}</div>
                   </TableCell>
                   <TableCell className="text-center">
                     <StockPill stock={p.stock} minStock={p.minStock} />
                   </TableCell>
-                  <TableCell className={cn("text-right font-mono text-sm font-semibold", p.stock <= 0 && "text-destructive")}>
+                  <TableCell className={cn("text-right text-sm font-semibold", p.stock <= 0 && "text-destructive")}>
                     {formatNumber(p.stock)} {p.unit?.short ?? ""}
                   </TableCell>
                   <TableCell className="text-center text-on-surface-variant">{formatNumber(p.minStock)}</TableCell>
-                  <TableCell className="text-right font-mono text-xs">{formatRupiah(p.stock * p.costPrice)}</TableCell>
+                  <TableCell className="text-right text-xs">{formatRupiah(p.stock * p.costPrice)}</TableCell>
                   <TableCell className="text-right">
                     <AdjustStockDialog product={{ id: p.id, name: p.name, stock: p.stock, minStock: p.minStock, unit: p.unit?.short ?? "" }} />
                   </TableCell>
@@ -238,7 +238,7 @@ export default async function StockPage({ searchParams }: { searchParams: Promis
                       {m.type === "IN" ? "Masuk" : m.type === "OUT" ? "Keluar" : "Penyesuaian"}
                     </span>
                   </TableCell>
-                  <TableCell className={cn("text-center font-mono text-sm font-semibold", m.qty < 0 && "text-destructive")}>
+                  <TableCell className={cn("text-center text-sm font-semibold", m.qty < 0 && "text-destructive")}>
                     {m.qty > 0 ? `+${m.qty}` : m.qty}
                   </TableCell>
                   <TableCell className="text-on-surface-variant">{m.note || "-"}</TableCell>

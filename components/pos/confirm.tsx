@@ -251,7 +251,7 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
             {pending.items.map((it) => (
               <li key={it.productId} className="flex justify-between gap-3">
                 <span className="min-w-0 truncate">{it.name}</span>
-                <span className="shrink-0 font-mono text-on-surface-variant">
+                <span className="shrink-0 text-on-surface-variant">
                   {it.qty} × {formatRupiah(it.price)}
                 </span>
               </li>
@@ -260,29 +260,29 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
           <div className="mt-3 space-y-1 border-t border-dashed border-outline-variant pt-2 text-sm">
             <div className="flex justify-between text-on-surface-variant">
               <span>Subtotal</span>
-              <span className="font-mono">{formatRupiah(pending.subtotal)}</span>
+              <span>{formatRupiah(pending.subtotal)}</span>
             </div>
             {pending.discount > 0 && (
               <div className="flex justify-between text-on-surface-variant">
                 <span>Diskon{pending.discountType === "PERCENT" ? ` (${pending.discountValue}%)` : ""}</span>
-                <span className="font-mono">-{formatRupiah(pending.discount)}</span>
+                <span>-{formatRupiah(pending.discount)}</span>
               </div>
             )}
             {pending.tax > 0 && (
               <div className="flex justify-between text-on-surface-variant">
                 <span>Pajak ({setting.taxRate}%)</span>
-                <span className="font-mono">{formatRupiah(pending.tax)}</span>
+                <span>{formatRupiah(pending.tax)}</span>
               </div>
             )}
             {pending.pointsUsed > 0 && (
               <div className="flex justify-between text-on-surface-variant">
                 <span>Poin</span>
-                <span className="font-mono">-{formatRupiah(pending.pointsUsed)}</span>
+                <span>-{formatRupiah(pending.pointsUsed)}</span>
               </div>
             )}
             <div className="flex justify-between pt-1 font-display text-base font-bold">
               <span>TOTAL</span>
-              <span className="font-mono">{formatRupiah(pending.total)}</span>
+              <span>{formatRupiah(pending.total)}</span>
             </div>
           </div>
         </div>
