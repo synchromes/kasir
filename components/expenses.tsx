@@ -66,13 +66,19 @@ export default function ExpensesPage({
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
+    if (loading) return;
     setError(null);
     setLoading(true);
-    const res = await saveExpense({ id: editing?.id, amount: form.amount, note: form.note });
-    setLoading(false);
-    if (res?.error) { setError(res.error); return; }
-    setOpen(false);
-    router.refresh();
+    try {
+      const res = await saveExpense({ id: editing?.id, amount: form.amount, note: form.note });
+      if (res?.error) { setError(res.error); return; }
+      setOpen(false);
+      router.refresh();
+    } catch {
+      setError("Gagal menyimpan pengeluaran. Periksa koneksi lalu coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleDelete(id: number) {
@@ -81,8 +87,12 @@ export default function ExpensesPage({
       message: "Data pengeluaran ini akan dihapus permanen dan tidak bisa dikembalikan.",
     });
     if (!ok) return;
-    await deleteExpense(id);
-    router.refresh();
+    try {
+      await deleteExpense(id);
+      router.refresh();
+    } catch {
+      setError("Gagal menghapus pengeluaran. Periksa koneksi lalu coba lagi.");
+    }
   }
 
   return (
@@ -109,8 +119,9 @@ export default function ExpensesPage({
         </Card>
       </div>
 
+      {error && !open && <p role="alert" className="text-sm text-destructive">{error}</p>}
       <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
+        <div role="region" aria-label="Daftar pengeluaran, tabel dapat digeser" tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <Table>
           <TableHeader>
             <TableRow>
@@ -128,12 +139,15 @@ export default function ExpensesPage({
                 <TableCell className="text-right font-semibold text-destructive">{formatRupiah(e.amount)}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
-                    <Button variant="ghost" size="sm" onClick={() => openEdit(e)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDelete(e.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" aria-label={`Edit pengeluaran ${e.note}`} onClick={() => openEdit(e)}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" aria-label={`Hapus pengeluaran ${e.note}`} className="text-destructive" onClick={() => handleDelete(e.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </TableCell>
               </TableRow>
             ))}
+            {expenses.length === 0 && (
+              <TableRow><TableCell colSpan={4} className="py-8 text-center text-on-surface-variant">Belum ada pengeluaran. Catat biaya operasional pertama.</TableCell></TableRow>
+            )}
           </TableBody>
         </Table>
         </div>
@@ -153,7 +167,7 @@ export default function ExpensesPage({
                 <Label htmlFor="note">Catatan *</Label>
                 <Input id="note" required value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} placeholder="Misal: bayar listrik, gaji karyawan" />
               </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
             </div>
             <DialogFooter>
               <Button variant="accent" type="submit" disabled={loading}>{loading ? "Menyimpan..." : "Simpan"}</Button>

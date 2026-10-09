@@ -6,6 +6,7 @@ import { GuideDialog } from "@/components/guide-dialog";
 import { saveSupplier, deleteSupplier } from "@/lib/actions";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Supplier" };
 
 export default async function SuppliersPage() {
   const session = await auth();

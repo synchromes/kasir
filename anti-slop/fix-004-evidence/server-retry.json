@@ -1,0 +1,71 @@
+{
+  "scope": "isolated action; no database connection or business writes",
+  "results": [
+    {
+      "name": "Committed retry succeeds despite depleted stock",
+      "status": "PASS",
+      "calls": {
+        "lookup": 1,
+        "product": 0,
+        "transaction": 0,
+        "create": 0,
+        "notification": 0
+      }
+    },
+    {
+      "name": "Another owner cannot reuse a sale key",
+      "status": "PASS",
+      "calls": {
+        "lookup": 1,
+        "product": 0,
+        "transaction": 0,
+        "create": 0,
+        "notification": 0
+      }
+    },
+    {
+      "name": "Atomic dedupe avoids repeated notifications",
+      "status": "PASS",
+      "calls": {
+        "lookup": 1,
+        "product": 1,
+        "transaction": 1,
+        "create": 0,
+        "notification": 0
+      }
+    },
+    {
+      "name": "Concurrent commit recovered after unique conflict",
+      "status": "PASS",
+      "calls": {
+        "lookup": 2,
+        "product": 1,
+        "transaction": 1,
+        "create": 0,
+        "notification": 0
+      }
+    },
+    {
+      "name": "Concurrent commit recovered after guarded stock failure",
+      "status": "PASS",
+      "calls": {
+        "lookup": 2,
+        "product": 1,
+        "transaction": 1,
+        "create": 0,
+        "notification": 0
+      }
+    },
+    {
+      "name": "Conflicting owner rejected during atomic dedupe",
+      "status": "PASS",
+      "calls": {
+        "lookup": 2,
+        "product": 1,
+        "transaction": 1,
+        "create": 0,
+        "notification": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "retry-committed-sale-after-stock-depleted",
+    "existingSale": {
+      "id": 38,
+      "saleKey": "previously-committed"
+    },
+    "response": {
+      "error": "Stok Sold-out audit product tidak mencukupi (tersisa 0)"
+    },
+    "existingLookup": 0,
+    "scope": "isolated stub; no real database access"
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "requests": [
+    {
+      "url": "http://localhost:3000/api/auth/providers",
+      "method": "GET",
+      "callback": null
+    },
+    {
+      "url": "http://localhost:3000/api/auth/csrf",
+      "method": "GET",
+      "callback": null
+    },
+    {
+      "url": "http://localhost:3000/api/auth/callback/credentials?",
+      "method": "POST",
+      "csrfLength": 64,
+      "callback": "http://localhost:3000/login"
+    },
+    {
+      "url": "http://localhost:3000/api/auth/csrf",
+      "method": "GET",
+      "callback": null
+    },
+    {
+      "url": "http://localhost:3000/api/auth/signout",
+      "method": "POST",
+      "csrfLength": 64,
+      "callback": "/login"
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://localhost:3000/api/auth/signout",
+      "status": 200,
+      "body": {
+        "url": "http://localhost:3000/login"
+      }
+    }
+  ],
+  "beforeCookies": [
+    "authjs.csrf-token",
+    "authjs.callback-url",
+    "authjs.session-token"
+  ],
+  "afterCookies": [
+    "authjs.csrf-token",
+    "authjs.callback-url"
+  ],
+  "url": "http://localhost:3000/login",
+  "sessionUser": null
+}

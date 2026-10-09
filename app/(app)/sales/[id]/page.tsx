@@ -8,6 +8,10 @@ import { PrintButton } from "@/components/print-button";
 import { ArrowLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return { title: `Detail transaksi #${id}` };
+}
 
 export default async function SaleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -25,7 +29,7 @@ export default async function SaleDetailPage({ params }: { params: Promise<{ id:
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <div className="flex items-center gap-3">
-        <Button variant="outline" size="icon" asChild><Link href="/sales"><ArrowLeft className="h-4 w-4" /></Link></Button>
+        <Button variant="outline" size="icon" asChild><Link href="/sales" aria-label="Kembali ke transaksi"><ArrowLeft className="h-4 w-4" /></Link></Button>
         <div className="flex-1">
           <h1 className="font-display text-xl font-bold">{sale.invoiceNo}</h1>
           <p className="text-sm text-muted-foreground">{formatDate(sale.createdAt)} · {methodLabel[sale.paymentMethod]}</p>

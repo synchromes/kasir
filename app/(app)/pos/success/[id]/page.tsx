@@ -8,6 +8,10 @@ import { ClearPending } from "@/components/pos/clear-pending";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return { title: `Struk transaksi #${id}` };
+}
 
 const methodLabel: Record<string, string> = { CASH: "Tunai", QRIS: "QRIS", TRANSFER: "Transfer" };
 
@@ -29,9 +33,9 @@ export default async function SuccessPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="mx-auto max-w-md space-y-4">
-      <ClearPending />
+      <ClearPending ownerId={ownerId} saleKey={sale.saleKey} />
       <Card className="no-print flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0 text-sm font-medium text-accent sm:flex-1">Transaksi berhasil disimpan</div>
+        <h1 className="min-w-0 text-sm font-medium text-accent sm:flex-1">Transaksi berhasil disimpan</h1>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" asChild className="flex-1 whitespace-nowrap sm:flex-none">
             <Link href="/pos">Transaksi Baru</Link>

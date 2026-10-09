@@ -4,13 +4,15 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
+import { clearPosStorage } from "@/lib/storage";
+import { setCartBar } from "@/components/pos/cart-bar-store";
 import { BottomNav } from "@/components/bottom-nav";
 import { NotificationBell } from "@/components/notification-bell";
 import { GuideDialog } from "@/components/guide-dialog";
 
 // Header mobile: logo, avatar (ke Pengaturan), keluar. Bottom bar berisi
 // 4 tab utama; menu lainnya dijangkau dari grid beranda.
-export function MobileNav({ name, userId }: { name: string; userId?: number }) {
+export function MobileNav({ name, userId }: { name: string; userId: number }) {
   const initial = (name.trim().charAt(0) || "K").toUpperCase();
 
   return (
@@ -31,7 +33,7 @@ export function MobileNav({ name, userId }: { name: string; userId?: number }) {
             {initial}
           </Link>
           <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
+            onClick={() => { clearPosStorage(); setCartBar({ ownerId: null, count: 0, total: 0 }); void signOut({ callbackUrl: "/login" }); }}
             aria-label="Keluar"
             className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-destructive"
           >
@@ -40,8 +42,7 @@ export function MobileNav({ name, userId }: { name: string; userId?: number }) {
         </div>
       </div>
 
-      {/* Bottom tab bar (native): Beranda / Kasir / Transaksi / Laporan */}
-      <BottomNav />
+      <BottomNav userId={userId} />
     </>
   );
 }

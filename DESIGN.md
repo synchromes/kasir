@@ -51,3 +51,5 @@ Skala: input/button `rounded-lg`, kartu/dialog `rounded-xl`, status/badge `round
 - Panah: hanya untuk aksi yang butuh isyarat arah, sisanya teks polos.
 - Badge: hanya status nyata (Habis/Menipis, hitungan panduan). `Hari Ini` dan `#1` duplikatif dihapus.
 - Override yang dipertahankan: tile menu mobile + kartu Produk Terlaris memakai palet ceria multi-warna (bukan token monokrom) atas permintaan pemilik.
+- Perubahan disetujui pemilik 8 Oktober 2026: stepper Rangkuman Pesanan mengikuti katalog. Angka jumlah membuka kontrol; tambah/kurang/hapus, ketukan di luar, perpindahan fokus, dan Escape menutupnya. Arahan ini menggantikan ketentuan stepper Rangkuman yang selalu tampil.
+- Batas input memakai outline `#666979` agar kontras kontrol mencapai 3:1; divider dan border kartu tetap memakai outline-variant. Nominal chip kaca Terlaris memakai teks on-surface di atas kaca putih lebih opak agar terbaca pada seluruh warna kartu.

@@ -92,15 +92,22 @@ export function SimpleCrud({
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
+    if (loading) return;
+    setError(null);
     setLoading(true);
-    const res = (await onSave(form)) as { error?: string } | null | undefined;
-    setLoading(false);
-    if (res?.error) {
-      setError(res.error);
-      return;
+    try {
+      const res = (await onSave(form)) as { error?: string } | null | undefined;
+      if (res?.error) {
+        setError(res.error);
+        return;
+      }
+      setOpen(false);
+      router.refresh();
+    } catch {
+      setError("Gagal menyimpan. Periksa koneksi lalu coba lagi.");
+    } finally {
+      setLoading(false);
     }
-    setOpen(false);
-    router.refresh();
   }
 
   async function handleDelete(id: number) {
@@ -112,9 +119,13 @@ export function SimpleCrud({
         : "Data akan dihapus permanen dan tidak bisa dikembalikan.",
     });
     if (!ok) return;
-    const res = (await onDelete(id)) as { error?: string } | null | undefined;
-    if (res?.error) { setError(res.error); return; }
-    router.refresh();
+    try {
+      const res = (await onDelete(id)) as { error?: string } | null | undefined;
+      if (res?.error) { setError(res.error); return; }
+      router.refresh();
+    } catch {
+      setError("Gagal menghapus. Periksa koneksi lalu coba lagi.");
+    }
   }
 
   return (
@@ -130,10 +141,12 @@ export function SimpleCrud({
         </div>
       </div>
 
+      {error && !open && <p role="alert" className="text-sm text-destructive">{error}</p>}
       <Card className="overflow-hidden">
         {searchKey && (
           <div className="p-4">
             <Input
+              aria-label={`Cari ${title.toLowerCase()}`}
               placeholder={`Cari ${title.toLowerCase()}...`}
               value={q}
               onChange={(e) => {
@@ -144,7 +157,7 @@ export function SimpleCrud({
             />
           </div>
         )}
-        <div className="overflow-x-auto">
+        <div role="region" aria-label={`Daftar ${title.toLowerCase()}, tabel dapat digeser`} tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <Table>
           <TableHeader>
             <TableRow>
@@ -162,8 +175,8 @@ export function SimpleCrud({
                 ))}
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="sm" onClick={() => openEdit(row)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDelete(row.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" aria-label={`Edit ${String(row[searchKey ?? fields[0].key] ?? title)}`} onClick={() => openEdit(row)}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" aria-label={`Hapus ${String(row[searchKey ?? fields[0].key] ?? title)}`} className="text-destructive" onClick={() => handleDelete(row.id)}><Trash2 className="h-4 w-4" /></Button>
                     {consequences?.[row.id] && (
                       <ConsequenceChip title={consequences[row.id].message}>{consequences[row.id].chip}</ConsequenceChip>
                     )}
@@ -206,7 +219,7 @@ export function SimpleCrud({
                   />
                 </div>
               ))}
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
             </div>
             <DialogFooter>
               <Button variant="accent" type="submit" disabled={loading}>{loading ? "Menyimpan..." : "Simpan"}</Button>

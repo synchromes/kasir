@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { SettingsForm } from "@/components/settings-form";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Pengaturan" };
 
 export default async function SettingsPage() {
   const session = await auth();

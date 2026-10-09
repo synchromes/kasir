@@ -6,6 +6,7 @@ import { GuideDialog } from "@/components/guide-dialog";
 import { saveCategory, deleteCategory } from "@/lib/actions";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Kategori" };
 
 export default async function CategoriesPage() {
   const session = await auth();

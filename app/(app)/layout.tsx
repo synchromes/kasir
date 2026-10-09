@@ -31,8 +31,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" />
               <Input
                 name="q"
+                aria-label="Cari produk atau SKU"
                 placeholder="Cari produk, SKU..."
-                className="h-11 rounded-md border-outline-variant bg-surface-container-lowest pl-9 text-sm shadow-none"
+                className="h-11 rounded-md border-input bg-surface-container-lowest pl-9 text-sm shadow-none"
               />
             </form>
             <div className="flex items-center gap-1 text-on-surface-variant">

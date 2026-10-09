@@ -1,0 +1,45 @@
+{
+  "results": [
+    {
+      "profile": "desktop",
+      "status": "PASS",
+      "csvRows": 10,
+      "visibleTableRows": 10,
+      "exportHeight": 44,
+      "inputBorder": "rgb(102, 105, 121)",
+      "stepper": [
+        "collapsed initially",
+        "expanded on count",
+        "collapsed after add",
+        "collapsed after subtract"
+      ],
+      "exactPaid": 5500,
+      "guideMatchesRole": true,
+      "pageErrors": []
+    },
+    {
+      "profile": "mobile-320",
+      "status": "PASS",
+      "csvRows": 10,
+      "visibleTableRows": 10,
+      "exportHeight": 44,
+      "inputBorder": "rgb(102, 105, 121)",
+      "stepper": [
+        "collapsed initially",
+        "expanded on count",
+        "collapsed after add",
+        "collapsed after subtract"
+      ],
+      "exactPaid": 5500,
+      "guideMatchesRole": true,
+      "pageErrors": []
+    }
+  ],
+  "contrasts": {
+    "inputOnWhite": 5.43804564775857,
+    "inputOnSurface": 5.162455686231831,
+    "heroWhiteOnBrand": 5.168555560022562,
+    "priceChipWorstCaseBlackBehind85PercentWhite": 12.155621787777784
+  },
+  "scope": "CSV download, local cart interactions, guide, and token contrast; no checkout POST"
+}

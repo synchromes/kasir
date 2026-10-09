@@ -52,12 +52,14 @@ export default function CustomersPage({ customers, saleCounts }: { customers: Cu
   const paged = visible.slice((safePage - 1) * per, safePage * per);
 
   function openNew() {
+    setError(null);
     setEditing(null);
     setForm({ ...empty });
     setIsMember(false);
     setOpen(true);
   }
   function openEdit(c: Customer) {
+    setError(null);
     setEditing(c);
     setForm({ name: c.name, phone: c.phone ?? "", email: c.email ?? "", address: c.address ?? "", isMember: c.isMember });
     setIsMember(c.isMember);
@@ -66,12 +68,19 @@ export default function CustomersPage({ customers, saleCounts }: { customers: Cu
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
+    if (loading) return;
+    setError(null);
     setLoading(true);
-    const res = await saveCustomer({ id: editing?.id, ...form, isMember });
-    setLoading(false);
-    if (res?.error) { setError(res.error); return; }
-    setOpen(false);
-    router.refresh();
+    try {
+      const res = await saveCustomer({ id: editing?.id, ...form, isMember });
+      if (res?.error) { setError(res.error); return; }
+      setOpen(false);
+      router.refresh();
+    } catch {
+      setError("Gagal menyimpan pelanggan. Periksa koneksi lalu coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleDelete(id: number) {
@@ -83,8 +92,12 @@ export default function CustomersPage({ customers, saleCounts }: { customers: Cu
         : "Data pelanggan ini akan dihapus permanen dan tidak bisa dikembalikan.",
     });
     if (!ok) return;
-    await deleteCustomer(id);
-    router.refresh();
+    try {
+      await deleteCustomer(id);
+      router.refresh();
+    } catch {
+      setError("Gagal menghapus pelanggan. Periksa koneksi lalu coba lagi.");
+    }
   }
 
   return (
@@ -100,9 +113,10 @@ export default function CustomersPage({ customers, saleCounts }: { customers: Cu
         </div>
       </div>
 
+      {error && !open && <p role="alert" className="text-sm text-destructive">{error}</p>}
       <Card className="overflow-hidden">
-        <div className="p-4"><Input placeholder="Cari pelanggan..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} className="max-w-xs" /></div>
-        <div className="overflow-x-auto">
+        <div className="p-4"><Input aria-label="Cari pelanggan" placeholder="Cari pelanggan..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} className="max-w-xs" /></div>
+        <div role="region" aria-label="Daftar pelanggan, tabel dapat digeser" tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <Table>
           <TableHeader>
             <TableRow>
@@ -122,8 +136,8 @@ export default function CustomersPage({ customers, saleCounts }: { customers: Cu
                 <TableCell><span className="inline-flex items-center gap-1"><Coins className="h-4 w-4 text-accent" />{formatNumber(c.points)}</span></TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="sm" onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDelete(c.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" aria-label={`Edit ${c.name}`} onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" aria-label={`Hapus ${c.name}`} className="text-destructive" onClick={() => handleDelete(c.id)}><Trash2 className="h-4 w-4" /></Button>
                     {(saleCounts[c.id] ?? 0) > 0 && (
                       <ConsequenceChip title={`${saleCounts[c.id]} transaksi akan kehilangan data pelanggan ini`}>
                         {saleCounts[c.id]} transaksi
@@ -133,6 +147,14 @@ export default function CustomersPage({ customers, saleCounts }: { customers: Cu
                 </TableCell>
               </TableRow>
             ))}
+            {paged.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="py-8 text-center">
+                  <p className="text-sm text-on-surface-variant">{q ? "Tidak ada pelanggan yang cocok dengan pencarian." : "Belum ada pelanggan. Tambahkan pelanggan pertama."}</p>
+                  {q && <Button variant="ghost" className="mt-2" onClick={() => { setQ(""); setPage(1); }}>Bersihkan pencarian</Button>}
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
         </div>
@@ -175,7 +197,7 @@ export default function CustomersPage({ customers, saleCounts }: { customers: Cu
                 <input type="checkbox" checked={isMember} onChange={(e) => setIsMember(e.target.checked)} className="h-4 w-4" />
                 Jadikan member (poin aktif)
               </label>
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
             </div>
             <DialogFooter>
               <Button variant="accent" type="submit" disabled={loading}>{loading ? "Menyimpan..." : "Simpan"}</Button>

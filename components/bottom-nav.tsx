@@ -17,10 +17,10 @@ const tabs: { href: string; label: string; icon: LucideIcon; tour?: string }[] =
 // dijangkau lewat grid beranda. Hanya tampil di viewport mobile.
 // Khusus di halaman Kasir saat keranjang berisi: tab diganti bar kasir
 // (Beranda + ringkasan belanja) dengan animasi slide ke atas.
-export function BottomNav() {
+export function BottomNav({ userId }: { userId: number }) {
   const pathname = usePathname();
   const cart = useCartBar();
-  const showCartBar = pathname === "/pos" && cart.count > 0;
+  const showCartBar = pathname === "/pos" && cart.ownerId === userId && cart.count > 0;
 
   return (
     <nav

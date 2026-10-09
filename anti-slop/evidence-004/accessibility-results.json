@@ -1,0 +1,1022 @@
+{
+  "pages": [
+    {
+      "route": "/",
+      "violations": []
+    },
+    {
+      "route": "/pos",
+      "violations": []
+    },
+    {
+      "route": "/products",
+      "violations": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "description": "Ensure an element's role supports its ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "tr:nth-child(1) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            },
+            {
+              "target": [
+                "tr:nth-child(2) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            },
+            {
+              "target": [
+                "tr:nth-child(3) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            },
+            {
+              "target": [
+                "tr:nth-child(4) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            },
+            {
+              "target": [
+                "tr:nth-child(5) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            },
+            {
+              "target": [
+                "tr:nth-child(6) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            },
+            {
+              "target": [
+                "tr:nth-child(7) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            },
+            {
+              "target": [
+                "tr:nth-child(8) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            },
+            {
+              "target": [
+                "tr:nth-child(9) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            },
+            {
+              "target": [
+                "tr:nth-child(10) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"]"
+              ],
+              "html": "<span class=\"relative inline-flex items-center\" type=\"button\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"closed\">",
+              "summary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-expanded=\"false\""
+            }
+          ]
+        },
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": [
+            {
+              "target": [
+                "tr:nth-child(1) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(2) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(3) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(4) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(5) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(6) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(7) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(8) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(9) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(10) > .text-right:nth-child(7) > .justify-end.gap-1.flex > .relative[aria-haspopup=\"dialog\"][data-state=\"closed\"] > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/categories",
+      "violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": [
+            {
+              "target": [
+                "tr:nth-child(1) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none:nth-child(1)"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(1) > .text-right > .justify-end.gap-1.flex > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(2) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none:nth-child(1)"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(2) > .text-right > .justify-end.gap-1.flex > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(3) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none:nth-child(1)"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(3) > .text-right > .justify-end.gap-1.flex > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/units",
+      "violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": [
+            {
+              "target": [
+                "tr:nth-child(1) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none:nth-child(1)"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(1) > .text-right > .justify-end.gap-1.flex > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(2) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none:nth-child(1)"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(2) > .text-right > .justify-end.gap-1.flex > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(3) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none:nth-child(1)"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(3) > .text-right > .justify-end.gap-1.flex > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/suppliers",
+      "violations": []
+    },
+    {
+      "route": "/customers",
+      "violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": [
+            {
+              "target": [
+                "tr:nth-child(1) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none:nth-child(1)"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(1) > .text-right > .justify-end.gap-1.flex > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(2) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none:nth-child(1)"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(2) > .text-right > .justify-end.gap-1.flex > .text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/purchases",
+      "violations": []
+    },
+    {
+      "route": "/stock",
+      "violations": []
+    },
+    {
+      "route": "/sales",
+      "violations": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": [
+            {
+              "target": [
+                ".md\\:w-44.w-full:nth-child(3) > .focus\\:outline-none.focus\\:ring-2[type=\"date\"]"
+              ],
+              "html": "<input class=\"h-11 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring\" type=\"date\" value=\"\">",
+              "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                ".md\\:w-44.w-full:nth-child(4) > .focus\\:outline-none.focus\\:ring-2[type=\"date\"]"
+              ],
+              "html": "<input class=\"h-11 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring\" type=\"date\" value=\"\">",
+              "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "description": "Ensure select element has an accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".md\\:w-48 > select"
+              ],
+              "html": "<select class=\"h-11 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring\">",
+              "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/expenses",
+      "violations": []
+    },
+    {
+      "route": "/reports",
+      "violations": [
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": [
+            {
+              "target": [
+                ".lg\\:col-span-8 > .mb-4.border-b.pb-3 > h3"
+              ],
+              "html": "<h3 class=\"font-display text-base font-bold\">Tren Pendapatan</h3>",
+              "summary": "Fix any of the following:\n  Heading order invalid"
+            }
+          ]
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+          "nodes": [
+            {
+              "target": [
+                ".overflow-hidden.bg-card.text-card-foreground > .overflow-x-auto"
+              ],
+              "html": "<div class=\"overflow-x-auto\">",
+              "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/notifications",
+      "violations": []
+    },
+    {
+      "route": "/users",
+      "violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": [
+            {
+              "target": [
+                "tr:nth-child(1) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "tr:nth-child(2) > .text-right > .justify-end.gap-1.flex > .hover\\:bg-muted.focus-visible\\:ring-offset-2.disabled\\:pointer-events-none:nth-child(1)"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                ".text-destructive.hover\\:bg-muted.focus-visible\\:ring-offset-2"
+              ],
+              "html": "<button class=\"inline-flex items-ce...\">",
+              "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/settings",
+      "violations": [
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": [
+            {
+              "target": [
+                ".h-full.text-card-foreground.shadow-sm:nth-child(1) > .p-6.flex-col.space-y-1\\.5 > h3"
+              ],
+              "html": "<h3 class=\"font-semibold leading-none tracking-tight\">Info Toko</h3>",
+              "summary": "Fix any of the following:\n  Heading order invalid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/sales/38",
+      "violations": [
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": [
+            {
+              "target": [
+                ".focus-visible\\:ring-offset-2.disabled\\:pointer-events-none.active\\:scale-\\[0\\.98\\]:nth-child(1)"
+              ],
+              "html": "<a class=\"inline-flex items-ce...\" href=\"/sales\">",
+              "summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/pos/success/38",
+      "violations": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "product-delete-keyboard",
+      "opened": true
+    },
+    {
+      "name": "product-delete-focus-return",
+      "triggerFocused": false,
+      "activeTag": "BODY"
+    },
+    {
+      "name": "cash-pas",
+      "paid": "6.000",
+      "dom": {
+        "title": "Rangkuman Pesanan",
+        "heading": "Rangkuman Pesanan",
+        "width": 412,
+        "scrollWidth": 412,
+        "controls": [
+          {
+            "tag": "A",
+            "text": "Kasirku",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "flex min-h-11 items-center gap-2 font-display text-on-surface",
+            "name": "Kasirku",
+            "width": 124,
+            "height": 44,
+            "disabled": false,
+            "href": "/"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "5",
+            "aria": "Notifikasi, 5 belum dibaca",
+            "placeholder": null,
+            "id": "",
+            "cls": "relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-surface-container-high hover:text-primary",
+            "name": "Notifikasi, 5 belum dibaca",
+            "width": 44,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "",
+            "aria": "Bantuan, panduan aplikasi",
+            "placeholder": null,
+            "id": "",
+            "cls": "inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-primary",
+            "name": "Bantuan, panduan aplikasi",
+            "width": 44,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "A",
+            "text": "A",
+            "aria": "Pengaturan akun",
+            "placeholder": null,
+            "id": "",
+            "cls": "flex h-11 w-11 items-center justify-center rounded-full bg-primary-soft text-sm font-bold text-primary transition-colors hover:bg-primary-fixed-dim",
+            "name": "Pengaturan akun",
+            "width": 44,
+            "height": 44,
+            "disabled": false,
+            "href": "/settings"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "",
+            "aria": "Keluar",
+            "placeholder": null,
+            "id": "",
+            "cls": "inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-destructive",
+            "name": "Keluar",
+            "width": 44,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "A",
+            "text": "Beranda",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "relative flex min-h-[68px] cursor-pointer flex-col items-center justify-center gap-1 pb-3 pt-2 text-[11px] font-semibold transition-colors text-on-surface-variant hover:text-on-surface",
+            "name": "Beranda",
+            "width": 103,
+            "height": 69,
+            "disabled": false,
+            "href": "/"
+          },
+          {
+            "tag": "A",
+            "text": "Kasir",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "relative flex min-h-[68px] cursor-pointer flex-col items-center justify-center gap-1 pb-3 pt-2 text-[11px] font-semibold transition-colors text-primary",
+            "name": "Kasir",
+            "width": 103,
+            "height": 69,
+            "disabled": false,
+            "href": "/pos"
+          },
+          {
+            "tag": "A",
+            "text": "Transaksi",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "relative flex min-h-[68px] cursor-pointer flex-col items-center justify-center gap-1 pb-3 pt-2 text-[11px] font-semibold transition-colors text-on-surface-variant hover:text-on-surface",
+            "name": "Transaksi",
+            "width": 103,
+            "height": 69,
+            "disabled": false,
+            "href": "/sales"
+          },
+          {
+            "tag": "A",
+            "text": "Laporan",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "relative flex min-h-[68px] cursor-pointer flex-col items-center justify-center gap-1 pb-3 pt-2 text-[11px] font-semibold transition-colors text-on-surface-variant hover:text-on-surface",
+            "name": "Laporan",
+            "width": 103,
+            "height": 69,
+            "disabled": false,
+            "href": "/reports"
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "aria": "Kembali ke Kasir",
+            "placeholder": null,
+            "id": "",
+            "cls": "flex h-11 w-11 items-center justify-center rounded-full border border-outline-variant text-on-surface-variant transition-colors hover:bg-surface-container-high",
+            "name": "Kembali ke Kasir",
+            "width": 44,
+            "height": 44,
+            "disabled": false,
+            "href": "/pos"
+          },
+          {
+            "tag": "A",
+            "text": "Tambah",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-lg px-2 text-xs font-semibold text-primary",
+            "name": "Tambah",
+            "width": 83,
+            "height": 44,
+            "disabled": false,
+            "href": "/pos"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Tambah Pelanggan (Opsional)",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "flex w-full items-center justify-between border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer h-11 rounded-md border-outline-variant bg-surface p",
+            "name": "Tambah Pelanggan (Opsional)",
+            "width": 362,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "",
+            "aria": "Hapus Coca Cola 390ml",
+            "placeholder": null,
+            "id": "",
+            "cls": "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-destructive-container text-on-destructive-container transition-transform active:scale-95 sm:h-10 sm:w-10",
+            "name": "Hapus Coca Cola 390ml",
+            "width": 32,
+            "height": 32,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "",
+            "aria": "Tambah Coca Cola 390ml",
+            "placeholder": null,
+            "id": "",
+            "cls": "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105 active:scale-95 sm:h-10 sm:w-10",
+            "name": "Tambah Coca Cola 390ml",
+            "width": 32,
+            "height": 32,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Rp",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "min-h-[44px] cursor-pointer px-3 py-1 text-xs font-semibold transition-colors bg-primary-fixed-dim text-on-primary-fixed",
+            "name": "Rp",
+            "width": 39,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "%",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "min-h-[44px] cursor-pointer border-l border-outline-variant px-3 py-1 text-xs font-semibold transition-colors bg-surface text-on-surface-variant hover:bg-surface-container-low",
+            "name": "%",
+            "width": 37,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "aria": null,
+            "placeholder": "0",
+            "id": "discount",
+            "cls": "flex border px-3 py-2 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 h-11 w-32 rounded-md border-outline-variant ",
+            "name": "Diskon",
+            "width": 128,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Tunai",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "flex min-h-[44px] cursor-pointer flex-col items-center justify-center gap-1 rounded-lg py-2.5 transition-colors border-2 border-primary bg-primary-fixed-dim/20 font-semibold text-primary",
+            "name": "Tunai",
+            "width": 115,
+            "height": 65,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "QRIS",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "flex min-h-[44px] cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border py-2.5 transition-colors border-outline-variant text-on-surface-variant hover:bg-surface-container-low",
+            "name": "QRIS",
+            "width": 115,
+            "height": 65,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Transfer",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "flex min-h-[44px] cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border py-2.5 transition-colors border-outline-variant text-on-surface-variant hover:bg-surface-container-low",
+            "name": "Transfer",
+            "width": 115,
+            "height": 65,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "aria": null,
+            "placeholder": "Masukkan nominal tunai, contoh 50.000",
+            "id": "paid",
+            "cls": "flex w-full border px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 h-11 rounded-md border-outlin",
+            "name": "Dibayar",
+            "width": 296,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Pas",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer",
+            "name": "Pas",
+            "width": 58,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Bayar Rp 5.500",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none",
+            "name": "Bayar Rp 5.500",
+            "width": 362,
+            "height": 48,
+            "disabled": false,
+            "href": null
+          }
+        ],
+        "contrast": [
+          {
+            "text": "Bayar Rp 5.500",
+            "ratio": 2.71,
+            "minimum": 4.5,
+            "color": "rgb(255, 255, 255)",
+            "bg": [
+              0,
+              113,
+              77
+            ],
+            "size": 16,
+            "weight": 700,
+            "opacity": 0.505783,
+            "cls": "inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none"
+          }
+        ],
+        "clipped": [],
+        "rows": 0,
+        "bodyText": "Kasirku\n5\nA\nBeranda\nKasir\nTransaksi\nLaporan\nRangkuman Pesanan\n\nPeriksa item lalu pilih pembayaran\n\nTambah\nPesanan Saat Ini\n1 item\nTambah Pelanggan (Opsional)\nCoca Cola 390ml\nRp 5.500\n1\nDiskon\nRp\n%\nRp\nSubtotal\nRp 5.500\nTotal\nRp 5.500\nTunai\nQRIS\nTransfer\nDibayar\nPas\n\nNominal dibayar: Rp 6.000\n\nKembalian\nRp 500\nBayar Rp 5.500",
+        "links": [
+          "/pos",
+          "/pos"
+        ]
+      }
+    },
+    {
+      "name": "customer-reset-options",
+      "options": [
+        "Budi Santoso · 150 poin",
+        "Pelanggan Umum · 0 poin"
+      ]
+    },
+    {
+      "name": "checkout-key-after-reload",
+      "blockedPosts": 2,
+      "keys": [
+        "7c34571d-be50-4997-913c-b1a503bde0f7",
+        "61ead10c-6fb1-4539-a1df-168ae90c2502"
+      ],
+      "uniqueKeys": 2
+    },
+    {
+      "name": "cart-after-account-switch",
+      "before": {
+        "items": [
+          {
+            "productId": 5,
+            "name": "Coca Cola 390ml",
+            "price": 5500,
+            "qty": 1,
+            "stock": 87,
+            "unit": "btl"
+          }
+        ],
+        "discountType": "FIXED",
+        "discountValue": 0,
+        "customerId": "2",
+        "usePoints": false
+      },
+      "after": {
+        "items": [
+          {
+            "productId": 5,
+            "name": "Coca Cola 390ml",
+            "price": 5500,
+            "qty": 1,
+            "stock": 87,
+            "unit": "btl"
+          }
+        ],
+        "discountType": "FIXED",
+        "discountValue": 0,
+        "customerId": "2",
+        "usePoints": false
+      },
+      "dom": {
+        "title": "Kasir",
+        "width": 412,
+        "scrollWidth": 412,
+        "controls": [
+          {
+            "tag": "A",
+            "text": "Kasirku",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "flex min-h-11 items-center gap-2 font-display text-on-surface",
+            "name": "Kasirku",
+            "width": 124,
+            "height": 44,
+            "disabled": false,
+            "href": "/"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "",
+            "aria": "Notifikasi",
+            "placeholder": null,
+            "id": "",
+            "cls": "relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-surface-container-high hover:text-primary",
+            "name": "Notifikasi",
+            "width": 44,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "",
+            "aria": "Bantuan, panduan aplikasi",
+            "placeholder": null,
+            "id": "",
+            "cls": "inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-primary",
+            "name": "Bantuan, panduan aplikasi",
+            "width": 44,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "A",
+            "text": "K",
+            "aria": "Pengaturan akun",
+            "placeholder": null,
+            "id": "",
+            "cls": "flex h-11 w-11 items-center justify-center rounded-full bg-primary-soft text-sm font-bold text-primary transition-colors hover:bg-primary-fixed-dim",
+            "name": "Pengaturan akun",
+            "width": 44,
+            "height": 44,
+            "disabled": false,
+            "href": "/settings"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "",
+            "aria": "Keluar",
+            "placeholder": null,
+            "id": "",
+            "cls": "inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-destructive",
+            "name": "Keluar",
+            "width": 44,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "A",
+            "text": "Beranda",
+            "aria": "Beranda",
+            "placeholder": null,
+            "id": "",
+            "cls": "flex min-h-[56px] w-14 shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl text-on-surface-variant transition-colors hover:bg-surface-container-low",
+            "name": "Beranda",
+            "width": 56,
+            "height": 56,
+            "disabled": false,
+            "href": "/"
+          },
+          {
+            "tag": "A",
+            "text": "1 item · Rp 5.500\nLihat rangkuman pesanan",
+            "aria": "Lihat rangkuman pesanan, 1 item, total Rp 5.500",
+            "placeholder": null,
+            "id": "",
+            "cls": "flex min-h-[56px] min-w-0 flex-1 items-center justify-between gap-2 rounded-2xl bg-primary px-4 text-primary-foreground shadow-md transition-transform active:scale-[0.98]",
+            "name": "Lihat rangkuman pesanan, 1 item, total Rp 5.500",
+            "width": 316,
+            "height": 56,
+            "disabled": false,
+            "href": "/pos/rangkuman"
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "aria": "Cari produk, SKU, atau scan barcode",
+            "placeholder": "Cari produk, SKU, atau scan barcode...",
+            "id": "",
+            "cls": "flex w-full border px-3 py-2 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 h-11 rounded-lg border-outline-varian",
+            "name": "Cari produk, SKU, atau scan barcode",
+            "width": 380,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Semua Item",
+            "aria": null,
+            "placeholder": null,
+            "id": "",
+            "cls": "shrink-0 inline-flex min-h-[44px] cursor-pointer items-center whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-colors bg-primary-fixed-dim text-on-primary-fixed",
+            "name": "Semua Item",
+            "width": 103,
+            "height": 44,
+            "disabled": false,
+            "href": null
+          }
+        ],
+        "contrast": [],
+        "clipped": [],
+        "rows": 0,
+        "bodyText": "Kasirku\nK\nBeranda\n1 item · Rp 5.500\nLihat rangkuman pesanan\nSemua Item\n\nTidak ada produk. Coba istilah lain atau scan barcode.",
+        "links": []
+      }
+    },
+    {
+      "name": "cashier-admin-route",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "api-invalid-take",
+      "status": 200
+    }
+  ],
+  "errors": []
+}

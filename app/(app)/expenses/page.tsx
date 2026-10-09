@@ -5,6 +5,7 @@ import ExpensesPage from "@/components/expenses";
 import { todayRange } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Pengeluaran" };
 
 const PER_OPTIONS = [10, 20, 50, 100];
 const DEFAULT_PER = 20;

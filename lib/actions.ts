@@ -43,14 +43,21 @@ export async function checkout(data: {
   customerId: number | null;
   usePoints: boolean;
   paymentProof?: string | null;
-  // Kunci idempotensi: dibuat sekali per transaksi di client; retry memakai
-  // kunci yang sama sehingga tidak pernah membuat sale ganda.
+  // Identitas transaksi tetap sama selama retry, termasuk setelah refresh.
   saleKey?: string;
   // Poin yang dipakai — dibekukan client saat QR dibuat; diverifikasi ulang
   // di sini agar nominal QR selalu sama dengan total yang tercatat.
   pointsUsed?: number;
 }) {
   const ownerId = await requireOwnerId();
+  if (data.saleKey) {
+    if (typeof data.saleKey !== "string" || data.saleKey.length > 128) return { error: "Identitas transaksi tidak valid" };
+    const existing = await prisma.sale.findUnique({ where: { saleKey: data.saleKey }, select: { id: true, ownerId: true } });
+    if (existing) {
+      if (existing.ownerId !== ownerId) return { error: "Identitas transaksi tidak valid" };
+      redirect(`/pos/success/${existing.id}`);
+    }
+  }
   if (!data.items.length) return { error: "Keranjang kosong" };
   if (!Number.isFinite(data.discountValue) || data.discountValue < 0) {
     return { error: "Nilai diskon tidak valid" };
@@ -125,15 +132,19 @@ export async function checkout(data: {
   // checkouts producing the same INV-... number).
   let saleId = 0;
   let invoiceNo = "";
+  let created = false;
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
       invoiceNo = await generateInvoiceNo(ownerId);
-      saleId = await prisma.$transaction(async (tx) => {
+      const result = await prisma.$transaction(async (tx) => {
         // Idempotensi: retry client (timeout/network) memakai saleKey yang sama
         // → kembalikan sale yang sudah dibuat, JANGAN buat sale baru.
         if (data.saleKey) {
           const existing = await tx.sale.findUnique({ where: { saleKey: data.saleKey } });
-          if (existing) return existing.id;
+          if (existing) {
+            if (existing.ownerId !== ownerId) throw new Error("CHECKOUT_ERROR:Identitas transaksi tidak valid");
+            return { id: existing.id, invoiceNo: existing.invoiceNo, created: false };
+          }
         }
         const customer = data.customerId
           ? await tx.customer.findFirst({ where: { id: data.customerId, ownerId } })
@@ -158,8 +169,7 @@ export async function checkout(data: {
 
         // QRIS dinamis: payload digenerate SERVER dari total final (bukan dari
         // client) agar nominal di QR tidak bisa diubah/dipalsukan. Disimpan
-        // untuk audit; QR yang ditampilkan ke pelanggan di POS memakai total
-        // yang sama (total sebelum poin) sehingga nilainya konsisten.
+        // untuk audit dengan nominal final setelah penggunaan poin.
         const qrisPayload =
           method === "QRIS" ? convertQRIS(setting?.qrisStatic?.trim() ?? "", { amount: Math.round(finalTotal) }) : null;
 
@@ -233,10 +243,21 @@ export async function checkout(data: {
             data: { points: { increment: pointsEarned } },
           });
         }
-        return sale.id;
+        return { id: sale.id, invoiceNo: sale.invoiceNo, created: true };
       });
+      saleId = result.id;
+      invoiceNo = result.invoiceNo;
+      created = result.created;
       break;
     } catch (e) {
+      // Request serentak dapat sudah commit saat guarded decrement/unique gagal.
+      if (data.saleKey) {
+        const existing = await prisma.sale.findUnique({ where: { saleKey: data.saleKey }, select: { id: true, ownerId: true } });
+        if (existing) {
+          if (existing.ownerId !== ownerId) return { error: "Identitas transaksi tidak valid" };
+          redirect(`/pos/success/${existing.id}`);
+        }
+      }
       // Business errors thrown inside the transaction are reported to the user.
       if (e instanceof Error && e.message.startsWith("CHECKOUT_ERROR:")) {
         return { error: e.message.slice("CHECKOUT_ERROR:".length) };
@@ -249,17 +270,19 @@ export async function checkout(data: {
   // Best-effort — kegagalan membuat notifikasi TIDAK boleh menggagalkan
   // transaksi yang sudah ter-commit (jika dilempar, kasir akan retry dan
   // transaksi dobel!).
-  try {
-    await createNotification({
-      ownerId,
-      type: "SALE",
-      title: `Transaksi baru ${invoiceNo}`,
-      message: `${METHOD_LABEL[method] ?? method} · ${formatRupiah(total)}`,
-      link: `/sales/${saleId}`,
-    });
-    await syncLowStockAlerts(ownerId, [...lines.keys()]);
-  } catch {
-    // abaikan — transaksi utama tetap sukses
+  if (created) {
+    try {
+      await createNotification({
+        ownerId,
+        type: "SALE",
+        title: `Transaksi baru ${invoiceNo}`,
+        message: `${METHOD_LABEL[method] ?? method} · ${formatRupiah(total)}`,
+        link: `/sales/${saleId}`,
+      });
+      await syncLowStockAlerts(ownerId, [...lines.keys()]);
+    } catch {
+      // Transaksi utama sudah commit; notifikasi tidak menggagalkan retry.
+    }
   }
 
   revalidatePath("/");
@@ -276,7 +299,6 @@ async function generateInvoiceNo(ownerId: number) {
   return `INV-${ymd}-${String(count + 1).padStart(4, "0")}`;
 }
 
-/* ---------------- Products ---------------- */
 
 export async function saveProduct(data: {
   id?: number;
@@ -386,7 +408,6 @@ export async function toggleProductActive(id: number, active: boolean) {
   revalidatePath("/products");
 }
 
-/* ---------------- Categories ---------------- */
 export async function saveCategory(data: Record<string, unknown>) {
   const ownerId = await requireOwnerId();
   const id = data.id ? Number(data.id) : undefined;
@@ -407,7 +428,6 @@ export async function deleteCategory(id: number) {
   revalidatePath("/categories");
 }
 
-/* ---------------- Units ---------------- */
 export async function saveUnit(data: Record<string, unknown>) {
   const ownerId = await requireOwnerId();
   const id = data.id ? Number(data.id) : undefined;
@@ -429,7 +449,6 @@ export async function deleteUnit(id: number) {
   revalidatePath("/units");
 }
 
-/* ---------------- Suppliers ---------------- */
 export async function saveSupplier(data: Record<string, unknown>) {
   const ownerId = await requireOwnerId();
   const id = data.id ? Number(data.id) : undefined;
@@ -453,7 +472,6 @@ export async function deleteSupplier(id: number) {
   revalidatePath("/suppliers");
 }
 
-/* ---------------- Customers ---------------- */
 export async function saveCustomer(data: { id?: number; name: string; phone?: string; email?: string; address?: string; isMember: boolean }) {
   const ownerId = await requireOwnerId();
   const payload = { name: data.name, phone: data.phone || null, email: data.email || null, address: data.address || null, isMember: data.isMember };
@@ -473,7 +491,6 @@ export async function deleteCustomer(id: number) {
   revalidatePath("/customers");
 }
 
-/* ---------------- Stock adjustment ---------------- */
 export async function adjustStock(productId: number, qty: number, note: string) {
   const ownerId = await requireOwnerId();
   if (!Number.isInteger(productId) || !Number.isInteger(qty)) {
@@ -517,7 +534,6 @@ export async function adjustStock(productId: number, qty: number, note: string) 
   });
 }
 
-/* ---------------- Purchase (stock in) ---------------- */
 export async function createPurchase(data: { supplierId?: number | null; note?: string; items: { productId: number; qty: number; cost: number }[] }) {
   const ownerId = await requireOwnerId();
   if (!data.items.length) return { error: "Minimal satu item" };
@@ -581,7 +597,6 @@ export async function createPurchase(data: { supplierId?: number | null; note?: 
   revalidatePath("/stock");
 }
 
-/* ---------------- Expenses ---------------- */
 export async function saveExpense(data: { id?: number; amount: number; note: string }) {
   const ownerId = await requireOwnerId();
   if (!Number.isFinite(data.amount) || data.amount < 0) {
@@ -603,7 +618,6 @@ export async function deleteExpense(id: number) {
   revalidatePath("/expenses");
 }
 
-/* ---------------- Settings ---------------- */
 export async function saveSettings(data: {
   storeName: string;
   address: string;
@@ -701,7 +715,6 @@ export async function saveSettings(data: {
   revalidatePath("/settings");
 }
 
-/* ---------------- Users (khusus ADMIN) ---------------- */
 export async function saveUser(data: { id?: number; name: string; email: string; role: string; active: boolean; password?: string }) {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") return { error: "Akses ditolak" };

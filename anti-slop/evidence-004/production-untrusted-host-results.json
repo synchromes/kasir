@@ -1,0 +1,22 @@
+{
+  "pages": [
+    {
+      "url": "http://localhost:3000/login",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:3000/api/auth/error",
+      "status": 500
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "o: There was a problem with the server configuration. Check the server logs for more information.. Read more at https://errors.authjs.dev#autherror\n    at u (http://localhost:3000/_next/static/chunks/2hrb_0gt1ewjj.js:1:1004)\n    at async m (http://localhost:3000/_next/static/chunks/2hrb_0gt1ewjj.js:1:2216)\n    at async c._getSession (http://localhost:3000/_next/static/chunks/2hrb_0gt1ewjj.js:2:1677)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "o: There was a problem with the server configuration. Check the server logs for more information.. Read more at https://errors.authjs.dev#autherror\n    at u (http://localhost:3000/_next/static/chunks/2hrb_0gt1ewjj.js:1:1004)\n    at async _ (http://localhost:3000/_next/static/chunks/2hrb_0gt1ewjj.js:1:2569)\n    at async d (http://localhost:3000/_next/static/chunks/2ihn48857x4yo.js:1:400)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "o: There was a problem with the server configuration. Check the server logs for more information.. Read more at https://errors.authjs.dev#autherror\n    at u (http://localhost:3000/_next/static/chunks/2hrb_0gt1ewjj.js:1:1004)\n    at async m (http://localhost:3000/_next/static/chunks/2hrb_0gt1ewjj.js:1:2216)\n    at async c._getSession (http://localhost:3000/_next/static/chunks/2hrb_0gt1ewjj.js:2:1677)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "page.waitForURL: Timeout 90000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"http://localhost:3000/\" until \"load\"\n  navigated to \"http://localhost:3000/api/auth/error\"\n============================================================"
+  ]
+}

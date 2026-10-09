@@ -12,6 +12,7 @@ import { Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Inventaris" };
 
 const PER_OPTIONS = [10, 20, 50, 100];
 const DEFAULT_PER = 20;
@@ -110,10 +111,10 @@ export default async function ProductsPage({
           <a
             href={`data:text/csv;charset=utf-8,${csvBlob}`}
             download="inventaris.csv"
-            className="inline-flex h-10 items-center gap-2 rounded-md border border-outline-variant bg-surface-container-lowest px-4 text-xs font-semibold text-on-surface transition-colors hover:bg-surface-container-high"
+            className="inline-flex h-11 items-center gap-2 rounded-md border border-outline-variant bg-surface-container-lowest px-4 text-xs font-semibold text-on-surface transition-colors hover:bg-surface-container-high"
           >
             <Download className="h-4 w-4" />
-            Ekspor CSV
+            Ekspor halaman ini
           </a>
           <ProductForm categories={categories} units={units} />
           <GuideDialog variant="chip" initialCategory="products" />
@@ -133,7 +134,7 @@ export default async function ProductsPage({
             <select
               id="products-category" name="category"
               defaultValue={sp.category ?? ""}
-              className="h-11 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              className="h-11 w-full cursor-pointer rounded-lg border border-input bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Semua Kategori</option>
               {categories.map((c) => (
@@ -146,7 +147,7 @@ export default async function ProductsPage({
             <select
               id="products-status" name="status"
               defaultValue={status === "all" ? "" : status}
-              className="h-11 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              className="h-11 w-full cursor-pointer rounded-lg border border-input bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Semua Status</option>
               <option value="ok">Tersedia</option>
@@ -160,7 +161,7 @@ export default async function ProductsPage({
 
       {/* Table */}
       <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest shadow-sm">
-        <div className="overflow-x-auto">
+        <div role="region" aria-label="Inventaris produk, tabel dapat digeser" tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <Table className="min-w-[860px]">
             <TableHeader>
               <TableRow>

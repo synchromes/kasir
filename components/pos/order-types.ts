@@ -28,6 +28,7 @@ export type Setting = {
   qrisStatic: string;
 };
 export type CartLine = { productId: number; name: string; price: number; qty: number; stock: number; unit: string };
+export type CartProduct = Pick<Product, "id" | "name" | "price" | "stock" | "unit">;
 
 // Metode pembayaran: identitas warna/ikon tetap, dipakai di panel POS,
 // halaman Rangkuman, dan halaman Konfirmasi QRIS.

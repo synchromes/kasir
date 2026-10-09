@@ -162,7 +162,7 @@ export function TablePagination({
                 onKeyDown={(e) => {
                   if (e.key === "Enter") gotoPage(Number(goPage));
                 }}
-                className="h-11 w-16 rounded-lg border border-outline-variant bg-surface px-3 text-center text-sm text-on-surface focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="h-11 w-16 rounded-lg border border-input bg-surface px-3 text-center text-sm text-on-surface focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
             </label>
           </>
@@ -173,7 +173,7 @@ export function TablePagination({
             value={per}
             onChange={handlePerChange}
             aria-label="Baris per halaman"
-            className="h-11 w-16 cursor-pointer appearance-none rounded-lg border border-outline-variant bg-surface pl-3 pr-7 text-sm font-medium text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-11 w-16 cursor-pointer appearance-none rounded-lg border border-input bg-surface pl-3 pr-7 text-sm font-medium text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {perOptions.map((o) => (
               <option key={o} value={o}>

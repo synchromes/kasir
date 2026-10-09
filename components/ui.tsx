@@ -8,7 +8,6 @@ import * as Slot from "@radix-ui/react-slot";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/* Button */
 const buttonVariants = {
   default: "bg-primary text-primary-foreground hover:bg-primary/90",
   accent: "bg-accent text-accent-foreground hover:bg-accent/90",
@@ -19,7 +18,7 @@ const buttonVariants = {
 };
 const buttonSizes = {
   default: "h-11 px-4 py-2",
-  sm: "h-11 rounded-md px-3 text-sm",
+  sm: "h-11 min-w-11 rounded-md px-3 text-sm",
   lg: "h-12 px-8 text-lg",
   icon: "h-11 w-11",
 };
@@ -53,7 +52,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-/* Input */
 const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => (
     <input
@@ -82,7 +80,6 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttribu
 );
 Textarea.displayName = "Textarea";
 
-/* Label */
 const Label = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttributes<HTMLLabelElement>>(
   ({ className, ...props }, ref) => (
     <label
@@ -94,7 +91,6 @@ const Label = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttributes<HTMLL
 );
 Label.displayName = "Label";
 
-/* Card */
 function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn("rounded-xl border bg-card text-card-foreground shadow-sm", className)} {...props} />
@@ -104,7 +100,7 @@ function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   return <div className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />;
 }
 function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("font-semibold leading-none tracking-tight", className)} {...props} />;
+  return <h2 className={cn("font-semibold leading-none tracking-tight", className)} {...props} />;
 }
 function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("p-6 pt-0", className)} {...props} />;
@@ -113,7 +109,6 @@ function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   return <div className={cn("flex items-center p-6 pt-0", className)} {...props} />;
 }
 
-/* Badge */
 function Badge({
   className,
   variant = "default",
@@ -131,7 +126,6 @@ function Badge({
   );
 }
 
-/* Table */
 function Table({ className, ...props }: React.TableHTMLAttributes<HTMLTableElement>) {
   return <table className={cn("w-full caption-bottom text-sm", className)} {...props} />;
 }
@@ -159,7 +153,6 @@ function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCell
   return <td className={cn("whitespace-nowrap px-4 py-3 align-middle", className)} {...props} />;
 }
 
-/* Dialog */
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 const DialogClose = DialogPrimitive.Close;
@@ -199,7 +192,6 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   return <div className={cn("flex flex-row justify-end gap-2 mt-6", className)} {...props} />;
 }
 
-/* Select */
 const Select = SelectPrimitive.Root;
 const SelectValue = SelectPrimitive.Value;
 
@@ -253,7 +245,6 @@ function SelectItem({ className, children, ...props }: React.ComponentPropsWitho
   );
 }
 
-/* Dropdown Menu */
 const DropdownMenu = DropdownMenuPrimitive.Root;
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 

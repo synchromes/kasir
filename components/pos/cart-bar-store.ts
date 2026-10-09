@@ -1,15 +1,14 @@
 import { useSyncExternalStore } from "react";
 
-// Ringkasan keranjang untuk bar bawah mobile ala GrabFood. Store eksternal
-// (bukan context) agar tab bar di layout dan halaman POS/Rangkuman yang
-// hidup terpisah tetap sinkron tanpa wiring provider.
-export type CartBarState = { count: number; total: number };
+// Store bersama untuk ringkasan POS dan navigasi bawah yang hidup terpisah.
+export type CartBarState = { ownerId: number | null; count: number; total: number };
 
-let state: CartBarState = { count: 0, total: 0 };
+const emptyState: CartBarState = { ownerId: null, count: 0, total: 0 };
+let state: CartBarState = emptyState;
 const listeners = new Set<() => void>();
 
 export function setCartBar(next: CartBarState) {
-  if (state.count !== next.count || state.total !== next.total) {
+  if (state.ownerId !== next.ownerId || state.count !== next.count || state.total !== next.total) {
     state = next;
     listeners.forEach((l) => l());
   }
@@ -27,5 +26,5 @@ function getSnapshot() {
 }
 
 export function useCartBar() {
-  return useSyncExternalStore(subscribe, getSnapshot);
+  return useSyncExternalStore(subscribe, getSnapshot, () => emptyState);
 }

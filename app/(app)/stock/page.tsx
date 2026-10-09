@@ -11,6 +11,7 @@ import { Package, Warehouse, CircleDollarSign, AlertTriangle, ArrowLeftRight } f
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Stok" };
 
 const PER_OPTIONS = [10, 20, 50, 100];
 const DEFAULT_PER = 20;
@@ -157,7 +158,7 @@ export default async function StockPage({ searchParams }: { searchParams: Promis
 
       {view === "products" ? (
         <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
+          <div role="region" aria-label="Stok produk, tabel dapat digeser" tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <Table className="min-w-[820px]">
             <TableHeader>
               <TableRow>
@@ -210,7 +211,7 @@ export default async function StockPage({ searchParams }: { searchParams: Promis
         </Card>
       ) : (
         <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
+          <div role="region" aria-label="Pergerakan stok, tabel dapat digeser" tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <Table className="min-w-[760px]">
             <TableHeader>
               <TableRow>

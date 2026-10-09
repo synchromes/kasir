@@ -21,6 +21,8 @@ export default async function POSPage() {
 
   return (
     <POSClient
+      key={ownerId}
+      ownerId={ownerId}
       products={products.map((p) => ({
         id: p.id,
         name: p.name,

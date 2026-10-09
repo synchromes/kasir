@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Kasirku",
+  title: { default: "Kasirku", template: "%s · Kasirku" },
   description: "Aplikasi kasir untuk toko retail",
 };
 
@@ -20,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="id" className={inter.variable}>
       <body className="font-sans antialiased">
-        <SessionProvider>{children}</SessionProvider>
+        {children}
       </body>
     </html>
   );

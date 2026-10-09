@@ -9,13 +9,17 @@ export default async function SummaryPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
   const ownerId = Number(session.user.id);
-  const [customers, setting] = await Promise.all([
+  const [customers, setting, products] = await Promise.all([
     prisma.customer.findMany({ where: { ownerId }, orderBy: { name: "asc" } }),
     prisma.setting.findUnique({ where: { ownerId } }),
+    prisma.product.findMany({ where: { ownerId, active: true }, select: { id: true, name: true, sellPrice: true, stock: true, unit: { select: { short: true } } } }),
   ]);
 
   return (
     <SummaryClient
+      key={ownerId}
+      ownerId={ownerId}
+      products={products.map((p) => ({ id: p.id, name: p.name, price: p.sellPrice, stock: p.stock, unit: p.unit?.short ?? "" }))}
       customers={customers.map((c) => ({ id: c.id, name: c.name, phone: c.phone, points: c.points, isMember: c.isMember }))}
       setting={{
         taxRate: setting?.taxRate ?? 0,

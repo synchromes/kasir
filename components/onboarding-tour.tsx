@@ -32,7 +32,7 @@ const BASE_STEPS: TourStep[] = [
 const ADMIN_STEP: TourStep = {
   target: "guide",
   title: "Panduan Pengguna (Admin)",
-  desc: "Menu Pengguna hanya tersedia untuk admin, di sana Anda bisa menambah akun kasir & admin baru. Buka panduan untuk langkah lengkapnya.",
+  desc: "Menu Pengguna hanya tersedia untuk admin. Gunakan menu ini untuk menambah akun kasir dengan data toko terpisah. Buka panduan untuk langkah lengkapnya.",
   openGuide: "users",
 };
 

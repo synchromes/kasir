@@ -41,11 +41,12 @@ export function TrendArea({ data }: { data: TrendPoint[] }) {
     <button
       type="button"
       onClick={() => setMode(m)}
+      aria-pressed={mode === m}
       className={cn(
-        "cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-all",
+        "min-h-11 cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-all",
         mode === m
           ? "bg-surface-container-lowest text-foreground shadow-sm"
-          : "text-on-surface-variant opacity-70 hover:opacity-100"
+          : "text-on-surface-variant hover:bg-surface-container-high"
       )}
     >
       {label}

@@ -12,20 +12,26 @@ export default function LoginForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (loading) return;
     setError(null);
     setLoading(true);
     const form = new FormData(e.currentTarget);
-    const res = await signIn("credentials", {
-      email: form.get("email"),
-      password: form.get("password"),
-      redirect: false,
-    });
-    setLoading(false);
-    if (res?.error) {
-      setError("Email atau password salah");
-    } else {
-      router.push("/");
-      router.refresh();
+    try {
+      const res = await signIn("credentials", {
+        email: form.get("email"),
+        password: form.get("password"),
+        redirect: false,
+      });
+      if (res?.error) {
+        setError("Email atau password salah");
+      } else {
+        router.push("/");
+        router.refresh();
+      }
+    } catch {
+      setError("Gagal masuk. Periksa koneksi lalu coba lagi.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -40,7 +46,7 @@ export default function LoginForm() {
         <Input id="password" name="password" type="password" placeholder="••••••••" required autoComplete="current-password" />
       </div>
       {error && (
-        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
+        <p role="alert" className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
       )}
       <Button variant="accent" type="submit" className="w-full" disabled={loading}>
         {loading ? "Memproses..." : "Masuk"}

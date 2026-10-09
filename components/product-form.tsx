@@ -269,7 +269,7 @@ export function ProductForm({
                 <Input id="minStock" type="number" value={form.minStock} onChange={(e) => set("minStock", Number(e.target.value))} />
               </div>
             )}
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
           </div>
           <DialogFooter>
             <Button variant="accent" type="submit" disabled={loading}>

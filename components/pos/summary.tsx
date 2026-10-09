@@ -4,13 +4,13 @@ import Link from "next/link";
 import { ArrowLeft, Plus } from "lucide-react";
 import { OrderPanel } from "@/components/pos/order-panel";
 import { usePosOrder } from "@/components/pos/use-pos-order";
-import type { Customer, Setting } from "@/components/pos/order-types";
+import type { CartProduct, Customer, Setting } from "@/components/pos/order-types";
 
 // Halaman Rangkuman Pesanan (mobile ala GrabFood): daftar item yang bisa
 // diubah + seluruh blok pembayaran. Logika sama persis dengan kolom kanan
 // POS desktop karena memakai hook dan panel yang sama.
-export default function SummaryClient({ customers, setting }: { customers: Customer[]; setting: Setting }) {
-  const order = usePosOrder({ customers, setting });
+export default function SummaryClient({ ownerId, products, customers, setting }: { ownerId: number; products: CartProduct[]; customers: Customer[]; setting: Setting }) {
+  const order = usePosOrder({ ownerId, products, customers, setting });
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
@@ -34,7 +34,7 @@ export default function SummaryClient({ customers, setting }: { customers: Custo
         </Link>
       </div>
 
-      {order.cart.length === 0 ? (
+      {!order.ready ? <p role="status" className="py-8 text-center text-sm text-on-surface-variant">Memuat pesanan...</p> : order.cart.length === 0 ? (
         <div className="rounded-xl border border-dashed border-outline-variant bg-card p-8 text-center">
           <p className="text-sm font-medium">Keranjang masih kosong</p>
           <p className="mt-1 text-xs text-on-surface-variant">Tambahkan produk dulu dari halaman Kasir.</p>

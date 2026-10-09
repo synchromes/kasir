@@ -1,13 +1,14 @@
 "use client";
 
 import * as React from "react";
+import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { checkout } from "@/lib/actions";
 import { validateQRIS } from "@/lib/qris";
 import { resizeImageToDataUrl, PROOF_IMAGE_MAX_DIM, PROOF_IMAGE_QUALITY } from "@/lib/image";
-import { CART_KEY, PENDING_KEY } from "@/lib/storage";
+import { cartStorageKey, pendingStorageKey, clearLegacyPosStorage } from "@/lib/storage";
 import { setCartBar } from "@/components/pos/cart-bar-store";
-import type { CartLine, Customer, Product, Setting } from "@/components/pos/order-types";
+import type { CartLine, CartProduct, Customer, Product, Setting } from "@/components/pos/order-types";
 
 // Kunci idempotensi: dipakai server untuk mencegah sale ganda saat retry
 // (mis. response hilang karena timeout lalu kasir menekan bayar lagi).
@@ -16,30 +17,34 @@ function genKey() {
   return `pos-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
 }
 
-// Seluruh state pesanan (keranjang + pembayaran) dalam satu hook agar
-// halaman POS dan halaman Rangkuman memakai logika yang sama persis.
-// Keranjang dipulihkan/disimpan via sessionStorage sehingga bertahan saat
-// pindah halaman.
-export function usePosOrder({ customers, setting }: { customers: Customer[]; setting: Setting }) {
+const savedOrderSchema = z.object({
+  ownerId: z.number().int().positive(),
+  saleKey: z.string().min(1).max(128),
+  items: z.array(z.object({ productId: z.number().int().positive(), qty: z.number().int().positive().max(2147483647) })),
+  discountType: z.enum(["FIXED", "PERCENT"]),
+  discountValue: z.number().finite().nonnegative(),
+  customerId: z.string(),
+  usePoints: z.boolean(),
+  paymentMethod: z.enum(["CASH", "QRIS", "TRANSFER"]),
+  paid: z.string(),
+});
+
+export function usePosOrder({ ownerId, products, customers, setting }: { ownerId: number; products: CartProduct[]; customers: Customer[]; setting: Setting }) {
   const [cart, setCart] = React.useState<CartLine[]>([]);
-  const [discountType, setDiscountType] = React.useState<"FIXED" | "PERCENT">("FIXED");
-  const [discountValue, setDiscountValue] = React.useState(0);
+  const [discountType, updateDiscountType] = React.useState<"FIXED" | "PERCENT">("FIXED");
+  const [discountValue, updateDiscountValue] = React.useState(0);
   const [customerId, setCustomerId] = React.useState<string>("");
-  const [usePoints, setUsePoints] = React.useState(false);
-  const [paymentMethod, setPaymentMethod] = React.useState("CASH");
+  const [usePoints, updateUsePoints] = React.useState(false);
+  const [paymentMethod, updatePaymentMethod] = React.useState("CASH");
   const [paid, setPaid] = React.useState<string>("");
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [ready, setReady] = React.useState(false);
 
   const router = useRouter();
 
-  // Kunci idempotensi transaksi. Harus STABIL selama retry keranjang yang sama
-  // (agar tidak menciptakan sale ganda), tetapi BERUBAH saat isi keranjang
-  // berubah (transaksi baru). Dibaca lewat microtask karena lint set-state-in-effect.
+  // Pulihkan key bersama pesanan; buat key baru hanya saat pesanan diedit.
   const [saleKey, setSaleKey] = React.useState(() => genKey());
-  React.useEffect(() => {
-    Promise.resolve().then(() => setSaleKey(genKey()));
-  }, [cart]);
 
   // Foto bukti pembayaran (Transfer)
   const [proofImage, setProofImage] = React.useState<string | null>(null);
@@ -75,59 +80,66 @@ export function usePosOrder({ customers, setting }: { customers: Customer[]; set
           : null
       : null;
 
-  // Pulihkan keranjang saat kembali dari halaman konfirmasi / setelah refresh.
-  // Pembacaan dilakukan lewat microtask (bukan setState sinkron di effect)
-  // agar lolos aturan lint react-hooks/set-state-in-effect.
-  const restoredRef = React.useRef(false);
+  // Legacy tanpa owner tidak dapat dipindahkan dengan aman ke akun aktif.
   React.useEffect(() => {
     let alive = true;
     Promise.resolve().then(() => {
       if (!alive) return;
       try {
-        // Keranjang disimpan terpisah (CART_KEY). Pending QRIS TIDAK dihapus
-        // di sini: menghapusnya di mount membuat kasir kehilangan transaksi
-        // berjalan saat menekan browser-back dari konfirmasi lalu forward lagi.
-        const raw = sessionStorage.getItem(CART_KEY);
+        clearLegacyPosStorage();
+        const raw = sessionStorage.getItem(cartStorageKey(ownerId));
         if (raw) {
-          const d = JSON.parse(raw);
-          if (Array.isArray(d.items) && d.items.length && cart.length === 0) {
-            setCart(d.items);
-            if (d.discountType) setDiscountType(d.discountType);
-            if (typeof d.discountValue === "number") setDiscountValue(d.discountValue);
-            if (d.customerId) setCustomerId(String(d.customerId));
-            setUsePoints(!!d.usePoints);
+          const parsed = savedOrderSchema.safeParse(JSON.parse(raw));
+          if (parsed.success && parsed.data.ownerId === ownerId) {
+            const data = parsed.data;
+            const items = data.items.flatMap((item) => {
+              const product = products.find((p) => p.id === item.productId);
+              return product ? [{ productId: product.id, name: product.name, price: product.price, qty: item.qty, stock: product.stock, unit: product.unit }] : [];
+            });
+            const customer = customers.find((c) => String(c.id) === data.customerId);
+            setCart(items);
+            setSaleKey(data.saleKey);
+            updateDiscountType(data.discountType);
+            updateDiscountValue(data.discountValue);
+            setCustomerId(customer ? data.customerId : "");
+            updateUsePoints(!!customer?.isMember && data.usePoints);
+            updatePaymentMethod(data.paymentMethod);
+            setPaid(data.paid);
+          } else {
+            sessionStorage.removeItem(cartStorageKey(ownerId));
           }
         }
       } catch {
         /* abaikan data korup */
       }
-      // Baru izinkan efek penyimpanan menulis storage setelah percobaan
-      // restore selesai, mencegah keranjang kosong menimpa data saat mount.
-      restoredRef.current = true;
+      setReady(true);
     });
     return () => {
       alive = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- hanya saat mount
-  }, []);
+  }, [ownerId, products, customers]);
+
+  const persistOrder = React.useCallback(() => {
+    sessionStorage.setItem(
+      cartStorageKey(ownerId),
+      JSON.stringify({ ownerId, saleKey, items: cart, discountType, discountValue, customerId, usePoints, paymentMethod, paid })
+    );
+  }, [ownerId, saleKey, cart, discountType, discountValue, customerId, usePoints, paymentMethod, paid]);
 
   // Simpan keranjang setiap berubah agar tidak hilang saat pindah halaman.
   React.useEffect(() => {
-    if (!restoredRef.current) return;
+    if (!ready) return;
     try {
-      sessionStorage.setItem(
-        CART_KEY,
-        JSON.stringify({ items: cart, discountType, discountValue, customerId, usePoints })
-      );
+      persistOrder();
     } catch {
       /* abaikan */
     }
-  }, [cart, discountType, discountValue, customerId, usePoints]);
+  }, [ready, persistOrder]);
 
   // Kabari bar bawah mobile setiap ringkasan berubah.
   React.useEffect(() => {
-    setCartBar({ count: totalQty, total });
-  }, [totalQty, total]);
+    if (ready) setCartBar({ ownerId, count: totalQty, total });
+  }, [ready, ownerId, totalQty, total]);
 
   async function handleProofChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -156,6 +168,8 @@ export function usePosOrder({ customers, setting }: { customers: Customer[]; set
   }
 
   function addToCart(product: Product) {
+    if (!ready || product.stock <= 0 || (cart.find((line) => line.productId === product.id)?.qty ?? 0) >= product.stock) return;
+    setSaleKey(genKey());
     setCart((prev) => {
       const existing = prev.find((l) => l.productId === product.id);
       if (existing) {
@@ -168,24 +182,34 @@ export function usePosOrder({ customers, setting }: { customers: Customer[]; set
   }
 
   function changeQty(productId: number, delta: number) {
+    const line = cart.find((item) => item.productId === productId);
+    if (!line || (delta > 0 && line.qty + delta > line.stock)) return;
+    setSaleKey(genKey());
     setCart((prev) =>
       prev
         .map((l) => {
           if (l.productId !== productId) return l;
           const nq = l.qty + delta;
-          if (nq < 0 || nq > l.stock) return l;
+          if (nq < 0 || (delta > 0 && nq > l.stock)) return l;
           return { ...l, qty: nq };
         })
         .filter((l) => l.qty > 0)
     );
   }
   function removeLine(productId: number) {
+    setSaleKey(genKey());
     setCart((prev) => prev.filter((l) => l.productId !== productId));
   }
 
   async function handleCheckout() {
-    if (loading) return;
+    if (!ready || loading) return;
     setError(null);
+    try {
+      persistOrder();
+    } catch {
+      setError("Pesanan tidak dapat disimpan di browser. Izinkan penyimpanan lalu coba lagi.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await checkout({
@@ -217,7 +241,10 @@ export function usePosOrder({ customers, setting }: { customers: Customer[]; set
   // pelanggan). Keranjang & rincian disimpan di sessionStorage; dibersihkan
   // setelah transaksi sukses di halaman sukses.
   function handleContinue() {
+    if (!ready || loading) return;
     const pending = {
+      ownerId,
+      saleKey,
       items: cart,
       discountType,
       discountValue,
@@ -234,19 +261,45 @@ export function usePosOrder({ customers, setting }: { customers: Customer[]; set
       total,
     };
     try {
-      sessionStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+      persistOrder();
+      sessionStorage.setItem(pendingStorageKey(ownerId), JSON.stringify(pending));
     } catch {
-      /* abaikan */
+      setError("Pesanan tidak dapat disimpan di browser. Izinkan penyimpanan lalu coba lagi.");
+      return;
     }
     router.push("/pos/confirm");
   }
 
   const changeCustomer = (v: string) => {
+    if (v === customerId) return;
+    setSaleKey(genKey());
     setCustomerId(v);
-    setUsePoints(false);
+    updateUsePoints(false);
   };
 
+  function setDiscountType(value: "FIXED" | "PERCENT") {
+    if (value === discountType) return;
+    setSaleKey(genKey());
+    updateDiscountType(value);
+  }
+  function setDiscountValue(value: number) {
+    if (value === discountValue) return;
+    setSaleKey(genKey());
+    updateDiscountValue(value);
+  }
+  function setUsePoints(value: boolean) {
+    if (value === usePoints) return;
+    setSaleKey(genKey());
+    updateUsePoints(value);
+  }
+  function setPaymentMethod(value: string) {
+    if (value === paymentMethod) return;
+    setSaleKey(genKey());
+    updatePaymentMethod(value);
+  }
+
   return {
+    ready,
     cart,
     discountType,
     setDiscountType,

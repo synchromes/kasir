@@ -8,6 +8,7 @@ import { PurchaseForm } from "@/components/purchase-form";
 import { GuideDialog } from "@/components/guide-dialog";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Pembelian" };
 
 const PER_OPTIONS = [10, 20, 50, 100];
 const DEFAULT_PER = 20;
@@ -49,7 +50,7 @@ export default async function PurchasesPage({ searchParams }: { searchParams: Pr
       </div>
 
       <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
+        <div role="region" aria-label="Riwayat pembelian, tabel dapat digeser" tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <Table>
           <TableHeader>
             <TableRow>

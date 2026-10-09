@@ -23,6 +23,7 @@ import { HomeMobile } from "@/components/home-mobile";
 import { OnboardingTour } from "@/components/onboarding-tour";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Dasbor" };
 
 const methodLabel: Record<string, string> = { CASH: "Tunai", QRIS: "QRIS", TRANSFER: "Transfer" };
 const methodIcon: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -337,16 +338,16 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-12 gap-4">
         <div className="relative col-span-12 flex min-h-[180px] flex-col justify-between overflow-hidden rounded-xl bg-brand p-6 text-on-brand xl:col-span-6">
           <div className="relative z-10">
-            <h2 className="font-display text-xl font-bold">Selamat datang, {session.user.name}</h2>
-            <p className="mt-1 text-sm font-medium text-on-brand/85">Pantau performa toko Anda hari ini.</p>
+            <h1 className="font-display text-xl font-bold">Selamat datang, {session.user.name}</h1>
+            <p className="mt-1 text-sm font-medium text-on-brand">Pantau performa toko Anda hari ini.</p>
             <div className="mt-4 inline-flex items-center overflow-hidden rounded-full bg-black/15">
               <div className="px-6 py-3 text-center">
                 <div className="font-display text-lg font-bold leading-none">{todaySales._count}</div>
-                <div className="mt-1 text-xs font-medium text-on-brand/85">Transaksi Hari Ini</div>
+                <div className="mt-1 text-xs font-medium text-on-brand">Transaksi Hari Ini</div>
               </div>
               <div className="border-l border-white/20 px-6 py-3 text-center">
                 <div className="font-display text-lg font-bold leading-none">{totalProducts}</div>
-                <div className="mt-1 text-xs font-medium text-on-brand/85">Produk Aktif</div>
+                <div className="mt-1 text-xs font-medium text-on-brand">Produk Aktif</div>
               </div>
             </div>
           </div>
@@ -395,7 +396,7 @@ export default async function DashboardPage() {
         <Card className="flex flex-col p-5 lg:col-span-8">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="font-display text-base font-bold">Tren Pendapatan</h3>
+              <h2 className="font-display text-base font-bold">Tren Pendapatan</h2>
               <p className="text-xs text-on-surface-variant">30 hari terakhir</p>
             </div>
           </div>
@@ -423,7 +424,7 @@ export default async function DashboardPage() {
 
         <Card className="flex flex-col p-5 lg:col-span-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-display text-base font-bold">Produk Terlaris</h3>
+            <h2 className="font-display text-base font-bold">Produk Terlaris</h2>
             <span className="inline-flex items-center gap-1 rounded-full bg-secondary-container px-2.5 py-1 text-[10px] font-bold text-on-secondary-container">
               <TrendingUp className="h-3 w-3" /> Terlaris
             </span>
@@ -459,7 +460,7 @@ export default async function DashboardPage() {
       {/* Row 3: payment methods + weekly transactions + profit */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <Card className="flex flex-col p-5 lg:col-span-5">
-          <h3 className="font-display text-base font-bold">Metode Pembayaran</h3>
+          <h2 className="font-display text-base font-bold">Metode Pembayaran</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-4">
               {topMethodRows.map((m) => {
@@ -493,6 +494,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-on-surface-variant">Lihat rincian pembayaran</p>
             <Link
               href="/sales"
+              aria-label="Lihat semua transaksi"
               className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity hover:opacity-90"
             >
               <ArrowRight className="h-4 w-4" />
@@ -501,7 +503,7 @@ export default async function DashboardPage() {
         </Card>
 
         <Card className="flex flex-col p-5 lg:col-span-3">
-          <h3 className="font-display text-base font-bold">Transaksi Mingguan</h3>
+          <h2 className="font-display text-base font-bold">Transaksi Mingguan</h2>
           <div className="mt-3 flex items-center gap-2">
             <span className="font-display text-2xl font-bold leading-none">{formatNumber(weekCount)}</span>
             <DeltaPill value={weekCountDelta} />
@@ -530,7 +532,7 @@ export default async function DashboardPage() {
         </Card>
 
         <Card className="flex flex-col p-5 lg:col-span-4">
-          <h3 className="font-display text-base font-bold">Laba Bulan Ini</h3>
+          <h2 className="font-display text-base font-bold">Laba Bulan Ini</h2>
           <div className="mt-3 rounded-md bg-primary/10 p-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-on-surface-variant">Laba bersih</span>
@@ -563,7 +565,7 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <Card className="overflow-hidden lg:col-span-8">
           <div className="flex items-center justify-between border-b border-outline-variant px-5 py-4">
-            <h3 className="font-display text-base font-bold">Produk Terlaris</h3>
+            <h2 className="font-display text-base font-bold">Produk Terlaris</h2>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/reports">
                 Lihat Semua
@@ -617,7 +619,7 @@ export default async function DashboardPage() {
 
         <Card className="flex flex-col p-5 lg:col-span-4">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="font-display text-base font-bold">Transaksi Terbaru</h3>
+            <h2 className="font-display text-base font-bold">Transaksi Terbaru</h2>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/sales">
                 Lihat Semua
@@ -651,7 +653,7 @@ export default async function DashboardPage() {
       {/* Low stock strip */}
       <Card className="p-5">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="font-display text-base font-bold">Stok Menipis</h3>
+            <h2 className="font-display text-base font-bold">Stok Menipis</h2>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/stock">
                 Kelola Stok

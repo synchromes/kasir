@@ -1,52 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kasirku
 
-## Getting Started
+Aplikasi kasir retail dengan Next.js 16, React 19, Prisma 7, dan MySQL. Satu akun memiliki satu toko; admin mengelola akun. Tampilan memakai Inter dan tema Material 3 terang sesuai `DESIGN.md`.
 
-First, run the development server:
+## Menjalankan lokal
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Aktifkan MySQL dan gunakan Node.js yang mendukung Next.js 16.
+
+```sh
+npm ci
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Salin `.env.example` menjadi `.env`, lalu isi:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variabel | Kegunaan |
+|---|---|
+| `DATABASE_URL` | Koneksi MySQL dan nama database |
+| `AUTH_SECRET` | Secret acak autentikasi, berbeda per lingkungan |
+| `AUTH_URL` | URL aplikasi termasuk port; lokal `http://localhost:3000` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Buat secret dengan:
 
-## Testing (E2E walkthrough onboarding)
+```sh
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
 
-Tes Playwright untuk walkthrough onboarding (tur muncul sekali, urutan sorotan Kasir → Produk → Pengaturan di desktop & mobile, tombol Lewati menyimpan flag):
+Siapkan schema pada database yang dipilih, kemudian jalankan aplikasi:
 
-```bash
-# sekali saja: pasang browser Chromium
-npm i -D @playwright/test
-npx playwright install chromium
+```sh
+npx prisma generate
+npx prisma migrate deploy
+npm run dev
+```
 
-# pastikan DB sudah di-seed (akun demo: admin@kasir.com / admin123)
-npx prisma db seed
+Buka `http://localhost:3000`. Untuk database pengembangan baru yang membutuhkan contoh produk dan akun demo, jalankan `npx prisma db seed`. Audit/perbaikan tidak memerlukan seed pada database yang sudah terisi.
 
-# jalankan (otomatis memakai dev server yang berjalan, atau menyalakan sendiri di port 14786)
+## Build dan produksi
+
+```sh
+npm run lint
+npm run build
+npm start
+```
+
+Tetapkan `AUTH_URL` ke URL publik aplikasi, misalnya `https://kasir.example.com`, dan gunakan `AUTH_SECRET` serta database produksi sendiri. Auth.js memakai URL ini untuk mengenali host dan membuat URL autentikasi. Jika memakai reverse proxy, teruskan host/protokol publik secara konsisten dan batasi akses langsung ke server aplikasi. `AUTH_TRUST_HOST=true` hanya digunakan bila deployment mempercayai header host dari proxy yang dikendalikan; URL publik tetap perlu dikonfigurasi.
+
+`next start` membutuhkan hasil build. Build sukses perlu dilanjutkan dengan pemeriksaan login dan halaman dinamis.
+
+## Validasi
+
+```sh
+npm run lint
+npx tsc --noEmit --incremental false
 npm run test:e2e
 ```
 
-## Learn More
+Playwright menjalankan desktop dan mobile di port 14786 dengan `AUTH_URL` yang sesuai. Pasang Chromium melalui `npx playwright install chromium`, atau set `PW_CHANNEL=msedge` untuk memakai Edge yang sudah terpasang pada Windows. Untuk memakai server yang sudah aktif, set `PW_BASE_URL` ke URL server tersebut; konfigurasi `AUTH_URL` server harus memakai URL yang sama.
 
-To learn more about Next.js, take a look at the following resources:
+Tes menggunakan akun demo di database pengembangan. `verify-fixes.spec.ts` menulis transaksi, produk, dan pengaturan, sehingga gunakan database khusus tes untuk keseluruhan suite. Regresi audit 004 memakai mock jaringan di `e2e/antislop-004.spec.ts`; probe checkout terisolasi ada di `scripts/check-checkout-retry.mjs`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Struktur
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `app/`: halaman App Router dan API.
+- `components/pos/`: katalog, rangkuman, stepper, dan pembayaran.
+- `lib/actions.ts`: operasi data dan checkout dengan isolasi owner serta idempotensi.
+- `prisma/`: schema, migrasi, dan data demo.
+- `anti-slop/`: laporan audit/perbaikan dan bukti pemeriksaan.
+- `qris-dinamis/`: tool Vite terpisah dari build/lint/type check aplikasi utama.
 
-## Deploy on Vercel
+Keranjang dan pembayaran yang belum selesai disimpan per akun di sessionStorage. Logout membersihkan state transaksi. Kunci transaksi bertahan saat pindah halaman/refresh dan dibersihkan setelah transaksi yang sama berhasil. Struk memakai media cetak 80 mm; hasil printer fisik bergantung konfigurasi driver.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Sesi diperiksa di server pada setiap request. Proxy tidak memperpanjang cookie sesi agar respons request latar yang terlambat tidak membatalkan logout. Masa berlaku JWT mengikuti waktu login dan batas bawaan Auth.js; aplikasi saat ini tidak memakai polling `SessionProvider` di klien.

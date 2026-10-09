@@ -1,22 +1,28 @@
 "use client";
 
 import * as React from "react";
-import { ArrowRight, Coins, Minus, Package, Plus, QrCode, Trash2, UploadCloud, UserRound, X } from "lucide-react";
+import { ArrowRight, Coins, Package, QrCode, UploadCloud, UserRound, X } from "lucide-react";
 import { formatNumber, formatRupiah, cn } from "@/lib/utils";
 import { Button, Input, Label, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui";
 import { methods, type Customer, type Setting } from "@/components/pos/order-types";
 import type { PosOrder } from "@/components/pos/use-pos-order";
+import { QuantityStepper } from "@/components/pos/quantity-stepper";
 
-// Daftar item keranjang dengan stepper jumlah. Dipakai di kolom kanan POS
-// (desktop) dan di halaman Rangkuman Pesanan (mobile).
 export function CartItems({ order }: { order: PosOrder }) {
   const { cart, changeQty, removeLine } = order;
+  const list = React.useRef<HTMLUListElement>(null);
+  function removeItem(productId: number) {
+    removeLine(productId);
+    requestAnimationFrame(() => {
+      (list.current?.querySelector<HTMLButtonElement>("[data-quantity-trigger]") ?? list.current)?.focus({ preventScroll: true });
+    });
+  }
   return (
     <div className="min-h-[120px] w-full shrink-0 overflow-x-clip rounded-xl border border-transparent bg-transparent p-1 shadow-none sm:p-2 lg:border-outline-variant lg:bg-card lg:p-3 lg:shadow-sm">
       {cart.length === 0 && (
         <p className="py-10 text-center text-sm text-on-surface-variant">Keranjang kosong</p>
       )}
-      <ul className="space-y-2">
+      <ul ref={list} tabIndex={-1} aria-label="Item keranjang" className="space-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         {cart.map((l) => (
           <li key={l.productId} className="flex min-w-0 items-center gap-2.5 rounded-lg border border-transparent bg-surface p-2 lg:border-outline-variant">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-container-high text-on-surface-variant">
@@ -27,33 +33,7 @@ export function CartItems({ order }: { order: PosOrder }) {
             </div>
             <div className="flex shrink-0 flex-col items-end gap-1">
               <span className="text-[13px] font-bold">{formatRupiah(l.price * l.qty)}</span>
-              <span className="flex items-center gap-0.5 rounded-full bg-white p-0.5 shadow-md sm:p-1">
-                {l.qty <= 1 ? (
-                  <button
-                    onClick={() => removeLine(l.productId)}
-                    aria-label={`Hapus ${l.name}`}
-                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-destructive-container text-on-destructive-container transition-transform active:scale-95 sm:h-10 sm:w-10"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => changeQty(l.productId, -1)}
-                    aria-label={`Kurangi ${l.name}`}
-                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-low sm:h-10 sm:w-10"
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
-                )}
-                <span aria-live="polite" className="w-5 text-center text-sm font-bold">{l.qty}</span>
-                <button
-                  onClick={() => changeQty(l.productId, 1)}
-                  aria-label={`Tambah ${l.name}`}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105 active:scale-95 sm:h-10 sm:w-10"
-                >
-                  <Plus className="h-4 w-4" />
-                </button>
-              </span>
+              <QuantityStepper name={l.name} quantity={l.qty} maxQuantity={l.stock} onChange={(delta) => changeQty(l.productId, delta)} onRemove={() => removeItem(l.productId)} />
             </div>
           </li>
         ))}
@@ -62,9 +42,6 @@ export function CartItems({ order }: { order: PosOrder }) {
   );
 }
 
-// Panel pesanan: pelanggan + keranjang + total + pembayaran. Satu komponen
-// yang dipakai di kolom kanan POS (desktop) dan halaman Rangkuman (mobile)
-// agar perilakunya identik.
 export function OrderPanel({ order, customers, setting }: { order: PosOrder; customers: Customer[]; setting: Setting }) {
   const {
     cart,
@@ -106,7 +83,6 @@ export function OrderPanel({ order, customers, setting }: { order: PosOrder; cus
 
   return (
     <div className="flex min-h-0 min-w-0 flex-col gap-4">
-      {/* Order header */}
       <div className="shrink-0 rounded-xl border border-transparent bg-transparent p-2 shadow-none lg:border-outline-variant lg:bg-card lg:p-4 lg:shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-display text-base font-bold">Pesanan Saat Ini</h2>
@@ -114,11 +90,12 @@ export function OrderPanel({ order, customers, setting }: { order: PosOrder; cus
         </div>
         <div className="relative">
           <UserRound className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-          <Select value={customerId} onValueChange={changeCustomer}>
-            <SelectTrigger className="h-11 rounded-md border-outline-variant bg-surface pl-9 text-sm">
+          <Select value={customerId || "none"} onValueChange={(value) => changeCustomer(value === "none" ? "" : value)}>
+            <SelectTrigger aria-label="Pelanggan pesanan" className="h-11 rounded-md border-input bg-surface pl-9 text-sm">
               <SelectValue placeholder="Tambah Pelanggan (Opsional)" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="none">Tanpa pelanggan</SelectItem>
               {customers.map((c) => (
                 <SelectItem key={c.id} value={String(c.id)}>
                   {c.name}
@@ -137,6 +114,7 @@ export function OrderPanel({ order, customers, setting }: { order: PosOrder; cus
               {maxPoints > 0 && (
                 <button
                   onClick={() => setUsePoints(!usePoints)}
+                  aria-pressed={usePoints}
                   className={cn(
                     "min-h-11 min-w-11 cursor-pointer px-2 text-xs font-semibold",
                     usePoints ? "text-accent" : "text-on-surface-variant hover:text-on-surface"
@@ -206,7 +184,7 @@ export function OrderPanel({ order, customers, setting }: { order: PosOrder; cus
                   )
                 }
                 placeholder="0"
-                className="h-11 w-32 rounded-md border-outline-variant bg-surface pr-8 text-right text-sm"
+                className="h-11 w-32 rounded-md border-input bg-surface pr-8 text-right text-sm"
               />
               <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-on-surface-variant">
                 {discountType === "PERCENT" ? "%" : "Rp"}
@@ -241,7 +219,6 @@ export function OrderPanel({ order, customers, setting }: { order: PosOrder; cus
           </div>
         </div>
 
-        {/* Payment methods */}
         <div className="mb-3 grid grid-cols-3 gap-2">
           {methods.map((m) => (
             <button
@@ -279,10 +256,10 @@ export function OrderPanel({ order, customers, setting }: { order: PosOrder; cus
                   onChange={(e) => setPaid(e.target.value.replace(/\D/g, ""))}
                   placeholder="Masukkan nominal tunai, contoh 50.000"
                   aria-describedby={paid ? "paid-preview" : undefined}
-                  className="h-11 rounded-md border-outline-variant bg-surface"
+                  className="h-11 rounded-md border-input bg-surface"
                 />
               </div>
-              <Button variant="outline" size="sm" onClick={() => setPaid(String(Math.ceil(total / 1000) * 1000))} className="px-4">
+              <Button variant="outline" size="sm" onClick={() => setPaid(String(total))} className="px-4">
                 Pas
               </Button>
             </div>
@@ -353,7 +330,7 @@ export function OrderPanel({ order, customers, setting }: { order: PosOrder; cus
           </div>
         )}
 
-        {error && <p className="mb-2 text-sm text-destructive">{error}</p>}
+        {error && <p role="alert" className="mb-2 text-sm text-destructive">{error}</p>}
 
         <Button
           variant="accent"

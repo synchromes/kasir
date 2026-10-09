@@ -12,6 +12,7 @@ import { Eye, ReceiptText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Transaksi" };
 
 const methodLabel: Record<string, string> = { CASH: "Tunai", QRIS: "QRIS", TRANSFER: "Transfer" };
 const METHOD_VALUES = ["CASH", "QRIS", "TRANSFER"];
@@ -101,7 +102,7 @@ export default async function SalesPage({
 
         <SalesFilters q={q ?? ""} method={method ?? ""} from={sp.from ?? ""} to={sp.to ?? ""} />
 
-        <div className="overflow-x-auto">
+        <div role="region" aria-label="Riwayat transaksi, tabel dapat digeser" tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <Table className="min-w-[980px]">
             <TableHeader>
               <TableRow>

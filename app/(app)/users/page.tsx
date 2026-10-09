@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import UsersPage from "@/components/users";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Pengguna" };
 
 export default async function Page() {
   const session = await auth();

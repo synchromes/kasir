@@ -5,6 +5,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Settings, LogOut, Plus } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { clearPosStorage } from "@/lib/storage";
+import { setCartBar } from "@/components/pos/cart-bar-store";
 import { cn } from "@/lib/utils";
 import { navForRole } from "@/components/nav-items";
 
@@ -74,7 +76,7 @@ export function Sidebar({ role }: { role: string }) {
           Pengaturan
         </Link>
         <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
+          onClick={() => { clearPosStorage(); setCartBar({ ownerId: null, count: 0, total: 0 }); void signOut({ callbackUrl: "/login" }); }}
           className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-semibold tracking-wide text-destructive transition-colors duration-200 hover:bg-destructive-container"
         >
           <LogOut className="h-5 w-5 shrink-0" />

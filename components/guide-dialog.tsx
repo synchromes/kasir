@@ -116,9 +116,10 @@ const GUIDE: GuideCategory[] = [
         desc: "Alur transaksi dari memilih produk hingga pembayaran.",
         steps: [
           "Buka menu Kasir.",
-          "Ketuk produk untuk menambahkan ke keranjang (atau ketuk gambar untuk lihat detail).",
-          "Ubah jumlah item langsung di keranjang.",
-          "Klik Bayar untuk masuk ke halaman pembayaran.",
+          "Ketuk tombol tambah atau nama produk untuk memasukkannya ke keranjang.",
+          "Ketuk angka jumlah untuk membuka tombol tambah/kurang. Tombol menutup setelah aksi atau ketukan di luar.",
+          "Di HP, ketuk Lihat rangkuman pesanan untuk mengatur pembayaran. Di desktop, gunakan panel pesanan di kanan.",
+          "Pilih metode pembayaran, lalu ketuk Bayar atau Lanjutkan Pembayaran untuk QRIS.",
         ],
       },
       {
@@ -138,14 +139,14 @@ const GUIDE: GuideCategory[] = [
           "QRIS: klik Lanjutkan Pembayaran, QRIS dinamis berisi nominal transaksi muncul besar untuk dipindai pelanggan.",
           "Transfer: pilih metode Transfer, lampirkan foto bukti transfer.",
         ],
-        tip: "QRIS & Transfer membutuhkan foto bukti pembayaran agar transaksi bisa diverifikasi.",
+        tip: "Foto bukti pembayaran dapat dilampirkan untuk QRIS dan Transfer.",
       },
       {
         title: "Poin member",
         desc: "Pelanggan member mengumpulkan & memakai poin.",
         steps: [
           "Pilih pelanggan member di keranjang.",
-          "Centang 'Gunakan poin' untuk memotong total dengan poin.",
+          "Ketuk 'Pakai poin' untuk memotong total dengan poin; ketuk lagi untuk membatalkannya.",
           "Poin baru otomatis ditambahkan setelah transaksi (aturan poin di Pengaturan).",
         ],
       },
@@ -191,7 +192,7 @@ const GUIDE: GuideCategory[] = [
         desc: "Cari dan unduh data produk.",
         steps: [
           "Gunakan kolom cari atau filter kategori/status stok.",
-          "Klik Ekspor CSV untuk mengunduh daftar produk saat ini.",
+          "Klik Ekspor halaman ini untuk mengunduh produk yang tampil pada halaman tabel saat ini. Pilihan jumlah baris dan filter menentukan isi file.",
         ],
       },
     ],
@@ -388,10 +389,10 @@ const GUIDE: GuideCategory[] = [
     items: [
       {
         title: "Kelola akun pengguna",
-        desc: "Tambah kasir atau admin baru. Khusus akun admin.",
+        desc: "Tambah akun kasir dengan data toko terpisah. Khusus admin.",
         steps: [
           "Buka menu Pengguna (hanya admin yang bisa).",
-          "Klik + Tambah Pengguna, isi nama, email, password, role (Kasir/Admin), dan status.",
+          "Klik + Tambah Pengguna, isi nama, email, password, dan status. Akun baru memakai role Kasir; role Admin hanya untuk akun developer yang sudah ada.",
           "Setiap akun = 1 toko dengan datanya sendiri.",
           "Saat menghapus akun, periksa chip amber, seluruh data tokonya ikut terhapus permanen.",
         ],

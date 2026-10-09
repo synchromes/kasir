@@ -23,6 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Laporan" };
 
 const methodLabel: Record<string, string> = { CASH: "Tunai", QRIS: "QRIS", TRANSFER: "Transfer" };
 const methodIcon: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -395,7 +396,7 @@ export default async function ReportsPage({
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <Card className="flex flex-col p-5 lg:col-span-8">
           <div className="mb-4 flex items-center justify-between border-b border-outline-variant pb-3">
-            <h3 className="font-display text-base font-bold">Tren Pendapatan</h3>
+            <h2 className="font-display text-base font-bold">Tren Pendapatan</h2>
             <div className="flex items-center gap-4 text-xs text-on-surface-variant">
               <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-primary" /> Pendapatan</span>
               <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-accent" /> Laba</span>
@@ -406,7 +407,7 @@ export default async function ReportsPage({
 
         <Card className="flex flex-col p-5 lg:col-span-4">
           <div className="mb-4 border-b border-outline-variant pb-3">
-            <h3 className="font-display text-base font-bold">Produk Terlaris</h3>
+            <h2 className="font-display text-base font-bold">Produk Terlaris</h2>
           </div>
           <DonutChart
             data={topProducts.map((p) => ({ name: p.name, value: p.qty }))}
@@ -438,7 +439,7 @@ export default async function ReportsPage({
           desktop, responsif: menumpuk di mobile, grid di desktop. */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <Card className="flex flex-col p-5 lg:col-span-5">
-          <h3 className="font-display text-base font-bold">Metode Pembayaran</h3>
+          <h2 className="font-display text-base font-bold">Metode Pembayaran</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-4">
               {topMethodRows.map((m) => {
@@ -471,7 +472,7 @@ export default async function ReportsPage({
         </Card>
 
         <Card className="flex flex-col p-5 lg:col-span-3">
-          <h3 className="font-display text-base font-bold">Transaksi Mingguan</h3>
+          <h2 className="font-display text-base font-bold">Transaksi Mingguan</h2>
           <div className="mt-3 flex items-center gap-2">
             <span className="font-display text-2xl font-bold leading-none">{weekCount}</span>
           </div>
@@ -496,7 +497,7 @@ export default async function ReportsPage({
         </Card>
 
         <Card className="flex flex-col p-5 lg:col-span-4">
-          <h3 className="font-display text-base font-bold">Laba</h3>
+          <h2 className="font-display text-base font-bold">Laba</h2>
           <div className="mt-3 rounded-md bg-primary/10 p-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-on-surface-variant">Laba bersih</span>
@@ -528,9 +529,9 @@ export default async function ReportsPage({
       {/* Stok menipis */}
       <Card className="p-5">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="flex items-center gap-2 font-display text-base font-bold">
+          <h2 className="flex items-center gap-2 font-display text-base font-bold">
             <PackageOpen className="h-4 w-4 text-tertiary" /> Stok Menipis
-          </h3>
+          </h2>
           <Button variant="ghost" size="sm" asChild>
             <Link href="/stock">Kelola Stok</Link>
           </Button>
@@ -552,12 +553,12 @@ export default async function ReportsPage({
 
       {/* Transactions table */}
       <Card className="overflow-hidden">          <div className="flex items-center justify-between border-b border-outline-variant bg-surface-container-low px-5 py-4">
-          <h3 className="font-display text-base font-bold">Transaksi Terakhir</h3>
+          <h2 className="font-display text-base font-bold">Transaksi Terakhir</h2>
           <Button variant="ghost" size="sm" asChild>
             <Link href="/sales">Lihat Semua</Link>
           </Button>
         </div>
-        <div className="overflow-x-auto">
+        <div role="region" aria-label="Transaksi terakhir, tabel dapat digeser" tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring">
         <Table>
           <TableHeader>
             <TableRow>

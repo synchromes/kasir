@@ -1,11 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Minus, Package, Plus, Search, Trash2 } from "lucide-react";
+import { Package, Search } from "lucide-react";
 import { formatRupiah, cn } from "@/lib/utils";
 import { Input } from "@/components/ui";
 import { OrderPanel } from "@/components/pos/order-panel";
 import { usePosOrder } from "@/components/pos/use-pos-order";
+import { QuantityStepper } from "@/components/pos/quantity-stepper";
 import type { Customer, Product, Setting } from "@/components/pos/order-types";
 
 // Halaman Kasir: pilih produk. Di desktop kolom pesanan tampil di kanan;
@@ -14,23 +15,15 @@ export default function POSClient({
   products,
   customers,
   setting,
+  ownerId,
 }: {
+  ownerId: number;
   products: Product[];
   customers: Customer[];
   setting: Setting;
 }) {
   const [query, setQuery] = React.useState("");
   const [category, setCategory] = React.useState("all");
-  // Stepper yang sedang terbuka; hanya satu dalam satu waktu. Setiap aksi
-  // atau ketukan di luar stepper menutupnya kembali ke lingkaran angka.
-  const [openId, setOpenId] = React.useState<number | null>(null);
-  React.useEffect(() => {
-    function onDoc(e: PointerEvent) {
-      if (!(e.target as HTMLElement).closest?.("[data-stepper]")) setOpenId(null);
-    }
-    document.addEventListener("pointerdown", onDoc);
-    return () => document.removeEventListener("pointerdown", onDoc);
-  }, []);
   const searchRef = React.useRef<HTMLInputElement>(null);
   // Cari produk tetap nyaman dipakai di desktop (autofokus), tapi di HP
   // fokus otomatis justru membuka keyboard dan menutupi layar — jadi hanya
@@ -44,7 +37,7 @@ export default function POSClient({
     focusSearch();
   }, []);
 
-  const order = usePosOrder({ customers, setting });
+  const order = usePosOrder({ ownerId, products, customers, setting });
 
   const categories = [...new Set(products.map((p) => p.category).filter(Boolean))];
 
@@ -72,23 +65,12 @@ export default function POSClient({
   function addAndRefocus(product: Product) {
     order.addToCart(product);
     setQuery("");
-    setOpenId(null);
     focusSearch();
-  }
-
-  function stepQty(productId: number, delta: number) {
-    order.changeQty(productId, delta);
-    setOpenId(null);
-  }
-
-  function stepRemove(productId: number) {
-    order.removeLine(productId);
-    setOpenId(null);
   }
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:h-[calc(100vh-8rem)] lg:grid-cols-[minmax(0,1fr)_400px]">
-      {/* Left: products */}
+      <h1 className="sr-only">Kasir</h1>
       <div className="flex min-h-0 min-w-0 flex-col gap-3">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
@@ -99,14 +81,14 @@ export default function POSClient({
             onKeyDown={handleKeyDown}
             placeholder="Cari produk, SKU, atau scan barcode..."
             aria-label="Cari produk, SKU, atau scan barcode"
-            className="h-11 rounded-lg border-outline-variant bg-surface-container-low pl-10 text-base shadow-none"
+            className="h-11 rounded-lg border-input bg-surface-container-low pl-10 text-base shadow-none"
           />
         </div>
 
-        {/* Category chips */}
         <div className="scrollbar-hide flex shrink-0 gap-2 overflow-x-auto pb-0.5">
           <button
             onClick={() => setCategory("all")}
+            aria-pressed={category === "all"}
             className={cn(
               "shrink-0 inline-flex min-h-[44px] cursor-pointer items-center whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
               category === "all"
@@ -120,6 +102,7 @@ export default function POSClient({
             <button
               key={c}
               onClick={() => setCategory(c)}
+              aria-pressed={category === c}
               className={cn(
                 "shrink-0 inline-flex min-h-[44px] cursor-pointer items-center whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-colors",
                 category === c
@@ -132,7 +115,6 @@ export default function POSClient({
           ))}
         </div>
 
-        {/* Product grid */}
         <div className="min-h-0 flex-1 overflow-y-auto pr-0.5">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
             {filtered.map((p) => {
@@ -162,52 +144,8 @@ export default function POSClient({
                     <span className="absolute inset-x-0 bottom-0 bg-black/55 py-0.5 text-center text-[10px] font-bold uppercase tracking-wide text-white">
                       Habis
                     </span>
-                  ) : qty === 0 ? (
-                    <button
-                      onClick={() => addAndRefocus(p)}
-                      aria-label={`Tambah ${p.name}`}
-                      className="absolute right-2 top-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-primary shadow-md transition-transform hover:scale-105 active:scale-95 sm:h-11 sm:w-11"
-                    >
-                      <Plus className="h-5 w-5" />
-                    </button>
-                  ) : openId === p.id ? (
-                    <span data-stepper className="absolute right-2 top-2 flex items-center gap-0.5 rounded-full bg-white p-0.5 shadow-md sm:p-1">
-                      {qty <= 1 ? (
-                        <button
-                          onClick={() => stepRemove(p.id)}
-                          aria-label={`Hapus ${p.name}`}
-                          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-destructive-container text-on-destructive-container transition-transform active:scale-95 sm:h-10 sm:w-10"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => stepQty(p.id, -1)}
-                          aria-label={`Kurangi ${p.name}`}
-                          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-low sm:h-10 sm:w-10"
-                        >
-                          <Minus className="h-4 w-4" />
-                        </button>
-                      )}
-                      <span aria-live="polite" className="w-5 text-center text-sm font-bold">{qty}</span>
-                      <button
-                        onClick={() => stepQty(p.id, 1)}
-                        aria-label={`Tambah ${p.name}`}
-                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105 active:scale-95 sm:h-10 sm:w-10"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-                    </span>
                   ) : (
-                    <button
-                      data-stepper
-                      onClick={() => setOpenId(p.id)}
-                      aria-label={`Ubah jumlah ${p.name}, saat ini ${qty}`}
-                      aria-expanded="false"
-                      className="absolute right-2 top-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-sm font-bold text-on-surface shadow-md transition-transform active:scale-95 sm:h-11 sm:w-11"
-                    >
-                      {qty}
-                    </button>
+                    <QuantityStepper name={p.name} quantity={qty} maxQuantity={p.stock} onAdd={() => addAndRefocus(p)} onChange={(delta) => order.changeQty(p.id, delta)} onRemove={() => order.removeLine(p.id)} className="absolute right-2 top-2" />
                   )}
                 </div>
                 <button
@@ -231,7 +169,6 @@ export default function POSClient({
         </div>
       </div>
 
-      {/* Right: cart & checkout (desktop saja; mobile lewat Rangkuman). */}
       <div className="hidden min-h-0 min-w-0 lg:flex lg:flex-col lg:overflow-y-auto">
         <OrderPanel order={order} customers={customers} setting={setting} />
       </div>

@@ -13,7 +13,7 @@ const METHOD_OPTIONS = [
 ];
 
 const selectCls =
-  "h-11 w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
+  "h-11 w-full cursor-pointer rounded-lg border border-input bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
 
 export function SalesFilters({
   q = "",
@@ -98,10 +98,11 @@ export function SalesFilters({
   return (
     <div className="flex flex-col gap-3 border-b border-outline-variant bg-surface-container-lowest p-4 md:flex-row md:items-end">
       <div className="flex-1">
-        <label className="mb-1 block text-xs font-semibold text-on-surface-variant">Cari Transaksi</label>
+        <label htmlFor="sales-search" className="mb-1 block text-xs font-semibold text-on-surface-variant">Cari Transaksi</label>
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" />
           <Input
+            id="sales-search"
             ref={searchRef}
             type="search"
             defaultValue={q}
@@ -112,8 +113,8 @@ export function SalesFilters({
         </div>
       </div>
       <div className="w-full md:w-48">
-        <label className="mb-1 block text-xs font-semibold text-on-surface-variant">Metode Pembayaran</label>
-        <select value={methodVal} onChange={onSelectChange("method")} className={selectCls}>
+        <label htmlFor="sales-method" className="mb-1 block text-xs font-semibold text-on-surface-variant">Metode Pembayaran</label>
+        <select id="sales-method" value={methodVal} onChange={onSelectChange("method")} className={selectCls}>
           {METHOD_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
@@ -122,12 +123,12 @@ export function SalesFilters({
         </select>
       </div>
       <div className="w-full md:w-44">
-        <label className="mb-1 block text-xs font-semibold text-on-surface-variant">Dari Tanggal</label>
-        <input type="date" value={fromVal} onChange={onSelectChange("from")} className={selectCls} />
+        <label htmlFor="sales-from" className="mb-1 block text-xs font-semibold text-on-surface-variant">Dari Tanggal</label>
+        <input id="sales-from" type="date" value={fromVal} onChange={onSelectChange("from")} className={selectCls} />
       </div>
       <div className="w-full md:w-44">
-        <label className="mb-1 block text-xs font-semibold text-on-surface-variant">Sampai Tanggal</label>
-        <input type="date" value={toVal} onChange={onSelectChange("to")} className={selectCls} />
+        <label htmlFor="sales-to" className="mb-1 block text-xs font-semibold text-on-surface-variant">Sampai Tanggal</label>
+        <input id="sales-to" type="date" value={toVal} onChange={onSelectChange("to")} className={selectCls} />
       </div>
       {hasFilter && (
         <button

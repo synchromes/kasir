@@ -9,12 +9,14 @@ import { convertQRIS } from "@/lib/qris";
 import { resizeImageToDataUrl, PROOF_IMAGE_MAX_DIM, PROOF_IMAGE_QUALITY } from "@/lib/image";
 import { formatRupiah } from "@/lib/utils";
 import { Button, Card, Label } from "@/components/ui";
-import { PENDING_KEY } from "@/lib/storage";
+import { pendingStorageKey } from "@/lib/storage";
 
 // Payload transaksi yang masih berjalan, diisi oleh POS (components/pos/pos.tsx)
 // saat kasir menekan "Lanjutkan Pembayaran", dibersihkan di halaman sukses.
 
 type PendingPayment = {
+  ownerId: number;
+  saleKey: string;
   items: { productId: number; name: string; price: number; qty: number }[];
   discountType: "FIXED" | "PERCENT";
   discountValue: number;
@@ -32,11 +34,12 @@ type PendingPayment = {
 
 type CartItem = { productId: number; name: string; price: number; qty: number; stock: number };
 
-function readPending(): PendingPayment | null {
+function readPending(ownerId: number): PendingPayment | null {
   try {
-    const raw = sessionStorage.getItem(PENDING_KEY);
+    const raw = sessionStorage.getItem(pendingStorageKey(ownerId));
     if (!raw) return null;
     const d = JSON.parse(raw);
+    if (d.ownerId !== ownerId || typeof d.saleKey !== "string" || !d.saleKey || d.saleKey.length > 128) return null;
     // Validasi bentuk payload: rincian harus lengkap agar tidak memunculkan
     // nilai Rp NaN dari data lama/rusak.
     if (!Array.isArray(d.items) || !d.items.length) return null;
@@ -48,7 +51,7 @@ function readPending(): PendingPayment | null {
   }
 }
 
-export default function ConfirmClient({ setting }: { setting: { storeName: string; taxRate: number; qrisStatic: string } }) {
+export default function ConfirmClient({ ownerId, setting }: { ownerId: number; setting: { storeName: string; taxRate: number; qrisStatic: string } }) {
   // Baca payload dari sessionStorage setelah mount (hindari hydration mismatch:
   // render awal selalu "Memuat...").
   const [pending, setPending] = React.useState<PendingPayment | null>(null);
@@ -60,25 +63,19 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const proofRef = React.useRef<HTMLInputElement>(null);
-  // Kunci idempotensi transaksi, stabil untuk semua retry halaman ini.
-  const [saleKey] = React.useState(() =>
-    typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
-      ? crypto.randomUUID()
-      : `pos-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`
-  );
 
   React.useEffect(() => {
     let alive = true;
     // Baca storage lewat microtask agar tidak memicu aturan lint set-state-in-effect.
     Promise.resolve().then(() => {
       if (!alive) return;
-      setPending(readPending());
+      setPending(readPending(ownerId));
       setReady(true);
     });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [ownerId]);
 
   const staticTrim = setting.qrisStatic.trim();
   const amount = pending ? Math.round(pending.total) : 0;
@@ -144,7 +141,7 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
         customerId: pending.customerId,
         usePoints: pending.usePoints,
         paymentProof: proofImage,
-        saleKey,
+        saleKey: pending.saleKey,
         pointsUsed: pending.pointsUsed,
       });
       if (res?.error) {
@@ -322,7 +319,7 @@ export default function ConfirmClient({ setting }: { setting: { storeName: strin
           {proofError && <p className="mt-1 text-xs text-destructive">{proofError}</p>}
         </div>
 
-        {submitError && <p className="mt-3 rounded-lg bg-destructive-container/60 px-3 py-2 text-sm text-destructive">{submitError}</p>}
+        {submitError && <p role="alert" className="mt-3 rounded-lg bg-destructive-container/60 px-3 py-2 text-sm text-destructive">{submitError}</p>}
 
         <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row">
           <Button variant="outline" asChild className="flex-1">

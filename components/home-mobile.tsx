@@ -117,6 +117,7 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
 
   return (
     <div className="flex flex-col gap-6">
+      <h1 className="sr-only">Beranda Kasirku</h1>
       {/* Search — memfilter menu grid secara real-time */}
       <div className="relative">
         <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-outline" />
@@ -126,7 +127,7 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
           onChange={(e) => setQ(e.target.value)}
           placeholder="Cari menu..."
           aria-label="Cari menu"
-           className="h-12 w-full rounded-2xl border border-outline-variant/60 bg-surface-container-lowest pl-12 pr-12 text-sm text-on-surface outline-none placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary"
+           className="h-12 w-full rounded-2xl border border-input bg-surface-container-lowest pl-12 pr-12 text-sm text-on-surface outline-none placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary"
         />
         {q && (
           <button
@@ -282,7 +283,7 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
                     <span className="block font-display text-lg font-bold leading-none">{formatNumber(p.qty)}</span>
                     <span className="text-[10px]">terjual</span>
                   </span>
-                  <span className="shrink-0 rounded-lg bg-white/25 px-2 py-1 text-[10px] font-bold backdrop-blur-sm">
+                  <span className="shrink-0 rounded-lg bg-white/85 px-2 py-1 text-[10px] font-bold text-on-surface backdrop-blur-sm">
                     {formatRupiah(p.revenue)}
                   </span>
                 </div>

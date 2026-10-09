@@ -50,18 +50,24 @@ export function PurchaseForm({ suppliers, products }: { suppliers: Supplier[]; p
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (loading) return;
     setError(null);
     const valid = lines.filter((l) => l.productId && l.qty > 0);
     if (!valid.length) { setError("Minimal satu item"); return; }
     setLoading(true);
-    const res = await createPurchase({
-      supplierId: supplierId ? Number(supplierId) : null,
-      items: valid.map((l) => ({ productId: Number(l.productId), qty: l.qty, cost: l.cost })),
-    });
-    setLoading(false);
-    if (res?.error) { setError(res.error); return; }
-    setOpen(false);
-    router.refresh();
+    try {
+      const res = await createPurchase({
+        supplierId: supplierId ? Number(supplierId) : null,
+        items: valid.map((l) => ({ productId: Number(l.productId), qty: l.qty, cost: l.cost })),
+      });
+      if (res?.error) { setError(res.error); return; }
+      setOpen(false);
+      router.refresh();
+    } catch {
+      setError("Gagal menyimpan pembelian. Periksa koneksi lalu coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const total = lines.reduce((s, l) => s + l.qty * (l.cost || 0), 0);
@@ -80,9 +86,9 @@ export function PurchaseForm({ suppliers, products }: { suppliers: Supplier[]; p
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <Label>Supplier</Label>
+              <Label htmlFor="purchase-supplier">Supplier</Label>
               <Select value={supplierId || undefined} onValueChange={setSupplierId}>
-                <SelectTrigger><SelectValue placeholder="Pilih supplier" /></SelectTrigger>
+                <SelectTrigger id="purchase-supplier"><SelectValue placeholder="Pilih supplier" /></SelectTrigger>
                 <SelectContent>
                   {suppliers.map((s) => <SelectItem key={s.id} value={String(s.id)}>{s.name}</SelectItem>)}
                 </SelectContent>
@@ -96,16 +102,25 @@ export function PurchaseForm({ suppliers, products }: { suppliers: Supplier[]; p
 
             <div className="space-y-2">
               {lines.map((l, i) => (
-                <div key={i} className="grid grid-cols-[1fr_70px_110px_36px] items-center gap-2">
-                  <Select value={l.productId || undefined} onValueChange={(v) => onProductChange(i, v)}>
-                    <SelectTrigger className="w-full"><SelectValue placeholder="Produk" /></SelectTrigger>
-                    <SelectContent>
-                      {products.map((p) => <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                  <Input type="number" min="1" value={l.qty || ""} onChange={(e) => setLine(i, { qty: Number(e.target.value) || 0 })} placeholder="Qty" />
-                  <Input type="number" min="0" value={l.cost || ""} onChange={(e) => setLine(i, { cost: Number(e.target.value) || 0 })} placeholder="Harga beli" />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => removeLine(i)} className="text-destructive" aria-label="Hapus baris">
+                <div key={i} className="grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_44px] items-end gap-2 rounded-lg border border-outline-variant p-3 sm:grid-cols-[minmax(0,1fr)_70px_110px_44px] sm:border-0 sm:p-0">
+                  <div className="col-span-3 min-w-0 space-y-1.5 sm:col-span-1">
+                    <Label htmlFor={`purchase-product-${i}`}>Produk {i + 1}</Label>
+                    <Select value={l.productId || undefined} onValueChange={(v) => onProductChange(i, v)}>
+                      <SelectTrigger id={`purchase-product-${i}`} className="min-w-0 [&>span]:truncate"><SelectValue placeholder="Pilih produk" /></SelectTrigger>
+                      <SelectContent>
+                        {products.map((p) => <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-1.5">
+                    <Label htmlFor={`purchase-qty-${i}`}>Jumlah</Label>
+                    <Input id={`purchase-qty-${i}`} type="number" min="1" step="1" required value={l.qty || ""} onChange={(e) => setLine(i, { qty: Number(e.target.value) || 0 })} placeholder="Qty" />
+                  </div>
+                  <div className="min-w-0 space-y-1.5">
+                    <Label htmlFor={`purchase-cost-${i}`}>Harga beli</Label>
+                    <Input id={`purchase-cost-${i}`} type="number" min="0" value={l.cost || ""} onChange={(e) => setLine(i, { cost: Number(e.target.value) || 0 })} placeholder="Harga beli" />
+                  </div>
+                  <Button type="button" variant="ghost" size="icon" onClick={() => removeLine(i)} className="text-destructive" aria-label={`Hapus baris ${i + 1}`}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -114,7 +129,7 @@ export function PurchaseForm({ suppliers, products }: { suppliers: Supplier[]; p
             </div>
 
             <div className="flex justify-between border-t pt-3 font-bold"><span>Total</span><span>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(total)}</span></div>
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
           </div>
           <DialogFooter>
             <Button variant="accent" type="submit" disabled={loading}>{loading ? "Menyimpan..." : "Simpan Pembelian"}</Button>

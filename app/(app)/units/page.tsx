@@ -6,6 +6,7 @@ import { GuideDialog } from "@/components/guide-dialog";
 import { saveUnit, deleteUnit } from "@/lib/actions";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Satuan" };
 
 export default async function UnitsPage() {
   const session = await auth();

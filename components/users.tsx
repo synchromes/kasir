@@ -126,10 +126,10 @@ export default function UsersPage({
         </div>
       </div>
 
-      {actionError && <p className="rounded-lg bg-destructive-container/60 px-3 py-2 text-sm text-destructive">{actionError}</p>}
+      {actionError && <p role="alert" className="rounded-lg bg-destructive-container/60 px-3 py-2 text-sm text-destructive">{actionError}</p>}
 
       <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
+        <div role="region" aria-label="Daftar pengguna, tabel dapat digeser" tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <Table>
           <TableHeader>
             <TableRow>
@@ -149,9 +149,9 @@ export default function UsersPage({
                 <TableCell>{u.active ? <Badge variant="success">Aktif</Badge> : <Badge variant="destructive">Nonaktif</Badge>}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="sm" onClick={() => openEdit(u)}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" aria-label={`Edit ${u.name}`} onClick={() => openEdit(u)}><Pencil className="h-4 w-4" /></Button>
                     {u.id !== currentUserId && (
-                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDelete(u.id)}><Trash2 className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="sm" aria-label={`Hapus ${u.name}`} className="text-destructive" onClick={() => handleDelete(u.id)}><Trash2 className="h-4 w-4" /></Button>
                     )}
                     {u.id !== currentUserId && (() => {
                       const d = dataCounts[u.id];
@@ -201,21 +201,21 @@ export default function UsersPage({
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label>Role</Label>
+                  <Label htmlFor="user-role">Role</Label>
                   <Select value={form.role} onValueChange={(v) => setForm({ ...form, role: v })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger id="user-role"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {/* Role ADMIN hanya untuk akun developer (akun sendiri) —
                           akun toko selalu KASIR (1 akun = 1 toko). */}
-                      <SelectItem value="ADMIN" disabled={!!editing && editing.id !== currentUserId}>Admin</SelectItem>
+                      <SelectItem value="ADMIN" disabled={!editing || editing.id !== currentUserId}>Admin</SelectItem>
                       <SelectItem value="KASIR">Kasir</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Status</Label>
+                  <Label htmlFor="user-status">Status</Label>
                   <Select value={form.active ? "true" : "false"} onValueChange={(v) => setForm({ ...form, active: v === "true" })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger id="user-status"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="true">Aktif</SelectItem>
                       <SelectItem value="false">Nonaktif</SelectItem>
@@ -227,7 +227,7 @@ export default function UsersPage({
                 <Label htmlFor="password">{editing ? "Password Baru (kosongkan jika tidak diganti)" : "Password *"}</Label>
                 <Input id="password" type="password" required={!editing} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
               </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
             </div>
             <DialogFooter>
               <Button variant="accent" type="submit" disabled={loading}>{loading ? "Menyimpan..." : "Simpan"}</Button>

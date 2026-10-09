@@ -9,7 +9,7 @@ export default async function LoginPage() {
   const session = await auth();
   if (session) redirect("/");
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
+    <main className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
       <div className="w-full max-w-sm rounded-xl border bg-card p-8 shadow-sm">
         <div className="mb-6 text-center">
           <Image src="/logo-kasirku.png" alt="" width={72} height={72} className="mx-auto mb-3 rounded-2xl" />
@@ -21,6 +21,6 @@ export default async function LoginPage() {
           Demo: admin@kasir.com / admin123 · kasir@kasir.com / kasir123
         </p>
       </div>
-    </div>
+    </main>
   );
 }

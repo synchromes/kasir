@@ -5,6 +5,7 @@ import { NotificationsList } from "@/components/notifications-list";
 import { GuideDialog } from "@/components/guide-dialog";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Notifikasi" };
 
 export default async function NotificationsPage() {
   const session = await auth();

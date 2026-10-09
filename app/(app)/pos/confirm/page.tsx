@@ -13,6 +13,8 @@ export default async function ConfirmPage() {
 
   return (
     <ConfirmClient
+      key={ownerId}
+      ownerId={ownerId}
       setting={{
         storeName: setting?.storeName ?? "",
         taxRate: setting?.taxRate ?? 0,

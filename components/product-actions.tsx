@@ -62,11 +62,10 @@ export function DeleteProductButton({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <span className="relative inline-flex items-center">
-          <Button variant="ghost" size="sm" className="text-destructive"><Trash2 className="h-4 w-4" /></Button>
-          {/* Badge sebagai SIBLING trigger (bukan anak), agar Radix tidak
-              meng-clone span pembungkus sebagai elemen trigger. */}
+      <span className="relative inline-flex items-center">
+        <DialogTrigger asChild>
+          <Button variant="ghost" size="sm" aria-label={`Hapus ${name}`} className="text-destructive"><Trash2 className="h-4 w-4" /></Button>
+        </DialogTrigger>
           {blocked ? (
             <span className="pointer-events-none absolute -right-1.5 -top-1.5">
               <ConsequenceChip title="Tidak dapat dihapus, sudah tercatat di transaksi">{historyCount}×</ConsequenceChip>
@@ -76,8 +75,7 @@ export function DeleteProductButton({
               <ConsequenceChip title={`${movementCount} riwayat stok akan ikut terhapus`}>{movementCount}</ConsequenceChip>
             </span>
           ) : null}
-        </span>
-      </DialogTrigger>
+      </span>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Hapus Produk</DialogTitle>
@@ -87,7 +85,7 @@ export function DeleteProductButton({
               : `Yakin ingin menghapus "${name}"?${consequence ? ` ${consequence}` : ""}`}
           </DialogDescription>
         </DialogHeader>
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>{blocked ? "Tutup" : "Batal"}</Button>
           {!blocked && (

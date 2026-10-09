@@ -1,5 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const baseURL = process.env.PW_BASE_URL || "http://localhost:14786";
+
 // E2E walkthrough onboarding.
 //
 // Prasyarat sekali saja:
@@ -22,7 +24,7 @@ export default defineConfig({
   retries: 0,
   reporter: [["list"]],
   use: {
-    baseURL: "http://localhost:14786",
+    baseURL,
     trace: "retain-on-failure",
   },
   projects: [
@@ -37,9 +39,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev -- -p 14786",
+    command: `node node_modules/next/dist/bin/next dev --webpack --port ${new URL(baseURL).port || "3000"}`,
+    env: { AUTH_URL: baseURL },
     // Redirect ke /login (3xx) tetap dianggap siap oleh Playwright.
-    url: "http://localhost:14786/",
+    url: `${baseURL}/`,
     reuseExistingServer: true,
     timeout: 120_000,
   },
