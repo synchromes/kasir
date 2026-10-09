@@ -1,0 +1,97 @@
+{
+  "metrics": {
+    "dialog": {
+      "x": 16,
+      "y": 167.5,
+      "width": 288,
+      "height": 516,
+      "top": 167.5,
+      "right": 304,
+      "bottom": 683.5,
+      "left": 16
+    },
+    "memberLabel": {
+      "x": 41,
+      "y": 546.5,
+      "width": 238,
+      "height": 44,
+      "top": 546.5,
+      "right": 279,
+      "bottom": 590.5,
+      "left": 41
+    },
+    "fields": [
+      {
+        "id": "name",
+        "type": "text",
+        "box": {
+          "x": 41,
+          "y": 250.5,
+          "width": 238,
+          "height": 44,
+          "top": 250.5,
+          "right": 279,
+          "bottom": 294.5,
+          "left": 41
+        }
+      },
+      {
+        "id": "phone",
+        "type": "tel",
+        "box": {
+          "x": 41,
+          "y": 330.5,
+          "width": 238,
+          "height": 44,
+          "top": 330.5,
+          "right": 279,
+          "bottom": 374.5,
+          "left": 41
+        }
+      },
+      {
+        "id": "email",
+        "type": "email",
+        "box": {
+          "x": 41,
+          "y": 410.5,
+          "width": 238,
+          "height": 44,
+          "top": 410.5,
+          "right": 279,
+          "bottom": 454.5,
+          "left": 41
+        }
+      },
+      {
+        "id": "address",
+        "type": "text",
+        "box": {
+          "x": 41,
+          "y": 490.5,
+          "width": 238,
+          "height": 44,
+          "top": 490.5,
+          "right": 279,
+          "bottom": 534.5,
+          "left": 41
+        }
+      },
+      {
+        "id": "",
+        "type": "checkbox",
+        "box": {
+          "x": 41,
+          "y": 560.5,
+          "width": 16,
+          "height": 16,
+          "top": 560.5,
+          "right": 57,
+          "bottom": 576.5,
+          "left": 41
+        }
+      }
+    ]
+  },
+  "errors": []
+}

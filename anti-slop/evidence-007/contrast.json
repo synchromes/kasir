@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Teks utama",
+    "foreground": "#131B2E",
+    "background": "#FFFFFF",
+    "ratio": 17.16,
+    "required": 4.5,
+    "pass": true,
+    "checker": "ratio: 17.16:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "Teks sekunder",
+    "foreground": "#434655",
+    "background": "#FAF8FF",
+    "ratio": 8.88,
+    "required": 4.5,
+    "pass": true,
+    "checker": "ratio: 8.88:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "Tombol Tambah/Simpan",
+    "foreground": "#FFFFFF",
+    "background": "#00714D",
+    "ratio": 6.05,
+    "required": 4.5,
+    "pass": true,
+    "checker": "ratio: 6.05:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "Badge Member",
+    "foreground": "#00714D",
+    "background": "#E6FFFA",
+    "ratio": 5.78,
+    "required": 4.5,
+    "pass": true,
+    "checker": "ratio: 5.78:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "Border input",
+    "foreground": "#666979",
+    "background": "#FFFFFF",
+    "ratio": 5.44,
+    "required": 3,
+    "pass": true,
+    "checker": "ratio: 5.44:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  }
+]

@@ -56,14 +56,15 @@ export function TrendBar({ data }: { data: { label: string; total: number; profi
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
+        <BarChart accessibilityLayer data={data} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-          <XAxis dataKey="label" tick={{ fontSize: 11 }} className="text-muted-foreground" />
-          <YAxis tick={{ fontSize: 11 }} className="text-muted-foreground" />
+          <XAxis dataKey="label" minTickGap={24} tick={{ fontSize: 11, fill: "var(--on-surface-variant)" }} tickLine={false} axisLine={false} />
+          <YAxis width={56} tick={{ fontSize: 11, fill: "var(--on-surface-variant)" }} tickLine={false} axisLine={false}
+            tickFormatter={(value: number) => new Intl.NumberFormat("id-ID", { notation: "compact", maximumFractionDigits: 1 }).format(value)} />
           <Tooltip formatter={(v) => money.format(Number(v))} contentStyle={tooltipStyle} />
           <Legend wrapperStyle={{ fontSize: 12 }} formatter={(value) => <span style={{ color: "var(--foreground)" }}>{value}</span>} />
-          <Bar dataKey="total" name="Pendapatan" fill="var(--primary)" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="profit" name="Laba" fill="var(--accent)" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="total" name="Omzet" fill="var(--primary)" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+          <Bar dataKey="profit" name="Laba kotor" fill="var(--accent)" radius={[4, 4, 0, 0]} isAnimationActive={false} />
         </BarChart>
       </ResponsiveContainer>
     </div>

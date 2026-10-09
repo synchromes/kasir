@@ -32,7 +32,7 @@ function savePer(v: number) {
 }
 
 const navBtn =
-  "flex h-11 w-11 items-center justify-center rounded-full bg-surface-container-high text-on-surface-variant transition-colors hover:bg-primary hover:text-primary-foreground disabled:pointer-events-none disabled:opacity-40";
+  "flex h-11 w-11 items-center justify-center rounded-full bg-surface-container-high text-on-surface-variant transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40";
 
 export function TablePagination({
   total,
@@ -42,6 +42,7 @@ export function TablePagination({
   onPageChange,
   onPerPageChange,
   perOptions = PER_OPTIONS,
+  compactOnMobile = false,
 }: {
   /** Total rows in the (filtered) dataset. */
   total: number;
@@ -56,6 +57,7 @@ export function TablePagination({
   /** State mode: fired when the rows-per-page select changes (caller resets to page 1). */
   onPerPageChange?: (per: number) => void;
   perOptions?: number[];
+  compactOnMobile?: boolean;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -122,7 +124,7 @@ export function TablePagination({
     if (linkMode) {
       if (disabled) {
         return (
-          <span key={key} aria-disabled="true" className={cn(navBtn, "cursor-default pointer-events-none")}>
+          <span key={key} role="link" aria-label={label} aria-disabled="true" className={cn(navBtn, "cursor-default pointer-events-none opacity-40")}>
             {icon}
           </span>
         );
@@ -141,7 +143,31 @@ export function TablePagination({
   }
 
   return (
-    <div className="flex flex-col gap-3 border-t border-outline-variant bg-surface px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <>
+    {compactOnMobile && (
+      <div className="space-y-2 px-3 py-3 lg:hidden">
+        <p className="flex items-center gap-2 text-xs text-on-surface-variant">
+          Menampilkan {from}–{to} dari {total} {unit}
+        </p>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <select value={per} onChange={handlePerChange} aria-label="Baris per halaman" className="h-11 w-16 cursor-pointer appearance-none rounded-lg border border-input bg-surface pl-3 pr-6 text-sm font-medium text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              {perOptions.map(option => <option key={option} value={option}>{option}</option>)}
+            </select>
+            <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
+          </div>
+          <span className="text-xs text-on-surface-variant">per halaman</span>
+        </div>
+          {totalPages > 1 && <div className="flex items-center gap-1">
+            {renderNavBtn(page - 1, page <= 1, "Halaman sebelumnya", <ChevronLeft className="h-5 w-5" />, "prev")}
+            {renderNavBtn(page + 1, page >= totalPages, "Halaman berikutnya", <ChevronRight className="h-5 w-5" />, "next")}
+          </div>}
+        </div>
+        {totalPages > 1 && <p className="text-xs text-on-surface-variant">Halaman {page} / {totalPages}</p>}
+      </div>
+    )}
+    <div className={cn("flex flex-col gap-3 border-t border-outline-variant bg-surface px-4 py-3 sm:flex-row sm:items-center sm:justify-between", compactOnMobile && "hidden lg:flex")}>
       <p className="text-sm text-on-surface-variant">
         Menampilkan {from}-{to} dari {total} {unit}
       </p>
@@ -194,5 +220,6 @@ export function TablePagination({
         )}
       </div>
     </div>
+    </>
   );
 }

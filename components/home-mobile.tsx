@@ -10,11 +10,11 @@ import {
   Settings,
   ShoppingCart,
   Store,
-  TrendingUp,
   X,
   ReceiptText,
   Flame,
-  ArrowUp,
+  ChevronRight,
+  Warehouse,
 } from "lucide-react";
 import { navForRole } from "@/components/nav-items";
 import {
@@ -34,6 +34,7 @@ import {
   MarkFood,
 } from "@/components/flat-icons";
 import { cn, formatRupiah, formatNumber } from "@/lib/utils";
+import { productIconKind } from "@/lib/product-icon-kind";
 
 // Palet tile lembut Material (tanpa gradient) — satu warna per menu,
 // dipakai berurutan agar grid terlihat hidup seperti super-app.
@@ -76,7 +77,7 @@ const flatIcon: Record<string, (props: { className?: string }) => React.ReactNod
   "/users": FlatUser,
 };
 
-// Warna tile stabil per menu (hash href) — tidak bergeser saat grid difilter.
+// Warna tile stabil per menu, mengikuti identitas launcher yang disetujui.
 function tileColor(href: string) {
   const palette: Record<string, number> = { "/": 2, "/products": 0, "/categories": 3, "/units": 1, "/suppliers": 3, "/customers": 1, "/purchases": 6, "/sales": 2, "/expenses": 4, "/notifications": 0, "/users": 5 };
   return href === "/settings" ? { bg: "bg-surface-container-high", text: "text-on-surface-variant" } : tilePalette[palette[href] ?? 0];
@@ -91,65 +92,83 @@ export type HomeData = {
   lowStockCount: number;
 };
 
-// Watermark kartu Terlaris mengikuti kategori: makanan = mangkuk,
-// minuman = gelas, selainnya = box. Nama produk dipakai cadangan bila
-// kategori kosong, karena data seed memakai nama seperti Teh/Kopi.
-const foodWords = ["makan", "food", "kuliner", "snack", "jajan", "mie", "roti", "kue", "nasi", "ayam", "bakso", "soto", "sate", "burger", "pizza", "donat", "martabak", "goreng", "indomie"];
-const drinkWords = ["minum", "drink", "beverage", "kopi", "teh", "jus", "juice", "susu", "soda", "aqua", "air", "es ", "boba", "matcha", "sirup", "pucuk", "botol"];
-function foodKind(category: string, name: string): "food" | "drink" | "other" {
-  const text = `${category} ${name}`.toLowerCase();
-  if (drinkWords.some((w) => text.includes(w))) return "drink";
-  if (foodWords.some((w) => text.includes(w))) return "food";
-  return "other";
-}
-
 // Beranda mobile bergaya aplikasi native (super-app): search + hero
 // ringkasan + grid menu 4 kolom + banner stok + carousel data asli.
 // Tujuan yang sudah punya tombol di kartu hero biru — jangan diduplikasi di grid.
 const heroHrefs = new Set(["/pos", "/reports", "/stock"]);
+const heroButton = "flex min-w-0 flex-1 flex-col items-start gap-2 rounded-xl border border-white/30 bg-white/65 p-2 text-on-surface backdrop-blur-md transition-colors hover:bg-white/80 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary min-[360px]:p-2.5";
 
 export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
-  const nav = navForRole(role).filter((item) => !heroHrefs.has(item.href));
-  const cards = [...nav, { href: "/settings", label: "Pengaturan", icon: Settings, tour: "settings" }];
+  const allCards = [...navForRole(role), { href: "/settings", label: "Pengaturan", icon: Settings, tour: "settings" }];
+  const cards = allCards.filter(item => !heroHrefs.has(item.href));
   const [q, setQ] = React.useState("");
+  const searchRef = React.useRef<HTMLInputElement>(null);
   const query = q.trim().toLowerCase();
-  const filtered = query ? cards.filter((c) => c.label.toLowerCase().includes(query)) : cards;
+  const filtered = allCards.filter(item => {
+    const aliases = item.href === "/" ? "beranda" : item.href === "/pos" ? "buka kasir kasir baru" : item.href === "/products" ? "produk" : "";
+    return `${item.label} ${aliases}`.toLowerCase().includes(query);
+  });
 
   return (
     <div className="flex flex-col gap-6">
       <h1 className="sr-only">Beranda Kasirku</h1>
-      {/* Search — memfilter menu grid secara real-time */}
       <div className="relative">
-        <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-outline" />
+        <Search aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-outline" />
         <input
+          ref={searchRef}
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
+          onKeyDown={(event) => { if (event.key === "Escape") setQ(""); }}
           placeholder="Cari menu..."
           aria-label="Cari menu"
-           className="h-12 w-full rounded-2xl border border-input bg-surface-container-lowest pl-12 pr-12 text-sm text-on-surface outline-none placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary"
+          className="h-12 w-full rounded-2xl border border-input bg-surface-container-lowest pl-12 pr-12 text-sm text-on-surface outline-none placeholder:text-outline focus:border-primary focus:ring-2 focus:ring-primary [&::-webkit-search-cancel-button]:appearance-none"
         />
         {q && (
           <button
-            onClick={() => setQ("")}
+            onClick={() => { setQ(""); searchRef.current?.focus(); }}
             aria-label="Bersihkan pencarian"
             className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high"
           >
-            <X className="h-4 w-4" />
+            <X aria-hidden="true" className="h-4 w-4" />
           </button>
         )}
       </div>
 
+      {query ? (
+        <section aria-label="Hasil pencarian menu" className="space-y-3">
+          <p role="status" className="text-sm text-on-surface-variant">
+            {filtered.length ? `${filtered.length} menu ditemukan` : `Tidak ada menu “${q.trim()}”`}
+          </p>
+          {filtered.length ? (
+            <ul className="divide-y divide-outline-variant rounded-2xl border border-outline-variant bg-surface-container-lowest">
+              {filtered.map(item => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.href}>
+                    <Link href={item.href} className="flex min-h-14 items-center gap-3 rounded-xl px-4 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                      <Icon aria-hidden="true" className="h-5 w-5 shrink-0 text-primary" />
+                      <span className="min-w-0 flex-1 break-words text-sm font-medium">{item.label}</span>
+                      <ChevronRight aria-hidden="true" className="h-4 w-4 shrink-0 text-on-surface-variant" />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : <p className="text-sm text-on-surface-variant">Coba nama menu lain, seperti Kasir, Laporan, atau Stok.</p>}
+        </section>
+      ) : (
+        <>
       {/* Hero: ringkasan hari ini (ala kartu saldo super-app) */}
-      <section className="relative overflow-hidden rounded-3xl bg-[linear-gradient(125deg,#2563eb,#0053c6)] p-4 text-white shadow-md sm:p-6">
-        <div className="pointer-events-none absolute -right-6 -top-10 h-28 w-28 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full border-[32px] border-white/5" />
-        <ReceiptText aria-hidden="true" className="pointer-events-none absolute right-5 top-16 h-20 w-20 rotate-12 text-white/20 sm:h-28 sm:w-28" strokeWidth={1.5} />
+      <section aria-label="Ringkasan penjualan hari ini" className="relative overflow-hidden rounded-3xl bg-[linear-gradient(125deg,#2563eb,#0053c6)] p-4 text-white shadow-md sm:p-6">
+        <div className="pointer-events-none absolute -right-6 -top-10 h-28 w-28 rounded-full bg-on-surface/10" />
+        <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full border-[32px] border-on-surface/5" />
+        <ReceiptText aria-hidden="true" className="pointer-events-none absolute right-5 top-16 h-20 w-20 rotate-12 text-on-surface/15 sm:h-28 sm:w-28" strokeWidth={1.5} />
         <div className="relative z-10">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-xs font-semibold">
-              <Store className="h-4 w-4" />
-              {data.storeName}
+            <span className="flex min-w-0 items-center gap-1.5 text-xs font-semibold">
+              <Store aria-hidden="true" className="h-4 w-4 shrink-0" />
+              <span className="min-w-0 break-words">{data.storeName}</span>
             </span>
           </div>
           <p className="mt-5 text-xs font-medium sm:text-sm">Total Penjualan Hari Ini</p>
@@ -157,27 +176,27 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
             {formatRupiah(data.todayTotal)}
           </div>
           <p className="mt-2 flex items-center gap-1 text-xs font-semibold">
-            <ArrowUp aria-hidden="true" className="h-4 w-4" />
+            <ReceiptText aria-hidden="true" className="h-4 w-4" />
             {formatNumber(data.todayCount)} transaksi selesai
           </p>
-          <div className="mt-5 flex gap-3">
+          <div className="mt-5 flex gap-2 min-[360px]:gap-3">
             <Link
               href="/pos"
-              className="flex min-w-0 flex-1 flex-col items-start gap-2 rounded-xl border border-white/30 bg-white/20 p-3 backdrop-blur-md transition-colors hover:bg-white/30 active:scale-95"
+              className={heroButton}
             >
-              <ShoppingCart className="h-5 w-5" />
-              <span className="text-[10px] font-semibold">Kasir Baru</span>
+              <ShoppingCart aria-hidden="true" className="h-5 w-5 text-primary" />
+              <span className="text-xs font-semibold">Buka Kasir</span>
             </Link>
             <Link
               href="/reports"
-              className="flex min-w-0 flex-1 flex-col items-start gap-2 rounded-xl border border-white/30 bg-white/20 p-3 backdrop-blur-md transition-colors hover:bg-white/30 active:scale-95"
+              className={heroButton}
             >
-              <BarChart3 className="h-5 w-5" />
-              <span className="text-[10px] font-semibold">Laporan</span>
+              <BarChart3 aria-hidden="true" className="h-5 w-5 text-primary" />
+              <span className="text-xs font-semibold">Laporan</span>
             </Link>
             <Link
               href="/stock"
-              className="relative flex min-w-0 flex-1 flex-col items-start gap-2 rounded-xl border border-white/30 bg-white/20 p-3 backdrop-blur-md transition-colors hover:bg-white/30 active:scale-95"
+              className={cn("relative", heroButton)}
             >
               {data.lowStockCount > 0 && (
                 <span
@@ -189,8 +208,8 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
                   {formatNumber(data.lowStockCount)}
                 </span>
               )}
-              <PackageOpen className="h-5 w-5" />
-              <span className="text-[10px] font-semibold">Stok</span>
+              <Warehouse aria-hidden="true" className="h-5 w-5 text-primary" />
+              <span className="text-xs font-semibold">Stok</span>
             </Link>
           </div>
           {data.lowStockCount > 0 && (
@@ -206,14 +225,14 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
       </section>
 
       {/* Grid menu 4 kolom — tile ikon berwarna ala super-app */}
-      <section>
+      <section aria-label="Menu utama">
         <div className="grid grid-cols-4 justify-items-center gap-y-6 gap-x-1">
-          {filtered.map((item) => {
+          {cards.map((item) => {
             const Icon = item.icon;
             const Flat = flatIcon[item.href];
             const tile = tileColor(item.href);
             return (
-              <Link key={item.href} href={item.href} data-tour={item.tour} className="flex w-full flex-col items-center gap-2">
+              <Link key={item.href} href={item.href} data-tour={item.tour} className="flex min-w-0 w-full flex-col items-center gap-2 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                 <span
                   className={cn(
                     "flex h-14 w-14 items-center justify-center rounded-[18px] transition-transform active:scale-95 min-[375px]:h-16 min-[375px]:w-16 sm:h-20 sm:w-20",
@@ -223,35 +242,27 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
                   {Flat ? (
                     <Flat className="h-8 w-8 sm:h-10 sm:w-10" />
                   ) : (
-                    <Icon className={cn("h-8 w-8", tile.text)} strokeWidth={2} />
+                    <Icon aria-hidden="true" className={cn("h-8 w-8", tile.text)} strokeWidth={2} />
                   )}
                 </span>
-                <span className="max-w-full truncate px-0.5 text-center text-[12px] font-medium leading-tight text-on-surface">
+                <span className="max-w-full break-words text-center text-[11px] font-medium leading-tight text-on-surface min-[360px]:text-xs">
                   {item.label}
                 </span>
               </Link>
             );
           })}
-          {filtered.length === 0 && (
-            <div className="col-span-4 flex flex-col items-center gap-2 py-8 text-center">
-              <Search className="h-8 w-8 text-outline" />
-              <p className="text-sm text-on-surface-variant">Tidak ada menu &quot;{q}&quot;</p>
-              <p className="max-w-[240px] text-xs text-on-surface-variant/80">
-                Kasir, Laporan &amp; Stok ada di tab bawah atau tombol kartu biru
-              </p>
-            </div>
-          )}
         </div>
       </section>
 
       {/* Carousel: produk terlaris bulan ini */}
-      <section>
+      <section aria-labelledby="top-products-title">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 font-display text-lg font-bold"><Flame aria-hidden="true" className="h-5 w-5 text-destructive" />Produk Terlaris</h2>
-          <Link href="/reports" className="inline-flex min-h-11 items-center text-xs font-semibold text-primary">
+          <h2 id="top-products-title" className="flex items-center gap-2 font-display text-lg font-bold"><Flame aria-hidden="true" className="h-5 w-5 text-destructive" />Produk terlaris</h2>
+          <Link href="/reports?preset=month" className="inline-flex min-h-11 shrink-0 items-center text-xs font-semibold text-primary">
             Lihat semua
           </Link>
         </div>
+        <p className="mb-3 text-xs text-on-surface-variant">Bulan ini · Berdasarkan jumlah terjual</p>
         {data.topProducts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-6 text-center text-sm text-on-surface-variant">
             Belum ada penjualan bulan ini. Mulai transaksi pertama di Kasir.
@@ -261,38 +272,41 @@ export function HomeMobile({ role, data }: { role: string; data: HomeData }) {
             {data.topProducts.map((p, i) => (
               <Link
                 key={p.id}
-                href="/reports"
+                href="/reports?preset=month"
                 className={cn(
-                  "relative w-[190px] shrink-0 overflow-hidden rounded-2xl p-4 text-white shadow-sm transition-transform hover:-translate-y-0.5 active:scale-[0.98] sm:w-[220px]",
+                  "relative w-[190px] shrink-0 overflow-hidden rounded-2xl p-4 text-white shadow-sm transition-transform hover:-translate-y-0.5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white sm:w-[220px]",
                   topColors[i % topColors.length]
                 )}
               >
-                {foodKind(p.category, p.name) === "food" ? (
-                  <MarkFood aria-hidden="true" className="pointer-events-none absolute -right-2 top-4 h-24 w-24 -rotate-12 opacity-25" />
-                ) : foodKind(p.category, p.name) === "drink" ? (
-                  <MarkDrink aria-hidden="true" className="pointer-events-none absolute -right-2 top-4 h-24 w-24 -rotate-12 opacity-25" />
+                {productIconKind(p.category, p.name) === "food" ? (
+                  <MarkFood aria-hidden="true" className="pointer-events-none absolute -right-2 top-4 h-24 w-24 -rotate-12 text-on-surface/20" />
+                ) : productIconKind(p.category, p.name) === "drink" ? (
+                  <MarkDrink aria-hidden="true" className="pointer-events-none absolute -right-2 top-4 h-24 w-24 -rotate-12 text-on-surface/20" />
                 ) : (
-                  <PackageOpen aria-hidden="true" className="pointer-events-none absolute -right-1 top-5 h-20 w-20 -rotate-12 text-white/10" />
+                  <PackageOpen aria-hidden="true" className="pointer-events-none absolute -right-1 top-5 h-20 w-20 -rotate-12 text-on-surface/20" />
                 )}
                 <span className="relative flex items-center gap-1.5 text-[11px] font-semibold">
-                  <TrendingUp className="h-3.5 w-3.5" /> Terlaris
+                  <BarChart3 aria-hidden="true" className="h-3.5 w-3.5" /> Terlaris
                 </span>
-                <h3 className="mt-2 line-clamp-2 font-bold leading-snug">{p.name}</h3>
-                <div className="mt-4 flex items-end justify-between gap-2">
+                <h3 className="relative mt-2 break-words line-clamp-2 font-bold leading-snug">{p.name}</h3>
+                <div className="relative mt-4">
                   <span>
                     <span className="block font-display text-lg font-bold leading-none">{formatNumber(p.qty)}</span>
                     <span className="text-[10px]">terjual</span>
                   </span>
-                  <span className="shrink-0 rounded-lg bg-white/85 px-2 py-1 text-[10px] font-bold text-on-surface backdrop-blur-sm">
-                    {formatRupiah(p.revenue)}
+                  <span className="mt-3 block">
+                    <span className="block text-[11px]">Nilai penjualan</span>
+                    <span className="block break-words text-xs font-bold">{formatRupiah(p.revenue)}</span>
                   </span>
                 </div>
               </Link>
             ))}
           </div>
         )}
+        {data.topProducts.length > 0 && <p className="mt-2 text-xs text-on-surface-variant">Nilai produk sebelum diskon dan pajak.</p>}
       </section>
-
+        </>
+      )}
     </div>
   );
 }

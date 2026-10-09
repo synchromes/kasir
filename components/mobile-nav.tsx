@@ -18,9 +18,9 @@ export function MobileNav({ name, userId }: { name: string; userId: number }) {
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-y-2 bg-surface px-4 py-4 lg:hidden">
-        <Link href="/" className="flex min-h-11 items-center gap-2 font-display text-on-surface">
-          <Image src="/logo-kasirku.png" alt="" width={44} height={44} className="rounded-xl" />
-          <span><span className="block text-xl font-bold tracking-tight">Kasirku</span><span className="hidden text-[10px] font-medium text-on-surface-variant min-[480px]:block">Mudah · Cepat · Terpercaya</span></span>
+        <Link href="/" className="flex min-h-11 shrink-0 items-center gap-1.5 font-display text-on-surface min-[360px]:gap-2">
+          <Image src="/logo-kasirku.png" alt="" width={44} height={44} className="h-8 w-8 rounded-xl min-[360px]:h-11 min-[360px]:w-11" />
+          <span><span className="block text-base font-bold tracking-tight min-[360px]:text-xl">Kasirku</span><span className="hidden text-[10px] font-medium text-on-surface-variant min-[480px]:block">Mudah · Cepat · Terpercaya</span></span>
         </Link>
         <div className="flex items-center gap-0.5">
           <NotificationBell className="[&>button]:h-11 [&>button]:w-11" />
@@ -37,7 +37,7 @@ export function MobileNav({ name, userId }: { name: string; userId: number }) {
             aria-label="Keluar"
             className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-destructive"
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut aria-hidden="true" className="h-5 w-5" />
           </button>
         </div>
       </div>

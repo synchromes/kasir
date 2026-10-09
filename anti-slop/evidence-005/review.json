@@ -1,0 +1,50 @@
+{
+  "metrics": {
+    "viewport": {
+      "width": 393,
+      "height": 851
+    },
+    "documentHeight": 3222,
+    "documentWidth": 393,
+    "headings": [
+      {
+        "text": "Analitik Penjualan",
+        "top": 100
+      },
+      {
+        "text": "Tren Pendapatan",
+        "top": 796
+      },
+      {
+        "text": "Produk Terlaris",
+        "top": 1163
+      },
+      {
+        "text": "Metode Pembayaran",
+        "top": 1594
+      },
+      {
+        "text": "Transaksi Mingguan",
+        "top": 1860
+      },
+      {
+        "text": "Laba",
+        "top": 2224
+      },
+      {
+        "text": " Stok Menipis",
+        "top": 2584
+      },
+      {
+        "text": "Transaksi Terakhir",
+        "top": 2766
+      }
+    ],
+    "mainText": "Analitik Penjualan\n\nGambaran menyeluruh tentang performa toko.\n\nHari Ini\nMinggu\nBulan\nKustom\nEkspor\nBantuan\n\nTotal pendapatan\n\nRp 282.000\n\n-\nvs periode sebelumnya\n\n5 transaksi · 7 item\n\nLaba kotor\n\nRp 33.700\n\n-\nvs periode sebelumnya\n\nPengeluaran: Rp 0 · Bersih: Rp 33.700\n\nRata-rata nilai transaksi\n\nRp 56.400\n\n-\nvs periode sebelumnya\n\nHPP: Rp 248.300\n\nTren Pendapatan\nPendapatan\nLaba\nLabaPendapatan\n7 Okt\n0\n75000\n150000\n225000\n300000\nProduk Terlaris\n7\nitem\nBeras Premium 5kg\n57%\nTepung Terigu 1kg\n14%\nTeh Botol Sosro\n14%\nCoca Cola 390ml\n14%\nMetode Pembayaran\n\nTunai\n\nRp 282.000\n\n100%\n282 rb\npendapatan\nTransaksi Mingguan\n5\n\ntransaksi · 7 hari terakhir\n\nSab\nMin\nSen\nSel\nRab\nKam\nJum\nTunai\n100%\nNon-tunai\n0%\nLaba\nLaba bersih\nRp 33.700\n\nPendapatan\n\nRp 282.000\n-\n\nPengeluaran\n\nRp 0\n-\nStok Menipis\nKelola Stok\nTepung Terigu 1kg · 3 pck\nIndomie Goreng · 5 pck\nTransaksi Terakhir\nLihat Semua\nID Transaksi\tTanggal & Waktu\tItem\tMetode\tTotal\tStatus\nINV-20261007-0005\t7 Okt 2026, 23.40\t1 item\tTunai\tRp 65.000\tSELESAI\nINV-20261007-0004\t7 Okt 2026, 23.39\t1 item\tTunai\tRp 65.000\tSELESAI\nINV-20261007-0003\t7 Okt 2026, 23.39\t1 item\tTunai\tRp 65.000\tSELESAI\nINV-20261007-0002\t7 Okt 2026, 23.36\t1 item\tTunai\tRp 65.000\tSELESAI\nINV-20261007-0001\t7 Okt 2026, 21.57\t3 item\tTunai\tRp 22.000\tSELESAI"
+  },
+  "narrow": {
+    "viewportWidth": 320,
+    "documentWidth": 320
+  },
+  "errors": []
+}

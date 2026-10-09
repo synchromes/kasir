@@ -107,6 +107,7 @@ export default async function DashboardPage() {
   const ownerId = Number(session.user.id);
   const { start, end } = todayRange();
   const monthStart = new Date(start.getFullYear(), start.getMonth(), 1);
+  const nextMonthStart = new Date(start.getFullYear(), start.getMonth() + 1, 1);
 
   // Data ringan beranda mobile (hero ringkasan, terlaris, restock) — jauh
   // lebih murah daripada 13 query dasbor desktop.
@@ -115,7 +116,7 @@ export default async function DashboardPage() {
     // Top 6 produk by qty — dibatasi lewat groupBy, tanpa memuat semua item bulan ini.
     prisma.saleItem.groupBy({
       by: ["productId"],
-      where: { sale: { ownerId, createdAt: { gte: monthStart } } },
+      where: { sale: { ownerId, createdAt: { gte: monthStart, lt: nextMonthStart } } },
       _sum: { qty: true },
       orderBy: { _sum: { qty: "desc" } },
       take: 6,
@@ -134,7 +135,7 @@ export default async function DashboardPage() {
   const [topRevenueItems, topProductsInfo] = await Promise.all([
     topIds.length
       ? prisma.saleItem.findMany({
-          where: { sale: { ownerId, createdAt: { gte: monthStart } }, productId: { in: topIds } },
+          where: { sale: { ownerId, createdAt: { gte: monthStart, lt: nextMonthStart } }, productId: { in: topIds } },
           select: { productId: true, qty: true, price: true },
         })
       : Promise.resolve([] as { productId: number; qty: number; price: number }[]),

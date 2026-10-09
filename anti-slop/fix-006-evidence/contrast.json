@@ -1,0 +1,137 @@
+[
+  {
+    "name": "hero label 1",
+    "foreground": "#131B2E",
+    "background": "#aec6f2",
+    "ratio": 9.93,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 9.93:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "hero label 2",
+    "foreground": "#131B2E",
+    "background": "#abc4ed",
+    "ratio": 9.68,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 9.68:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "hero label 3",
+    "foreground": "#131B2E",
+    "background": "#a8c4ed",
+    "ratio": 9.63,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 9.63:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "hero icon 1",
+    "foreground": "#004AC6",
+    "background": "#aec6f2",
+    "ratio": 4.35,
+    "required": 3,
+    "pass_": true,
+    "checker": "ratio: 4.35:1\nnormal text (4.5:1): FAIL\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "hero icon 2",
+    "foreground": "#004AC6",
+    "background": "#abc4ed",
+    "ratio": 4.24,
+    "required": 3,
+    "pass_": true,
+    "checker": "ratio: 4.24:1\nnormal text (4.5:1): FAIL\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "hero icon 3",
+    "foreground": "#004AC6",
+    "background": "#a8c4ed",
+    "ratio": 4.22,
+    "required": 3,
+    "pass_": true,
+    "checker": "ratio: 4.22:1\nnormal text (4.5:1): FAIL\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "product #007F68",
+    "foreground": "#FFFFFF",
+    "background": "#007F68",
+    "ratio": 4.96,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 4.96:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "product #0067DB",
+    "foreground": "#FFFFFF",
+    "background": "#0067DB",
+    "ratio": 5.3,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 5.30:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "product #6B46C1",
+    "foreground": "#FFFFFF",
+    "background": "#6B46C1",
+    "ratio": 6.42,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 6.42:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "product #986000",
+    "foreground": "#FFFFFF",
+    "background": "#986000",
+    "ratio": 5.24,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 5.24:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "product #BA1A1A",
+    "foreground": "#FFFFFF",
+    "background": "#BA1A1A",
+    "ratio": 6.46,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 6.46:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "product #006F65",
+    "foreground": "#FFFFFF",
+    "background": "#006F65",
+    "ratio": 6.07,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 6.07:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "hero text worst gradient",
+    "foreground": "#FFFFFF",
+    "background": "#2563EB",
+    "ratio": 5.17,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 5.17:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "outline on white",
+    "foreground": "#666979",
+    "background": "#FFFFFF",
+    "ratio": 5.44,
+    "required": 3,
+    "pass_": true,
+    "checker": "ratio: 5.44:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  },
+  {
+    "name": "body text on surface",
+    "foreground": "#131B2E",
+    "background": "#FAF8FF",
+    "ratio": 16.29,
+    "required": 4.5,
+    "pass_": true,
+    "checker": "ratio: 16.29:1\nnormal text (4.5:1): PASS\nlarge text  (3.0:1): PASS\n"
+  }
+]

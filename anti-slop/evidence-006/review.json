@@ -1,0 +1,293 @@
+{
+  "layouts": [
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "height": 1148,
+      "searchY": 152,
+      "sections": [
+        {
+          "y": 224,
+          "height": 299
+        },
+        {
+          "y": 547,
+          "height": 285
+        },
+        {
+          "y": 856,
+          "height": 197
+        }
+      ],
+      "labels": [
+        {
+          "text": "Dasbor",
+          "clipped": false
+        },
+        {
+          "text": "Inventaris",
+          "clipped": false
+        },
+        {
+          "text": "Kategori",
+          "clipped": false
+        },
+        {
+          "text": "Satuan",
+          "clipped": false
+        },
+        {
+          "text": "Supplier",
+          "clipped": false
+        },
+        {
+          "text": "Pelanggan",
+          "clipped": false
+        },
+        {
+          "text": "Pembelian",
+          "clipped": false
+        },
+        {
+          "text": "Transaksi",
+          "clipped": false
+        },
+        {
+          "text": "Pengeluaran",
+          "clipped": true
+        },
+        {
+          "text": "Notifikasi",
+          "clipped": false
+        },
+        {
+          "text": "Pengguna",
+          "clipped": false
+        },
+        {
+          "text": "Pengaturan",
+          "clipped": true
+        }
+      ]
+    },
+    {
+      "width": 360,
+      "documentWidth": 360,
+      "height": 1096,
+      "searchY": 100,
+      "sections": [
+        {
+          "y": 172,
+          "height": 299
+        },
+        {
+          "y": 495,
+          "height": 285
+        },
+        {
+          "y": 804,
+          "height": 197
+        }
+      ],
+      "labels": [
+        {
+          "text": "Dasbor",
+          "clipped": false
+        },
+        {
+          "text": "Inventaris",
+          "clipped": false
+        },
+        {
+          "text": "Kategori",
+          "clipped": false
+        },
+        {
+          "text": "Satuan",
+          "clipped": false
+        },
+        {
+          "text": "Supplier",
+          "clipped": false
+        },
+        {
+          "text": "Pelanggan",
+          "clipped": false
+        },
+        {
+          "text": "Pembelian",
+          "clipped": false
+        },
+        {
+          "text": "Transaksi",
+          "clipped": false
+        },
+        {
+          "text": "Pengeluaran",
+          "clipped": false
+        },
+        {
+          "text": "Notifikasi",
+          "clipped": false
+        },
+        {
+          "text": "Pengguna",
+          "clipped": false
+        },
+        {
+          "text": "Pengaturan",
+          "clipped": false
+        }
+      ]
+    },
+    {
+      "width": 393,
+      "documentWidth": 393,
+      "height": 1120,
+      "searchY": 100,
+      "sections": [
+        {
+          "y": 172,
+          "height": 299
+        },
+        {
+          "y": 495,
+          "height": 309
+        },
+        {
+          "y": 828,
+          "height": 197
+        }
+      ],
+      "labels": [
+        {
+          "text": "Dasbor",
+          "clipped": false
+        },
+        {
+          "text": "Inventaris",
+          "clipped": false
+        },
+        {
+          "text": "Kategori",
+          "clipped": false
+        },
+        {
+          "text": "Satuan",
+          "clipped": false
+        },
+        {
+          "text": "Supplier",
+          "clipped": false
+        },
+        {
+          "text": "Pelanggan",
+          "clipped": false
+        },
+        {
+          "text": "Pembelian",
+          "clipped": false
+        },
+        {
+          "text": "Transaksi",
+          "clipped": false
+        },
+        {
+          "text": "Pengeluaran",
+          "clipped": false
+        },
+        {
+          "text": "Notifikasi",
+          "clipped": false
+        },
+        {
+          "text": "Pengguna",
+          "clipped": false
+        },
+        {
+          "text": "Pengaturan",
+          "clipped": false
+        }
+      ]
+    },
+    {
+      "width": 430,
+      "documentWidth": 430,
+      "height": 1120,
+      "searchY": 100,
+      "sections": [
+        {
+          "y": 172,
+          "height": 299
+        },
+        {
+          "y": 495,
+          "height": 309
+        },
+        {
+          "y": 828,
+          "height": 197
+        }
+      ],
+      "labels": [
+        {
+          "text": "Dasbor",
+          "clipped": false
+        },
+        {
+          "text": "Inventaris",
+          "clipped": false
+        },
+        {
+          "text": "Kategori",
+          "clipped": false
+        },
+        {
+          "text": "Satuan",
+          "clipped": false
+        },
+        {
+          "text": "Supplier",
+          "clipped": false
+        },
+        {
+          "text": "Pelanggan",
+          "clipped": false
+        },
+        {
+          "text": "Pembelian",
+          "clipped": false
+        },
+        {
+          "text": "Transaksi",
+          "clipped": false
+        },
+        {
+          "text": "Pengeluaran",
+          "clipped": false
+        },
+        {
+          "text": "Notifikasi",
+          "clipped": false
+        },
+        {
+          "text": "Pengguna",
+          "clipped": false
+        },
+        {
+          "text": "Pengaturan",
+          "clipped": false
+        }
+      ]
+    }
+  ],
+  "searchKasir": "Beranda Kasirku\nToko Kasir Sejahtera\n\nTotal Penjualan Hari Ini\n\nRp 0\n\n0 transaksi selesai\n\nKasir Baru\nLaporan\n2\nStok\n2 produk perlu restock\n\nTidak ada menu \"kasir\"\n\nKasir, Laporan & Stok ada di tab bawah atau tombol kartu biru\n\nProduk Terlaris\nLihat semua\nTerlaris\nBeras Premium 5kg\n4\nterjual\nRp 260.000\nTerlaris\nTepung Terigu 1kg\n1\nterjual\nRp 11.500\nTerlaris\nTeh Botol Sosro\n1\nterjual\nRp 5.000\nTerlaris\nCoca Cola 390ml\n1\nterjual\nRp 5.500",
+  "inventoryMatches": 1,
+  "errors": [],
+  "violations": [],
+  "preview": {
+    "width": 393,
+    "height": 1120,
+    "note": "Tall viewport records complete composition; phone screenshots are separate."
+  }
+}

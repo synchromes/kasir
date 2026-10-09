@@ -1,0 +1,858 @@
+{
+  "url": "http://localhost:3001/customers",
+  "status": 200,
+  "metrics": [
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "documentHeight": 851,
+      "tableViewport": 286,
+      "tableWidth": 680,
+      "visibleRange": {
+        "left": 17,
+        "right": 303
+      },
+      "columns": [
+        {
+          "label": "Nama",
+          "x": 17,
+          "width": 150
+        },
+        {
+          "label": "Telepon",
+          "x": 167,
+          "width": 145
+        },
+        {
+          "label": "Status",
+          "x": 312,
+          "width": 100
+        },
+        {
+          "label": "Poin",
+          "x": 412,
+          "width": 75
+        },
+        {
+          "label": "Aksi",
+          "x": 487,
+          "width": 210
+        }
+      ],
+      "controls": [
+        {
+          "label": "Bantuan, panduan Pelanggan",
+          "box": {
+            "x": 16,
+            "y": 164,
+            "width": 109.96875,
+            "height": 44,
+            "top": 164,
+            "right": 125.96875,
+            "bottom": 208,
+            "left": 16
+          }
+        },
+        {
+          "label": "+ Tambah",
+          "box": {
+            "x": 133.96875,
+            "y": 164,
+            "width": 98.75,
+            "height": 44,
+            "top": 164,
+            "right": 232.71875,
+            "bottom": 208,
+            "left": 133.96875
+          }
+        },
+        {
+          "label": "Cari pelanggan",
+          "box": {
+            "x": 33,
+            "y": 249,
+            "width": 254,
+            "height": 44,
+            "top": 249,
+            "right": 287,
+            "bottom": 293,
+            "left": 33
+          }
+        },
+        {
+          "label": "Edit Budi Santoso",
+          "box": {
+            "x": 588.90625,
+            "y": 370,
+            "width": 44,
+            "height": 44,
+            "top": 370,
+            "right": 632.90625,
+            "bottom": 414,
+            "left": 588.90625
+          }
+        },
+        {
+          "label": "Hapus Budi Santoso",
+          "box": {
+            "x": 636.90625,
+            "y": 370,
+            "width": 44,
+            "height": 44,
+            "top": 370,
+            "right": 680.90625,
+            "bottom": 414,
+            "left": 636.90625
+          }
+        },
+        {
+          "label": "Edit Pelanggan Umum",
+          "box": {
+            "x": 503.125,
+            "y": 439,
+            "width": 44,
+            "height": 44,
+            "top": 439,
+            "right": 547.125,
+            "bottom": 483,
+            "left": 503.125
+          }
+        },
+        {
+          "label": "Hapus Pelanggan Umum",
+          "box": {
+            "x": 551.125,
+            "y": 439,
+            "width": 44,
+            "height": 44,
+            "top": 439,
+            "right": 595.125,
+            "bottom": 483,
+            "left": 551.125
+          }
+        },
+        {
+          "label": "Baris per halaman",
+          "box": {
+            "x": 33,
+            "y": 540,
+            "width": 64,
+            "height": 44,
+            "top": 540,
+            "right": 97,
+            "bottom": 584,
+            "left": 33
+          }
+        }
+      ]
+    },
+    {
+      "width": 360,
+      "documentWidth": 360,
+      "documentHeight": 851,
+      "tableViewport": 326,
+      "tableWidth": 680,
+      "visibleRange": {
+        "left": 17,
+        "right": 343
+      },
+      "columns": [
+        {
+          "label": "Nama",
+          "x": 17,
+          "width": 150
+        },
+        {
+          "label": "Telepon",
+          "x": 167,
+          "width": 145
+        },
+        {
+          "label": "Status",
+          "x": 312,
+          "width": 100
+        },
+        {
+          "label": "Poin",
+          "x": 412,
+          "width": 75
+        },
+        {
+          "label": "Aksi",
+          "x": 487,
+          "width": 210
+        }
+      ],
+      "controls": [
+        {
+          "label": "Bantuan, panduan Pelanggan",
+          "box": {
+            "x": 16,
+            "y": 164,
+            "width": 109.96875,
+            "height": 44,
+            "top": 164,
+            "right": 125.96875,
+            "bottom": 208,
+            "left": 16
+          }
+        },
+        {
+          "label": "+ Tambah",
+          "box": {
+            "x": 133.96875,
+            "y": 164,
+            "width": 98.75,
+            "height": 44,
+            "top": 164,
+            "right": 232.71875,
+            "bottom": 208,
+            "left": 133.96875
+          }
+        },
+        {
+          "label": "Cari pelanggan",
+          "box": {
+            "x": 33,
+            "y": 249,
+            "width": 294,
+            "height": 44,
+            "top": 249,
+            "right": 327,
+            "bottom": 293,
+            "left": 33
+          }
+        },
+        {
+          "label": "Edit Budi Santoso",
+          "box": {
+            "x": 588.90625,
+            "y": 370,
+            "width": 44,
+            "height": 44,
+            "top": 370,
+            "right": 632.90625,
+            "bottom": 414,
+            "left": 588.90625
+          }
+        },
+        {
+          "label": "Hapus Budi Santoso",
+          "box": {
+            "x": 636.90625,
+            "y": 370,
+            "width": 44,
+            "height": 44,
+            "top": 370,
+            "right": 680.90625,
+            "bottom": 414,
+            "left": 636.90625
+          }
+        },
+        {
+          "label": "Edit Pelanggan Umum",
+          "box": {
+            "x": 503.125,
+            "y": 439,
+            "width": 44,
+            "height": 44,
+            "top": 439,
+            "right": 547.125,
+            "bottom": 483,
+            "left": 503.125
+          }
+        },
+        {
+          "label": "Hapus Pelanggan Umum",
+          "box": {
+            "x": 551.125,
+            "y": 439,
+            "width": 44,
+            "height": 44,
+            "top": 439,
+            "right": 595.125,
+            "bottom": 483,
+            "left": 551.125
+          }
+        },
+        {
+          "label": "Baris per halaman",
+          "box": {
+            "x": 33,
+            "y": 540,
+            "width": 64,
+            "height": 44,
+            "top": 540,
+            "right": 97,
+            "bottom": 584,
+            "left": 33
+          }
+        }
+      ]
+    },
+    {
+      "width": 393,
+      "documentWidth": 393,
+      "documentHeight": 851,
+      "tableViewport": 359,
+      "tableWidth": 680,
+      "visibleRange": {
+        "left": 17,
+        "right": 376
+      },
+      "columns": [
+        {
+          "label": "Nama",
+          "x": 17,
+          "width": 150
+        },
+        {
+          "label": "Telepon",
+          "x": 167,
+          "width": 145
+        },
+        {
+          "label": "Status",
+          "x": 312,
+          "width": 100
+        },
+        {
+          "label": "Poin",
+          "x": 412,
+          "width": 75
+        },
+        {
+          "label": "Aksi",
+          "x": 487,
+          "width": 210
+        }
+      ],
+      "controls": [
+        {
+          "label": "Bantuan, panduan Pelanggan",
+          "box": {
+            "x": 16,
+            "y": 164,
+            "width": 109.96875,
+            "height": 44,
+            "top": 164,
+            "right": 125.96875,
+            "bottom": 208,
+            "left": 16
+          }
+        },
+        {
+          "label": "+ Tambah",
+          "box": {
+            "x": 133.96875,
+            "y": 164,
+            "width": 98.75,
+            "height": 44,
+            "top": 164,
+            "right": 232.71875,
+            "bottom": 208,
+            "left": 133.96875
+          }
+        },
+        {
+          "label": "Cari pelanggan",
+          "box": {
+            "x": 33,
+            "y": 249,
+            "width": 320,
+            "height": 44,
+            "top": 249,
+            "right": 353,
+            "bottom": 293,
+            "left": 33
+          }
+        },
+        {
+          "label": "Edit Budi Santoso",
+          "box": {
+            "x": 588.90625,
+            "y": 370,
+            "width": 44,
+            "height": 44,
+            "top": 370,
+            "right": 632.90625,
+            "bottom": 414,
+            "left": 588.90625
+          }
+        },
+        {
+          "label": "Hapus Budi Santoso",
+          "box": {
+            "x": 636.90625,
+            "y": 370,
+            "width": 44,
+            "height": 44,
+            "top": 370,
+            "right": 680.90625,
+            "bottom": 414,
+            "left": 636.90625
+          }
+        },
+        {
+          "label": "Edit Pelanggan Umum",
+          "box": {
+            "x": 503.125,
+            "y": 439,
+            "width": 44,
+            "height": 44,
+            "top": 439,
+            "right": 547.125,
+            "bottom": 483,
+            "left": 503.125
+          }
+        },
+        {
+          "label": "Hapus Pelanggan Umum",
+          "box": {
+            "x": 551.125,
+            "y": 439,
+            "width": 44,
+            "height": 44,
+            "top": 439,
+            "right": 595.125,
+            "bottom": 483,
+            "left": 551.125
+          }
+        },
+        {
+          "label": "Baris per halaman",
+          "box": {
+            "x": 33,
+            "y": 540,
+            "width": 64,
+            "height": 44,
+            "top": 540,
+            "right": 97,
+            "bottom": 584,
+            "left": 33
+          }
+        }
+      ]
+    },
+    {
+      "width": 430,
+      "documentWidth": 430,
+      "documentHeight": 851,
+      "tableViewport": 396,
+      "tableWidth": 680,
+      "visibleRange": {
+        "left": 17,
+        "right": 413
+      },
+      "columns": [
+        {
+          "label": "Nama",
+          "x": 17,
+          "width": 150
+        },
+        {
+          "label": "Telepon",
+          "x": 167,
+          "width": 145
+        },
+        {
+          "label": "Status",
+          "x": 312,
+          "width": 100
+        },
+        {
+          "label": "Poin",
+          "x": 412,
+          "width": 75
+        },
+        {
+          "label": "Aksi",
+          "x": 487,
+          "width": 210
+        }
+      ],
+      "controls": [
+        {
+          "label": "Bantuan, panduan Pelanggan",
+          "box": {
+            "x": 16,
+            "y": 164,
+            "width": 109.96875,
+            "height": 44,
+            "top": 164,
+            "right": 125.96875,
+            "bottom": 208,
+            "left": 16
+          }
+        },
+        {
+          "label": "+ Tambah",
+          "box": {
+            "x": 133.96875,
+            "y": 164,
+            "width": 98.75,
+            "height": 44,
+            "top": 164,
+            "right": 232.71875,
+            "bottom": 208,
+            "left": 133.96875
+          }
+        },
+        {
+          "label": "Cari pelanggan",
+          "box": {
+            "x": 33,
+            "y": 249,
+            "width": 320,
+            "height": 44,
+            "top": 249,
+            "right": 353,
+            "bottom": 293,
+            "left": 33
+          }
+        },
+        {
+          "label": "Edit Budi Santoso",
+          "box": {
+            "x": 588.90625,
+            "y": 370,
+            "width": 44,
+            "height": 44,
+            "top": 370,
+            "right": 632.90625,
+            "bottom": 414,
+            "left": 588.90625
+          }
+        },
+        {
+          "label": "Hapus Budi Santoso",
+          "box": {
+            "x": 636.90625,
+            "y": 370,
+            "width": 44,
+            "height": 44,
+            "top": 370,
+            "right": 680.90625,
+            "bottom": 414,
+            "left": 636.90625
+          }
+        },
+        {
+          "label": "Edit Pelanggan Umum",
+          "box": {
+            "x": 503.125,
+            "y": 439,
+            "width": 44,
+            "height": 44,
+            "top": 439,
+            "right": 547.125,
+            "bottom": 483,
+            "left": 503.125
+          }
+        },
+        {
+          "label": "Hapus Pelanggan Umum",
+          "box": {
+            "x": 551.125,
+            "y": 439,
+            "width": 44,
+            "height": 44,
+            "top": 439,
+            "right": 595.125,
+            "bottom": 483,
+            "left": 551.125
+          }
+        },
+        {
+          "label": "Baris per halaman",
+          "box": {
+            "x": 33,
+            "y": 540,
+            "width": 64,
+            "height": 44,
+            "top": 540,
+            "right": 97,
+            "bottom": 584,
+            "left": 33
+          }
+        }
+      ]
+    }
+  ],
+  "rows": [
+    [
+      "Budi Santoso",
+      "0813-2222-3333",
+      "Member",
+      "150",
+      ""
+    ],
+    [
+      "Pelanggan Umum",
+      "0812-0000-1111",
+      "Member",
+      "0",
+      "30 transaksi"
+    ]
+  ],
+  "searchByName": 1,
+  "searchByPhone": "Tidak ada pelanggan yang cocok dengan pencarian.\n\nBersihkan pencarian",
+  "editDialog": "Edit Pelanggan\nNama *\nTelepon\nEmail\nAlamat\nJadikan member (poin aktif)\nSimpan",
+  "formMetrics": [
+    {
+      "width": 320,
+      "box": {
+        "x": 16,
+        "y": 219.5,
+        "width": 288,
+        "height": 412,
+        "top": 219.5,
+        "right": 304,
+        "bottom": 631.5,
+        "left": 16
+      },
+      "fields": [
+        {
+          "id": "name",
+          "type": "text",
+          "inputMode": "",
+          "box": {
+            "x": 41,
+            "y": 302.5,
+            "width": 238,
+            "height": 44,
+            "top": 302.5,
+            "right": 279,
+            "bottom": 346.5,
+            "left": 41
+          }
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "inputMode": "",
+          "box": {
+            "x": 41,
+            "y": 382.5,
+            "width": 113,
+            "height": 44,
+            "top": 382.5,
+            "right": 154,
+            "bottom": 426.5,
+            "left": 41
+          }
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "inputMode": "",
+          "box": {
+            "x": 166,
+            "y": 382.5,
+            "width": 113,
+            "height": 44,
+            "top": 382.5,
+            "right": 279,
+            "bottom": 426.5,
+            "left": 166
+          }
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "inputMode": "",
+          "box": {
+            "x": 41,
+            "y": 462.5,
+            "width": 238,
+            "height": 44,
+            "top": 462.5,
+            "right": 279,
+            "bottom": 506.5,
+            "left": 41
+          }
+        },
+        {
+          "id": "",
+          "type": "checkbox",
+          "inputMode": "",
+          "box": {
+            "x": 41,
+            "y": 520.5,
+            "width": 16,
+            "height": 16,
+            "top": 520.5,
+            "right": 57,
+            "bottom": 536.5,
+            "left": 41
+          }
+        }
+      ],
+      "memberLabel": {
+        "x": 41,
+        "y": 518.5,
+        "width": 238,
+        "height": 20,
+        "top": 518.5,
+        "right": 279,
+        "bottom": 538.5,
+        "left": 41
+      },
+      "closeButton": {
+        "x": 247,
+        "y": 232.5,
+        "width": 44,
+        "height": 44,
+        "top": 232.5,
+        "right": 291,
+        "bottom": 276.5,
+        "left": 247
+      }
+    },
+    {
+      "width": 393,
+      "box": {
+        "x": 16,
+        "y": 219.5,
+        "width": 361,
+        "height": 412,
+        "top": 219.5,
+        "right": 377,
+        "bottom": 631.5,
+        "left": 16
+      },
+      "fields": [
+        {
+          "id": "name",
+          "type": "text",
+          "inputMode": "",
+          "box": {
+            "x": 41,
+            "y": 302.5,
+            "width": 311,
+            "height": 44,
+            "top": 302.5,
+            "right": 352,
+            "bottom": 346.5,
+            "left": 41
+          }
+        },
+        {
+          "id": "phone",
+          "type": "text",
+          "inputMode": "",
+          "box": {
+            "x": 41,
+            "y": 382.5,
+            "width": 149.5,
+            "height": 44,
+            "top": 382.5,
+            "right": 190.5,
+            "bottom": 426.5,
+            "left": 41
+          }
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "inputMode": "",
+          "box": {
+            "x": 202.5,
+            "y": 382.5,
+            "width": 149.5,
+            "height": 44,
+            "top": 382.5,
+            "right": 352,
+            "bottom": 426.5,
+            "left": 202.5
+          }
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "inputMode": "",
+          "box": {
+            "x": 41,
+            "y": 462.5,
+            "width": 311,
+            "height": 44,
+            "top": 462.5,
+            "right": 352,
+            "bottom": 506.5,
+            "left": 41
+          }
+        },
+        {
+          "id": "",
+          "type": "checkbox",
+          "inputMode": "",
+          "box": {
+            "x": 41,
+            "y": 520.5,
+            "width": 16,
+            "height": 16,
+            "top": 520.5,
+            "right": 57,
+            "bottom": 536.5,
+            "left": 41
+          }
+        }
+      ],
+      "memberLabel": {
+        "x": 41,
+        "y": 518.5,
+        "width": 311,
+        "height": 20,
+        "top": 518.5,
+        "right": 352,
+        "bottom": 538.5,
+        "left": 41
+      },
+      "closeButton": {
+        "x": 320,
+        "y": 232.5,
+        "width": 44,
+        "height": 44,
+        "top": 232.5,
+        "right": 364,
+        "bottom": 276.5,
+        "left": 320
+      }
+    }
+  ],
+  "invalidName": {
+    "valid": false,
+    "message": "Please fill out this field."
+  },
+  "shortForm": {
+    "viewportHeight": 420,
+    "dialog": {
+      "x": 16,
+      "y": 21,
+      "width": 288,
+      "height": 378,
+      "top": 21,
+      "right": 304,
+      "bottom": 399,
+      "left": 16
+    },
+    "focused": {
+      "x": 166,
+      "y": 184,
+      "width": 113,
+      "height": 44,
+      "top": 184,
+      "right": 279,
+      "bottom": 228,
+      "left": 166
+    },
+    "scrollHeight": 410,
+    "clientHeight": 376
+  },
+  "confirmText": "Hapus pelanggan?\n\nData pelanggan ini akan dihapus permanen dan tidak bisa dikembalikan.\n\nBatal\nHapus",
+  "axeViolations": 0,
+  "formAxeViolations": 0,
+  "errors": [],
+  "dataMutationsBlocked": true,
+  "formScreenshotsAfterAnimation": true
+}

@@ -1,0 +1,453 @@
+{
+  "metrics": [
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "height": 851,
+      "customerRows": [
+        {
+          "box": {
+            "x": 17,
+            "y": 361,
+            "width": 286,
+            "height": 113,
+            "top": 361,
+            "right": 303,
+            "bottom": 474,
+            "left": 17
+          },
+          "text": "Budi Santoso0813-2222-3333Member150 poin"
+        },
+        {
+          "box": {
+            "x": 17,
+            "y": 474,
+            "width": 286,
+            "height": 112,
+            "top": 474,
+            "right": 303,
+            "bottom": 586,
+            "left": 17
+          },
+          "text": "Pelanggan Umum0812-0000-1111Member0 poin30 transaksi"
+        }
+      ],
+      "controls": [
+        {
+          "label": "Bantuan, panduan Pelanggan",
+          "box": {
+            "x": 16,
+            "y": 164,
+            "width": 109.96875,
+            "height": 44,
+            "top": 164,
+            "right": 125.96875,
+            "bottom": 208,
+            "left": 16
+          }
+        },
+        {
+          "label": "+ Tambah pelanggan+ Tambah",
+          "box": {
+            "x": 16,
+            "y": 216,
+            "width": 172.984375,
+            "height": 44,
+            "top": 216,
+            "right": 188.984375,
+            "bottom": 260,
+            "left": 16
+          }
+        },
+        {
+          "label": "Aksi untuk Budi Santoso",
+          "box": {
+            "x": 243,
+            "y": 377,
+            "width": 44,
+            "height": 44,
+            "top": 377,
+            "right": 287,
+            "bottom": 421,
+            "left": 243
+          }
+        },
+        {
+          "label": "Aksi untuk Pelanggan Umum",
+          "box": {
+            "x": 243,
+            "y": 490,
+            "width": 44,
+            "height": 44,
+            "top": 490,
+            "right": 287,
+            "bottom": 534,
+            "left": 243
+          }
+        }
+      ]
+    },
+    {
+      "width": 360,
+      "documentWidth": 360,
+      "height": 851,
+      "customerRows": [
+        {
+          "box": {
+            "x": 17,
+            "y": 309,
+            "width": 326,
+            "height": 113,
+            "top": 309,
+            "right": 343,
+            "bottom": 422,
+            "left": 17
+          },
+          "text": "Budi Santoso0813-2222-3333Member150 poin"
+        },
+        {
+          "box": {
+            "x": 17,
+            "y": 422,
+            "width": 326,
+            "height": 112,
+            "top": 422,
+            "right": 343,
+            "bottom": 534,
+            "left": 17
+          },
+          "text": "Pelanggan Umum0812-0000-1111Member0 poin30 transaksi"
+        }
+      ],
+      "controls": [
+        {
+          "label": "Bantuan, panduan Pelanggan",
+          "box": {
+            "x": 16,
+            "y": 164,
+            "width": 109.96875,
+            "height": 44,
+            "top": 164,
+            "right": 125.96875,
+            "bottom": 208,
+            "left": 16
+          }
+        },
+        {
+          "label": "+ Tambah pelanggan+ Tambah",
+          "box": {
+            "x": 133.96875,
+            "y": 164,
+            "width": 172.984375,
+            "height": 44,
+            "top": 164,
+            "right": 306.953125,
+            "bottom": 208,
+            "left": 133.96875
+          }
+        },
+        {
+          "label": "Aksi untuk Budi Santoso",
+          "box": {
+            "x": 283,
+            "y": 325,
+            "width": 44,
+            "height": 44,
+            "top": 325,
+            "right": 327,
+            "bottom": 369,
+            "left": 283
+          }
+        },
+        {
+          "label": "Aksi untuk Pelanggan Umum",
+          "box": {
+            "x": 283,
+            "y": 438,
+            "width": 44,
+            "height": 44,
+            "top": 438,
+            "right": 327,
+            "bottom": 482,
+            "left": 283
+          }
+        }
+      ]
+    },
+    {
+      "width": 393,
+      "documentWidth": 393,
+      "height": 851,
+      "customerRows": [
+        {
+          "box": {
+            "x": 17,
+            "y": 309,
+            "width": 359,
+            "height": 113,
+            "top": 309,
+            "right": 376,
+            "bottom": 422,
+            "left": 17
+          },
+          "text": "Budi Santoso0813-2222-3333Member150 poin"
+        },
+        {
+          "box": {
+            "x": 17,
+            "y": 422,
+            "width": 359,
+            "height": 112,
+            "top": 422,
+            "right": 376,
+            "bottom": 534,
+            "left": 17
+          },
+          "text": "Pelanggan Umum0812-0000-1111Member0 poin30 transaksi"
+        }
+      ],
+      "controls": [
+        {
+          "label": "Bantuan, panduan Pelanggan",
+          "box": {
+            "x": 16,
+            "y": 164,
+            "width": 109.96875,
+            "height": 44,
+            "top": 164,
+            "right": 125.96875,
+            "bottom": 208,
+            "left": 16
+          }
+        },
+        {
+          "label": "+ Tambah pelanggan+ Tambah",
+          "box": {
+            "x": 133.96875,
+            "y": 164,
+            "width": 172.984375,
+            "height": 44,
+            "top": 164,
+            "right": 306.953125,
+            "bottom": 208,
+            "left": 133.96875
+          }
+        },
+        {
+          "label": "Aksi untuk Budi Santoso",
+          "box": {
+            "x": 316,
+            "y": 325,
+            "width": 44,
+            "height": 44,
+            "top": 325,
+            "right": 360,
+            "bottom": 369,
+            "left": 316
+          }
+        },
+        {
+          "label": "Aksi untuk Pelanggan Umum",
+          "box": {
+            "x": 316,
+            "y": 438,
+            "width": 44,
+            "height": 44,
+            "top": 438,
+            "right": 360,
+            "bottom": 482,
+            "left": 316
+          }
+        }
+      ]
+    },
+    {
+      "width": 430,
+      "documentWidth": 430,
+      "height": 851,
+      "customerRows": [
+        {
+          "box": {
+            "x": 17,
+            "y": 309,
+            "width": 396,
+            "height": 113,
+            "top": 309,
+            "right": 413,
+            "bottom": 422,
+            "left": 17
+          },
+          "text": "Budi Santoso0813-2222-3333Member150 poin"
+        },
+        {
+          "box": {
+            "x": 17,
+            "y": 422,
+            "width": 396,
+            "height": 112,
+            "top": 422,
+            "right": 413,
+            "bottom": 534,
+            "left": 17
+          },
+          "text": "Pelanggan Umum0812-0000-1111Member0 poin30 transaksi"
+        }
+      ],
+      "controls": [
+        {
+          "label": "Bantuan, panduan Pelanggan",
+          "box": {
+            "x": 16,
+            "y": 164,
+            "width": 109.96875,
+            "height": 44,
+            "top": 164,
+            "right": 125.96875,
+            "bottom": 208,
+            "left": 16
+          }
+        },
+        {
+          "label": "+ Tambah pelanggan+ Tambah",
+          "box": {
+            "x": 133.96875,
+            "y": 164,
+            "width": 172.984375,
+            "height": 44,
+            "top": 164,
+            "right": 306.953125,
+            "bottom": 208,
+            "left": 133.96875
+          }
+        },
+        {
+          "label": "Aksi untuk Budi Santoso",
+          "box": {
+            "x": 353,
+            "y": 325,
+            "width": 44,
+            "height": 44,
+            "top": 325,
+            "right": 397,
+            "bottom": 369,
+            "left": 353
+          }
+        },
+        {
+          "label": "Aksi untuk Pelanggan Umum",
+          "box": {
+            "x": 353,
+            "y": 438,
+            "width": 44,
+            "height": 44,
+            "top": 438,
+            "right": 397,
+            "bottom": 482,
+            "left": 353
+          }
+        }
+      ]
+    }
+  ],
+  "formMetrics": {
+    "memberLabel": {
+      "x": 41,
+      "y": 546.5,
+      "width": 238,
+      "height": 44,
+      "top": 546.5,
+      "right": 279,
+      "bottom": 590.5,
+      "left": 41
+    },
+    "fields": [
+      {
+        "id": "name",
+        "type": "text",
+        "autocomplete": "name",
+        "inputMode": "",
+        "box": {
+          "x": 41,
+          "y": 250.5,
+          "width": 238,
+          "height": 44,
+          "top": 250.5,
+          "right": 279,
+          "bottom": 294.5,
+          "left": 41
+        }
+      },
+      {
+        "id": "phone",
+        "type": "tel",
+        "autocomplete": "tel",
+        "inputMode": "tel",
+        "box": {
+          "x": 41,
+          "y": 330.5,
+          "width": 238,
+          "height": 44,
+          "top": 330.5,
+          "right": 279,
+          "bottom": 374.5,
+          "left": 41
+        }
+      },
+      {
+        "id": "email",
+        "type": "email",
+        "autocomplete": "email",
+        "inputMode": "",
+        "box": {
+          "x": 41,
+          "y": 410.5,
+          "width": 238,
+          "height": 44,
+          "top": 410.5,
+          "right": 279,
+          "bottom": 454.5,
+          "left": 41
+        }
+      },
+      {
+        "id": "address",
+        "type": "text",
+        "autocomplete": "street-address",
+        "inputMode": "",
+        "box": {
+          "x": 41,
+          "y": 490.5,
+          "width": 238,
+          "height": 44,
+          "top": 490.5,
+          "right": 279,
+          "bottom": 534.5,
+          "left": 41
+        }
+      },
+      {
+        "id": "",
+        "type": "checkbox",
+        "autocomplete": "",
+        "inputMode": "",
+        "box": {
+          "x": 41,
+          "y": 560.5,
+          "width": 16,
+          "height": 16,
+          "top": 560.5,
+          "right": 57,
+          "bottom": 576.5,
+          "left": 41
+        }
+      }
+    ]
+  },
+  "errors": [],
+  "source": "existing demo admin data",
+  "viewport": {
+    "width": 393,
+    "height": 851
+  },
+  "dataMutationsBlocked": true
+}

@@ -1,0 +1,289 @@
+{
+  "metrics": [
+    {
+      "width": 320,
+      "docWidth": 320,
+      "height": 1182,
+      "searchY": 100,
+      "heroButtons": [
+        {
+          "text": "Buka Kasir",
+          "box": {
+            "x": 32,
+            "y": 329.5,
+            "width": 80,
+            "height": 62,
+            "top": 329.5,
+            "right": 112,
+            "bottom": 391.5,
+            "left": 32
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "Laporan",
+          "box": {
+            "x": 120,
+            "y": 329.5,
+            "width": 80,
+            "height": 62,
+            "top": 329.5,
+            "right": 200,
+            "bottom": 391.5,
+            "left": 120
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "2Stok",
+          "box": {
+            "x": 208,
+            "y": 329.5,
+            "width": 80,
+            "height": 62,
+            "top": 329.5,
+            "right": 288,
+            "bottom": 391.5,
+            "left": 208
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "2 produk perlu restock",
+          "box": {
+            "x": 32,
+            "y": 403.5,
+            "width": 152.984375,
+            "height": 44,
+            "top": 403.5,
+            "right": 184.984375,
+            "bottom": 447.5,
+            "left": 32
+          },
+          "textColor": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "width": 360,
+      "docWidth": 360,
+      "height": 1190,
+      "searchY": 100,
+      "heroButtons": [
+        {
+          "text": "Buka Kasir",
+          "box": {
+            "x": 32,
+            "y": 329.5,
+            "width": 90.65625,
+            "height": 66,
+            "top": 329.5,
+            "right": 122.65625,
+            "bottom": 395.5,
+            "left": 32
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "Laporan",
+          "box": {
+            "x": 134.65625,
+            "y": 329.5,
+            "width": 90.671875,
+            "height": 66,
+            "top": 329.5,
+            "right": 225.328125,
+            "bottom": 395.5,
+            "left": 134.65625
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "2Stok",
+          "box": {
+            "x": 237.328125,
+            "y": 329.5,
+            "width": 90.671875,
+            "height": 66,
+            "top": 329.5,
+            "right": 328,
+            "bottom": 395.5,
+            "left": 237.328125
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "2 produk perlu restock",
+          "box": {
+            "x": 32,
+            "y": 407.5,
+            "width": 152.984375,
+            "height": 44,
+            "top": 407.5,
+            "right": 184.984375,
+            "bottom": 451.5,
+            "left": 32
+          },
+          "textColor": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "width": 393,
+      "docWidth": 393,
+      "height": 1214,
+      "searchY": 100,
+      "heroButtons": [
+        {
+          "text": "Buka Kasir",
+          "box": {
+            "x": 32,
+            "y": 329.5,
+            "width": 101.65625,
+            "height": 66,
+            "top": 329.5,
+            "right": 133.65625,
+            "bottom": 395.5,
+            "left": 32
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "Laporan",
+          "box": {
+            "x": 145.65625,
+            "y": 329.5,
+            "width": 101.671875,
+            "height": 66,
+            "top": 329.5,
+            "right": 247.328125,
+            "bottom": 395.5,
+            "left": 145.65625
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "2Stok",
+          "box": {
+            "x": 259.328125,
+            "y": 329.5,
+            "width": 101.671875,
+            "height": 66,
+            "top": 329.5,
+            "right": 361,
+            "bottom": 395.5,
+            "left": 259.328125
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "2 produk perlu restock",
+          "box": {
+            "x": 32,
+            "y": 407.5,
+            "width": 152.984375,
+            "height": 44,
+            "top": 407.5,
+            "right": 184.984375,
+            "bottom": 451.5,
+            "left": 32
+          },
+          "textColor": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "width": 430,
+      "docWidth": 430,
+      "height": 1214,
+      "searchY": 100,
+      "heroButtons": [
+        {
+          "text": "Buka Kasir",
+          "box": {
+            "x": 32,
+            "y": 329.5,
+            "width": 114,
+            "height": 66,
+            "top": 329.5,
+            "right": 146,
+            "bottom": 395.5,
+            "left": 32
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "Laporan",
+          "box": {
+            "x": 158,
+            "y": 329.5,
+            "width": 114,
+            "height": 66,
+            "top": 329.5,
+            "right": 272,
+            "bottom": 395.5,
+            "left": 158
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "2Stok",
+          "box": {
+            "x": 284,
+            "y": 329.5,
+            "width": 114,
+            "height": 66,
+            "top": 329.5,
+            "right": 398,
+            "bottom": 395.5,
+            "left": 284
+          },
+          "textColor": "rgb(19, 27, 46)"
+        },
+        {
+          "text": "2 produk perlu restock",
+          "box": {
+            "x": 32,
+            "y": 407.5,
+            "width": 152.984375,
+            "height": 44,
+            "top": 407.5,
+            "right": 184.984375,
+            "bottom": 451.5,
+            "left": 32
+          },
+          "textColor": "rgb(255, 255, 255)"
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "x": 121,
+      "y": 362,
+      "background": "#aec6f2",
+      "foreground": "#131B2E",
+      "icon": "#004AC6"
+    },
+    {
+      "x": 235,
+      "y": 362,
+      "background": "#abc4ed",
+      "foreground": "#131B2E",
+      "icon": "#004AC6"
+    },
+    {
+      "x": 349,
+      "y": 362,
+      "background": "#a8c4ed",
+      "foreground": "#131B2E",
+      "icon": "#004AC6"
+    }
+  ],
+  "errors": [],
+  "preview": {
+    "width": 393,
+    "height": 1214,
+    "source": "existing demo admin database"
+  }
+}

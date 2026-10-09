@@ -1,0 +1,25 @@
+{
+  "height": 2237,
+  "headings": [
+    {
+      "title": "Laporan",
+      "y": 100
+    },
+    {
+      "title": "Tren penjualan",
+      "y": 713
+    },
+    {
+      "title": "Produk terlaris",
+      "y": 1151
+    },
+    {
+      "title": "Metode pembayaran",
+      "y": 1552
+    },
+    {
+      "title": "Transaksi terakhir",
+      "y": 1728
+    }
+  ]
+}

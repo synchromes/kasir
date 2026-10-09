@@ -57,7 +57,7 @@ export function FlatInventory({ className }: IconProps) {
 export function FlatCategory({ className }: IconProps) {
   return (
     <Svg className={className}>
-      <path d="M8.3 7.3 15 11M8.3 16.7 15 13" stroke="#F59E0B" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M9.2 6h5.6M7.4 8.9l3.2 6.2M16.6 8.9l-3.2 6.2" stroke="#F59E0B" strokeWidth="2.2" strokeLinecap="round" />
       <circle cx="6" cy="6" r="3.2" fill="#F59E0B" />
       <circle cx="18" cy="6" r="3.2" fill="#FBBF24" />
       <circle cx="12" cy="18" r="3.2" fill="#D97706" />
@@ -205,15 +205,15 @@ export function FlatUser({ className }: IconProps) {
   );
 }
 
-// Siluet putih untuk watermark kartu Produk Terlaris: bentuk mengikuti
+// Siluet untuk watermark kartu Produk Terlaris: bentuk mengikuti
 // kategori produk (makanan/minuman), bukan selalu box.
 export function MarkFood({ className }: IconProps) {
   return (
     <Svg className={className}>
-      <rect x="13.5" y="1.5" width="1.8" height="9" rx="0.9" fill="#FFFFFF" transform="rotate(24 13.5 1.5)" />
-      <rect x="16.5" y="1.5" width="1.8" height="9" rx="0.9" fill="#FFFFFF" transform="rotate(24 16.5 1.5)" />
-      <ellipse cx="12" cy="10" rx="7.5" ry="2.8" fill="#FFFFFF" />
-      <path d="M4.5 10h15c0 4.6-3.4 8-7.5 8s-7.5-3.4-7.5-8z" fill="#FFFFFF" />
+      <rect x="13.5" y="1.5" width="1.8" height="9" rx="0.9" fill="currentColor" transform="rotate(24 13.5 1.5)" />
+      <rect x="16.5" y="1.5" width="1.8" height="9" rx="0.9" fill="currentColor" transform="rotate(24 16.5 1.5)" />
+      <ellipse cx="12" cy="10" rx="7.5" ry="2.8" fill="currentColor" />
+      <path d="M4.5 10h15c0 4.6-3.4 8-7.5 8s-7.5-3.4-7.5-8z" fill="currentColor" />
     </Svg>
   );
 }
@@ -221,9 +221,9 @@ export function MarkFood({ className }: IconProps) {
 export function MarkDrink({ className }: IconProps) {
   return (
     <Svg className={className}>
-      <rect x="13" y="1.5" width="1.8" height="8" rx="0.9" fill="#FFFFFF" transform="rotate(18 13 1.5)" />
-      <rect x="7" y="5" width="10" height="2.4" rx="1.2" fill="#FFFFFF" />
-      <path d="M8 7.4h8l-1.3 12.1a1.5 1.5 0 0 1-1.5 1.3h-2.4a1.5 1.5 0 0 1-1.5-1.3z" fill="#FFFFFF" />
+      <rect x="13" y="1.5" width="1.8" height="8" rx="0.9" fill="currentColor" transform="rotate(18 13 1.5)" />
+      <rect x="7" y="5" width="10" height="2.4" rx="1.2" fill="currentColor" />
+      <path d="M8 7.4h8l-1.3 12.1a1.5 1.5 0 0 1-1.5 1.3h-2.4a1.5 1.5 0 0 1-1.5-1.3z" fill="currentColor" />
     </Svg>
   );
 }

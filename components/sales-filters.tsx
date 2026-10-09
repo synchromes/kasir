@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { RotateCcw, Search } from "lucide-react";
-import { Input } from "@/components/ui";
+import { CalendarDays, ChevronDown, CreditCard, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
+import { Button, Input } from "@/components/ui";
 
 const METHOD_OPTIONS = [
   { value: "", label: "Semua Metode" },
@@ -13,7 +13,7 @@ const METHOD_OPTIONS = [
 ];
 
 const selectCls =
-  "h-11 w-full cursor-pointer rounded-lg border border-input bg-surface px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
+  "h-11 min-w-0 w-full rounded-lg border border-input bg-surface-container-lowest pl-10 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
 
 export function SalesFilters({
   q = "",
@@ -28,6 +28,7 @@ export function SalesFilters({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [isPending, startTransition] = React.useTransition();
 
   // Input pencarian sengaja uncontrolled (defaultValue) agar teks yang sedang
   // diketik tidak pernah tertimpa prop setelah navigasi server. Select/tanggal
@@ -59,13 +60,14 @@ export function SalesFilters({
     // Baca dari window.location.search saat dipanggil (bukan closure) agar
     // debounce yang tertunda tidak membuang filter yang baru dipilih user
     // (race antara ketikan pencarian dan perubahan select/tanggal).
+    if (timer.current) clearTimeout(timer.current);
     const u = new URLSearchParams(window.location.search);
     u.set("page", "1");
-    for (const [k, v] of Object.entries(changes)) {
+    for (const [k, v] of Object.entries({ q: searchRef.current?.value ?? q, ...changes })) {
       if (v) u.set(k, v);
       else u.delete(k);
     }
-    router.replace(`${pathname}?${u.toString()}`);
+    startTransition(() => router.replace(`${pathname}?${u.toString()}`));
   }
 
   function onSearchChange() {
@@ -74,14 +76,12 @@ export function SalesFilters({
     timer.current = setTimeout(() => push({ q: v }), 350);
   }
 
-  function onSelectChange(key: "method" | "from" | "to") {
-    return (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-      const v = e.target.value;
-      if (key === "method") setMethodVal(v);
-      else if (key === "from") setFromVal(v);
-      else setToVal(v);
-      push({ [key]: v });
-    };
+  function onSelectChange(key: "method" | "from" | "to", value: string) {
+    if (key === "method") setMethodVal(value);
+    else if (key === "from") setFromVal(value);
+    else setToVal(value);
+    const next = { method: methodVal, from: fromVal, to: toVal, [key]: value };
+    if (!next.from || !next.to || next.from <= next.to) push(next);
   }
 
   function reset() {
@@ -93,53 +93,69 @@ export function SalesFilters({
     push({ q: "", method: "", from: "", to: "" });
   }
 
-  const hasFilter = Boolean(q || method || from || to);
+  const hasFilter = Boolean(q || methodVal || fromVal || toVal);
+  const invalidRange = Boolean(fromVal && toVal && fromVal > toVal);
 
   return (
-    <div className="flex flex-col gap-3 border-b border-outline-variant bg-surface-container-lowest p-4 md:flex-row md:items-end">
-      <div className="flex-1">
-        <label htmlFor="sales-search" className="mb-1 block text-xs font-semibold text-on-surface-variant">Cari Transaksi</label>
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" />
-          <Input
-            id="sales-search"
-            ref={searchRef}
-            type="search"
-            defaultValue={q}
-            onChange={onSearchChange}
-            placeholder="Cari nomor invoice atau nama pelanggan..."
-            className="h-11 bg-surface pl-9 text-sm shadow-none"
-          />
+    <section aria-labelledby="sales-filter-heading">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 border-b border-outline-variant px-4 py-3 sm:px-5">
+        <h2 id="sales-filter-heading" className="flex min-h-11 items-center gap-2.5 font-display text-base font-bold">
+          <SlidersHorizontal className="h-5 w-5 text-primary" aria-hidden="true" />
+          Riwayat Transaksi
+        </h2>
+        {hasFilter && (
+          <Button type="button" variant="ghost" size="sm" onClick={reset} className="gap-1.5 text-xs text-primary">
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />Reset filter
+          </Button>
+        )}
+      </div>
+      <div className="grid gap-4 p-4 sm:grid-cols-2 sm:px-5 lg:grid-cols-[minmax(0,1fr)_10rem_9rem_9rem] lg:gap-3">
+        <div className="min-w-0 flex-1">
+          <label htmlFor="sales-search" className="mb-1.5 block text-xs font-medium text-on-surface-variant">Cari Transaksi</label>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" />
+            <Input
+              id="sales-search"
+              ref={searchRef}
+              type="search"
+              defaultValue={q}
+              onChange={onSearchChange}
+              placeholder="Cari nomor invoice atau nama pelanggan..."
+              className="bg-surface-container-lowest pl-10 text-sm shadow-none"
+            />
+          </div>
+        </div>
+        <div className="min-w-0">
+          <label htmlFor="sales-method" className="mb-1.5 block text-xs font-medium text-on-surface-variant">Metode Pembayaran</label>
+          <div className="relative">
+            <CreditCard className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" aria-hidden="true" />
+            <select id="sales-method" value={methodVal} onChange={event => onSelectChange("method", event.target.value)} className={`${selectCls} cursor-pointer appearance-none pr-9`}>
+              {METHOD_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" aria-hidden="true" />
+          </div>
+        </div>
+        <div className="min-w-0">
+          <label htmlFor="sales-from" className="mb-1.5 block text-xs font-medium text-on-surface-variant">Dari Tanggal</label>
+          <div className="relative">
+            <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" aria-hidden="true" />
+            <input id="sales-from" type="date" value={fromVal} onChange={event => onSelectChange("from", event.target.value)} aria-invalid={invalidRange || undefined} aria-describedby={invalidRange ? "sales-date-error" : undefined} className={selectCls} />
+          </div>
+        </div>
+        <div className="min-w-0">
+          <label htmlFor="sales-to" className="mb-1.5 block text-xs font-medium text-on-surface-variant">Sampai Tanggal</label>
+          <div className="relative">
+            <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" aria-hidden="true" />
+            <input id="sales-to" type="date" value={toVal} onChange={event => onSelectChange("to", event.target.value)} aria-invalid={invalidRange || undefined} aria-describedby={invalidRange ? "sales-date-error" : undefined} className={selectCls} />
+          </div>
         </div>
       </div>
-      <div className="w-full md:w-48">
-        <label htmlFor="sales-method" className="mb-1 block text-xs font-semibold text-on-surface-variant">Metode Pembayaran</label>
-        <select id="sales-method" value={methodVal} onChange={onSelectChange("method")} className={selectCls}>
-          {METHOD_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="w-full md:w-44">
-        <label htmlFor="sales-from" className="mb-1 block text-xs font-semibold text-on-surface-variant">Dari Tanggal</label>
-        <input id="sales-from" type="date" value={fromVal} onChange={onSelectChange("from")} className={selectCls} />
-      </div>
-      <div className="w-full md:w-44">
-        <label htmlFor="sales-to" className="mb-1 block text-xs font-semibold text-on-surface-variant">Sampai Tanggal</label>
-        <input id="sales-to" type="date" value={toVal} onChange={onSelectChange("to")} className={selectCls} />
-      </div>
-      {hasFilter && (
-        <button
-          type="button"
-          onClick={reset}
-          className="inline-flex h-11 cursor-pointer items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          Reset
-        </button>
-      )}
-    </div>
+      {invalidRange && <p id="sales-date-error" role="alert" className="px-4 pb-4 text-sm text-destructive sm:px-5">Tanggal akhir harus sama atau setelah tanggal awal.</p>}
+      <p role="status" className={isPending ? "px-4 pb-4 text-xs text-on-surface-variant sm:px-5" : "sr-only"}>
+        {isPending ? "Memuat transaksi…" : ""}
+      </p>
+    </section>
   );
 }

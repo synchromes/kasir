@@ -1,0 +1,81 @@
+{
+  "data": "Existing demo account data, no UI or dataset alteration",
+  "mobileViewport": {
+    "width": 393,
+    "height": 851
+  },
+  "previewViewport": {
+    "width": 393,
+    "height": 2237
+  },
+  "note": "Tall viewport shows the complete composition with fixed navigation at the bottom. See mobile-viewport.png for an actual phone viewport.",
+  "colors": [
+    {
+      "foreground": "rgb(19, 27, 46)",
+      "background": "rgb(250, 248, 255)",
+      "ratio": 16.29,
+      "sample": "Laporan"
+    },
+    {
+      "foreground": "rgb(67, 70, 85)",
+      "background": "rgb(250, 248, 255)",
+      "ratio": 8.88,
+      "sample": "1 Okt 2026 – 9 Okt 2026"
+    },
+    {
+      "foreground": "rgb(19, 27, 46)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 17.16,
+      "sample": "Rp 22.000"
+    },
+    {
+      "foreground": "rgb(67, 70, 85)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 9.35,
+      "sample": "5 transaksi · 100% omzet"
+    },
+    {
+      "foreground": "rgb(0, 74, 198)",
+      "background": "rgb(232, 240, 255)",
+      "ratio": 6.56,
+      "sample": "1"
+    },
+    {
+      "foreground": "rgb(67, 70, 85)",
+      "background": "rgb(242, 243, 255)",
+      "ratio": 8.48,
+      "sample": "5 transaksi terbaru dari 5 transaksi pada periode ini."
+    },
+    {
+      "foreground": "rgb(19, 27, 46)",
+      "background": "rgb(242, 243, 255)",
+      "ratio": 15.56,
+      "sample": "Rp 33.700"
+    },
+    {
+      "foreground": "rgb(0, 113, 77)",
+      "background": "rgb(242, 243, 255)",
+      "ratio": 5.49,
+      "sample": "Rp 33.700"
+    },
+    {
+      "foreground": "rgb(186, 26, 26)",
+      "background": "rgb(242, 243, 255)",
+      "ratio": 5.86,
+      "sample": "Rp 0"
+    },
+    {
+      "foreground": "rgb(0, 74, 198)",
+      "background": "rgb(242, 243, 255)",
+      "ratio": 6.81,
+      "sample": "Rincian laba"
+    },
+    {
+      "foreground": "rgb(0, 74, 198)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 7.51,
+      "sample": "Lihat semua"
+    }
+  ],
+  "tooltip": "7 Okt\n\nLaba kotor : Rp 33.700\nOmzet : Rp 282.000"
+}

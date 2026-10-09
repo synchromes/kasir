@@ -166,7 +166,8 @@ test("004: pembelian 320px, label filter, fokus hapus dan pelanggan opsional", a
   await expect(remove).toBeFocused();
   expect((await remove.boundingBox())!.width).toBeGreaterThanOrEqual(44);
   await page.goto("/sales");
-  for (const name of ["Cari Transaksi", "Metode Pembayaran", "Dari Tanggal", "Sampai Tanggal"]) await expect(page.getByLabel(name, { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Cari Transaksi", { exact: true })).toBeVisible();
+  for (const name of ["Metode Pembayaran", "Dari Tanggal", "Sampai Tanggal"]) await expect(page.getByLabel(name, { exact: true })).toBeVisible();
   await page.goto("/reports");
   const table = page.getByRole("region", { name: /Transaksi terakhir/ });
   await table.focus();

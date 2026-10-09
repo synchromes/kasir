@@ -300,11 +300,13 @@ const GUIDE: GuideCategory[] = [
     items: [
       {
         title: "Melihat transaksi",
-        desc: "Daftar penjualan lengkap dengan filter real-time.",
+        desc: "Cari penjualan berdasarkan invoice, pelanggan, metode pembayaran, atau tanggal.",
         steps: [
           "Buka menu Transaksi, daftar terurut dari yang terbaru.",
-          "Gunakan filter (tanggal, metode, status), hasil berubah real-time tanpa tombol Terapkan.",
-          "Klik transaksi untuk melihat detail, item, dan bukti pembayaran.",
+          "Ketik nomor invoice atau nama pelanggan di kolom Cari Transaksi.",
+          "Pilih metode pembayaran dan tanggal pada filter yang terlihat. Hasil langsung diperbarui; tanggal akhir harus sama atau setelah tanggal awal.",
+          "Di HP, pilih ID Transaksi atau Tanggal & Waktu untuk mengurutkan hasil terbaru. Total Transaksi menghitung seluruh hasil filter; Total Halaman hanya menghitung halaman aktif.",
+          "Di HP, ketuk baris transaksi untuk membuka detail. Di desktop, klik ikon detail di ujung baris.",
           "Cetak ulang struk dari halaman detail.",
         ],
       },
@@ -321,8 +323,11 @@ const GUIDE: GuideCategory[] = [
         desc: "Pantau performa toko.",
         steps: [
           "Buka menu Laporan.",
-          "Lihat ringkasan penjualan, laba, dan pengeluaran.",
-          "Gunakan grafik tren untuk melihat pola penjualan harian.",
+          "Pilih Hari Ini, 7 Hari, Bulan Ini, atau Kustom. Pada Kustom, isi Dari dan Sampai lalu klik Terapkan.",
+          "Lihat omzet, laba bersih, dan pengeluaran. Buka Rincian laba untuk melihat HPP dan perhitungannya.",
+          "Grafik Tren penjualan membandingkan omzet dan laba kotor; laba kotor belum dikurangi pengeluaran. Buka Lihat angka grafik untuk membaca nilai per tanggal.",
+          "Lihat jumlah terjual dan nilai produk pada Produk terlaris, lalu rincian Metode pembayaran.",
+          "Lihat semua membuka halaman Transaksi pada periode laporan yang sama. Ekspor mengunduh CSV seluruh transaksi pada periode itu.",
         ],
       },
     ],

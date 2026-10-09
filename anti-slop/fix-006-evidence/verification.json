@@ -1,0 +1,37 @@
+{
+  "fixtureAccountsRemaining": 0,
+  "axe": [
+    {
+      "file": "desktop-chromium-default-axe.json",
+      "violations": 0
+    },
+    {
+      "file": "desktop-chromium-empty-axe.json",
+      "violations": 0
+    },
+    {
+      "file": "desktop-chromium-long-data-axe.json",
+      "violations": 0
+    },
+    {
+      "file": "desktop-chromium-search-axe.json",
+      "violations": 0
+    },
+    {
+      "file": "mobile-chromium-default-axe.json",
+      "violations": 0
+    },
+    {
+      "file": "mobile-chromium-empty-axe.json",
+      "violations": 0
+    },
+    {
+      "file": "mobile-chromium-long-data-axe.json",
+      "violations": 0
+    },
+    {
+      "file": "mobile-chromium-search-axe.json",
+      "violations": 0
+    }
+  ]
+}
